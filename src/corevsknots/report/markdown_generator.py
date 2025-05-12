@@ -1017,10 +1017,10 @@ def generate_comparison_report_content(metrics: Dict[str, Any], charts: Dict[str
     self_merged_ratio2 = review_metrics2.get("self_merged_ratio", 0)
 
     sections.append(
-        f"**{repo1_name}** has a review thoroughness score of **{thoroughness_score1}/10** with a self-merged ratio of **{self_merged_ratio1:.1%}**.\n"
+        f"**{repo1_name}** has a review thoroughness score of **{thoroughness_score1:.1f}/10** with a self-merged ratio of **{self_merged_ratio1:.1%}**.\n"
     )
     sections.append(
-        f"**{repo2_name}** has a review thoroughness score of **{thoroughness_score2}/10** with a self-merged ratio of **{self_merged_ratio2:.1%}**.\n"
+        f"**{repo2_name}** has a review thoroughness score of **{thoroughness_score2:.1f}/10** with a self-merged ratio of **{self_merged_ratio2:.1%}**.\n"
     )
 
     thoroughness_difference = thoroughness_score1 - thoroughness_score2
@@ -1064,6 +1064,9 @@ def generate_comparison_report_content(metrics: Dict[str, Any], charts: Dict[str
 
     # Summary table of key metrics
     sections.append("\n## Summary of Key Metrics\n")
+
+    # Add note about metrics interpretation
+    sections.append("*Note: For all metrics in this table, a positive difference indicates better performance for the first repository, except for self-merged ratio where lower values are better.*\n\n")
 
     sections.append(f"| Metric | {repo1_name} | {repo2_name} | Difference |\n")
     sections.append(f"|--------|{'-' * len(repo1_name)}|{'-' * len(repo2_name)}|----------|\n")
@@ -1121,7 +1124,7 @@ def generate_comparison_report_content(metrics: Dict[str, Any], charts: Dict[str
         f"| Review Thoroughness | {thoroughness_score1:.1f}/10 | {thoroughness_score2:.1f}/10 | {thoroughness_difference:+.1f} |\n"
     )
     sections.append(
-        f"| Self-Merged Ratio | {self_merged_ratio1:.1%} | {self_merged_ratio2:.1%} | {self_merged_difference:+.1%} |\n"
+        f"| Self-Merged Ratio | {self_merged_ratio1:.1%} | {self_merged_ratio2:.1%} | {-self_merged_difference:+.1%} |\n"
     )
 
     # Conclusion and recommendations
