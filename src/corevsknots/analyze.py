@@ -46,41 +46,46 @@ def analyze_repository(
     Returns:
         Dictionary of repository metrics
     """
-    logger.info(f"Analyzing repository: {repo} for the past {months} months")
+    logger.info(f"Starting analysis for repository: {repo} (last {months} months)")
 
     # Initialize GitHub API client
+    logger.info("Initializing GitHub API client...")
     github_client = GitHubAPIClient(token=github_token, use_cache=use_cache)
 
     # Fetch data from GitHub API
     since_date = months_ago(months)
     since = format_date(since_date)
 
-    logger.info(f"Fetching GitHub data since: {since}")
+    logger.info(f"Fetching GitHub data since: {since} for {repo}...")
     github_data = github_client.get_repository_metrics(repo, months)
+    logger.info(f"GitHub data fetching complete for {repo}.")
 
     # Initialize Git CLI client if local path is provided
     git_data = None
     if local_path:
-        logger.info(f"Analyzing local repository at: {local_path}")
+        logger.info(f"Analyzing local repository at: {local_path} for {repo}...")
         try:
             git_client = GitCLI(repo_path=local_path)
             git_data = git_client.get_repository_metrics(months)
+            logger.info(f"Local git analysis complete for {repo} at {local_path}.")
         except Exception as e:
-            logger.error(f"Failed to analyze local repository: {e}")
+            logger.error(f"Failed to analyze local repository at {local_path} for {repo}: {e}")
     else:
-        # Try to clone the repository temporarily
         try:
-            logger.info(f"Creating temporary clone of repository")
+            logger.info(f"Attempting temporary clone of repository {repo}...")
             repo_url = f"https://github.com/{repo}.git"
             git_client = GitCLI(clone_url=repo_url)
             git_data = git_client.get_repository_metrics(months)
+            logger.info(f"Temporary clone and local git analysis complete for {repo}.")
         except Exception as e:
-            logger.error(f"Failed to clone repository: {e}")
+            logger.error(f"Failed to clone and analyze repository {repo}: {e}")
 
-    # Calculate metrics
-    metrics = calculate_all_metrics(github_data, git_data)
+    logger.info(f"Calculating all metrics for {repo}...")
+    metrics = calculate_all_metrics(github_data, git_data, repo_name_for_logging=repo)
+    logger.info(f"All metrics calculation complete for {repo}.")
 
     # Add repository metadata
+    logger.debug(f"Adding repository metadata for {repo}...")
     metrics["repository"] = {
         "name": repo,
         "analysis_period_months": months,
@@ -93,12 +98,11 @@ def analyze_repository(
     }
 
     # Calculate overall health score
+    logger.debug(f"Calculating overall health score for {repo}...")
     metrics["overall_health_score"] = calculate_overall_health_score(metrics)
 
-    logger.info(f"Using cached metrics for {repo}")
+    logger.info(f"Analysis complete for repository: {repo}")
     return metrics
-
-    logger.info("Cache miss or invalid, fetching fresh data...")
 
 
 def compare_repositories(
@@ -143,7 +147,7 @@ def compare_repositories(
 
 
 def calculate_all_metrics(
-    github_data: Dict[str, Any], git_data: Optional[Dict[str, Any]] = None
+    github_data: Dict[str, Any], git_data: Optional[Dict[str, Any]] = None, repo_name_for_logging: str = "unknown_repo"
 ) -> Dict[str, Any]:
     """
     Calculate all repository metrics.
@@ -151,11 +155,13 @@ def calculate_all_metrics(
     Args:
         github_data: Repository data fetched from GitHub API
         git_data: Repository data fetched from Git CLI (optional)
+        repo_name_for_logging: Name of the repository for logging purposes
 
     Returns:
         Dictionary of all repository metrics
     """
     metrics = {}
+    logger.info(f"[{repo_name_for_logging}] Starting calculation of all metrics.")
 
     # Basic repository info
     if "repo_info" in github_data:
@@ -178,61 +184,69 @@ def calculate_all_metrics(
         }
 
     # Calculate contributor metrics
-    logger.info("Calculating contributor metrics")
+    logger.info(f"[{repo_name_for_logging}] Calculating contributor metrics...")
     try:
         metrics["contributor"] = calculate_contributor_metrics(github_data, git_data)
+        logger.info(f"[{repo_name_for_logging}] Contributor metrics calculated.")
     except Exception as e:
-        logger.error(f"Failed to calculate contributor metrics: {e}")
+        logger.error(f"[{repo_name_for_logging}] Failed to calculate contributor metrics: {e}")
         metrics["contributor"] = {}
 
     # Calculate commit metrics
-    logger.info("Calculating commit metrics")
+    logger.info(f"[{repo_name_for_logging}] Calculating commit metrics...")
     try:
         metrics["commit"] = calculate_commit_metrics(github_data, git_data)
+        logger.info(f"[{repo_name_for_logging}] Commit metrics calculated.")
     except Exception as e:
-        logger.error(f"Failed to calculate commit metrics: {e}")
+        logger.error(f"[{repo_name_for_logging}] Failed to calculate commit metrics: {e}")
         metrics["commit"] = {}
 
     # Calculate pull request metrics
-    logger.info("Calculating pull request metrics")
+    logger.info(f"[{repo_name_for_logging}] Calculating pull request metrics...")
     try:
         metrics["pull_request"] = calculate_pr_metrics(github_data)
+        logger.info(f"[{repo_name_for_logging}] Pull request metrics calculated.")
     except Exception as e:
-        logger.error(f"Failed to calculate pull request metrics: {e}")
+        logger.error(f"[{repo_name_for_logging}] Failed to calculate pull request metrics: {e}")
         metrics["pull_request"] = {}
 
     # Calculate code review metrics
-    logger.info("Calculating code review metrics")
+    logger.info(f"[{repo_name_for_logging}] Calculating code review metrics...")
     try:
         metrics["code_review"] = calculate_code_review_metrics(github_data)
+        logger.info(f"[{repo_name_for_logging}] Code review metrics calculated.")
     except Exception as e:
-        logger.error(f"Failed to calculate code review metrics: {e}")
+        logger.error(f"[{repo_name_for_logging}] Failed to calculate code review metrics: {e}")
         metrics["code_review"] = {}
 
     # Calculate CI/CD metrics
-    logger.info("Calculating CI/CD metrics")
+    logger.info(f"[{repo_name_for_logging}] Calculating CI/CD metrics...")
     try:
         metrics["ci_cd"] = calculate_cicd_metrics(github_data, git_data)
+        logger.info(f"[{repo_name_for_logging}] CI/CD metrics calculated.")
     except Exception as e:
-        logger.error(f"Failed to calculate CI/CD metrics: {e}")
+        logger.error(f"[{repo_name_for_logging}] Failed to calculate CI/CD metrics: {e}")
         metrics["ci_cd"] = {}
 
     # Calculate issue metrics
-    logger.info("Calculating issue metrics")
+    logger.info(f"[{repo_name_for_logging}] Calculating issue metrics...")
     try:
         metrics["issue"] = calculate_issue_metrics(github_data)
+        logger.info(f"[{repo_name_for_logging}] Issue metrics calculated.")
     except Exception as e:
-        logger.error(f"Failed to calculate issue metrics: {e}")
+        logger.error(f"[{repo_name_for_logging}] Failed to calculate issue metrics: {e}")
         metrics["issue"] = {}
 
     # Calculate test metrics
-    logger.info("Calculating test metrics")
+    logger.info(f"[{repo_name_for_logging}] Calculating test metrics...")
     try:
         metrics["test"] = calculate_test_metrics(github_data, git_data)
+        logger.info(f"[{repo_name_for_logging}] Test metrics calculated.")
     except Exception as e:
-        logger.error(f"Failed to calculate test metrics: {e}")
+        logger.error(f"[{repo_name_for_logging}] Failed to calculate test metrics: {e}")
         metrics["test"] = {}
 
+    logger.info(f"[{repo_name_for_logging}] Finished calculation of all metrics.")
     return metrics
 
 

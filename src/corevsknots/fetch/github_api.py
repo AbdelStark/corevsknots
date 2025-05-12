@@ -76,37 +76,36 @@ class GitHubAPIClient:
             requests.HTTPError: If the request fails
         """
         url = f"{self.api_url}{endpoint}"
+        cache_key = f"{url}_{str(params)}"
 
-        # Check if response is in cache
-        if self.use_cache:
-            cache_key = f"{url}_{str(params)}"
+        if self.use_cache and self.cache:
             cached_response = self.cache.get(cache_key)
             if cached_response:
-                logger.debug(f"Using cached response for {url}")
+                logger.debug(f"Using cached response for {url} (Params: {params})")
                 return cached_response
+            else:
+                logger.debug(f"Cache miss for {url} (Params: {params})")
 
-        # Check rate limiting
         if self.rate_limit_remaining is not None and self.rate_limit_remaining <= 1:
-            wait_time = self.rate_limit_reset - time.time()
+            wait_time = (self.rate_limit_reset or time.time()) - time.time()
             if wait_time > 0:
-                logger.warning(f"Rate limit reached. Waiting {wait_time:.1f} seconds...")
-                time.sleep(wait_time + 1)  # Add 1 second buffer
+                logger.warning(f"Rate limit nearly exceeded. Waiting {wait_time:.1f} seconds before request to {url}...")
+                time.sleep(wait_time + 1)
 
-        logger.debug(f"Making request to {url}")
+        logger.info(f"Fetching data from GitHub API: {url} (Params: {params})")
         response = requests.get(url, headers=self.headers, params=params)
 
-        # Update rate limit information
         if "X-RateLimit-Remaining" in response.headers:
             self.rate_limit_remaining = int(response.headers["X-RateLimit-Remaining"])
             self.rate_limit_reset = int(response.headers["X-RateLimit-Reset"])
-            logger.debug(f"Rate limit remaining: {self.rate_limit_remaining}")
+            logger.debug(f"Rate limit: {self.rate_limit_remaining} remaining, resets at {self.rate_limit_reset}")
 
         response.raise_for_status()
         data = response.json()
 
-        # Cache the response
-        if self.use_cache:
+        if self.use_cache and self.cache:
             self.cache.set(cache_key, data)
+            logger.debug(f"Cached response for {url} (Params: {params})")
 
         return data
 
@@ -129,28 +128,50 @@ class GitHubAPIClient:
         if params is None:
             params = {}
 
-        # Set pagination parameters if not already set
         if "per_page" not in params:
             params["per_page"] = 100
 
-        all_items = []
+        all_items: List[Dict[str, Any]] = []
         page = 1
         more_pages = True
+        logger.info(f"Fetching paginated data from endpoint: {endpoint} (Params: {params})")
 
         while more_pages:
             params["page"] = page
-            response = self._make_request(endpoint, params)
+            logger.debug(f"Fetching page {page} for {endpoint}...")
+            try:
+                response_data = self._make_request(endpoint, params)
 
-            # Check if the response is a list (paginated) or a single object
-            if isinstance(response, list):
-                all_items.extend(response)
-                more_pages = len(response) == params["per_page"]
-            else:
-                # If it's a single object, just return it wrapped in a list
-                return [response]
+                if isinstance(response_data, list):
+                    if not response_data:
+                        more_pages = False
+                        logger.debug(f"No more items found for {endpoint} on page {page}.")
+                    else:
+                        all_items.extend(response_data)
+                        logger.debug(f"Fetched {len(response_data)} items on page {page} for {endpoint}. Total so far: {len(all_items)}.")
+                        if len(response_data) < params["per_page"]:
+                            more_pages = False
+                            logger.debug(f"Last page detected for {endpoint} (items < per_page).")
+                else:
+                    logger.warning(f"Unexpected response type (not a list) for paginated request to {endpoint} on page {page}. Response: {response_data}")
+                    if isinstance(response_data, dict) and response_data:
+                        all_items.append(response_data)
+                    more_pages = False
 
-            page += 1
+            except requests.HTTPError as e:
+                logger.error(f"HTTP error fetching page {page} for {endpoint}: {e}")
+                more_pages = False
+            except Exception as e:
+                logger.error(f"Generic error fetching page {page} for {endpoint}: {e}")
+                more_pages = False
 
+            if more_pages:
+                page += 1
+            if page > 30:
+                logger.warning(f"Reached page limit (30) for {endpoint}. Stopping pagination.")
+                more_pages = False
+
+        logger.info(f"Finished fetching paginated data for {endpoint}. Total items: {len(all_items)}.")
         return all_items
 
     def get_repository(self, repo: str) -> Dict[str, Any]:
