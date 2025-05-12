@@ -6,20 +6,27 @@ review thoroughness, and review culture.
 """
 
 from collections import Counter
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
 from ..utils.time_utils import parse_date
 
+# from ..fetch.github_api import GitHubAPIClient # Import if type hinting client
+
 logger = get_logger(__name__)
 
 
-def calculate_code_review_metrics(github_data: Dict[str, Any]) -> Dict[str, Any]:
+def calculate_code_review_metrics(github_data: Dict[str, Any],
+                                  repo_name: Optional[str] = None,
+                                  github_client: Optional[Any] = None # Actual type GitHubAPIClient but avoid circular for now
+                                 ) -> Dict[str, Any]:
     """
     Calculate code review related metrics from GitHub API data.
 
     Args:
         github_data: Repository data fetched from GitHub API
+        repo_name: Name of the repository
+        github_client: GitHub API client
 
     Returns:
         Dictionary of code review metrics
@@ -48,8 +55,8 @@ def calculate_code_review_metrics(github_data: Dict[str, Any]) -> Dict[str, Any]
     # Review responsiveness
     metrics.update(calculate_review_responsiveness_metrics(pull_requests, pr_reviews))
 
-    # Self-merge patterns
-    metrics.update(calculate_self_merge_metrics(pull_requests))
+    # Self-merge patterns - pass client and repo_name
+    metrics.update(calculate_self_merge_metrics(pull_requests, repo_name, github_client))
 
     return metrics
 
@@ -281,34 +288,57 @@ def calculate_review_responsiveness_metrics(
     }
 
 
-def calculate_self_merge_metrics(pull_requests: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """
-    Calculate metrics related to self-merge practices.
+def calculate_self_merge_metrics(pull_requests: List[Dict[str, Any]],
+                                 repo_name: Optional[str] = None,
+                                 github_client: Optional[Any] = None
+                                ) -> Dict[str, Any]:
+    """Calculate metrics related to self-merge practices."""
+    if not pull_requests or not repo_name or not github_client:
+        logger.warning(f"[{repo_name or 'unknown'}] Missing data for accurate self-merge calculation (PRs, repo_name, or github_client).")
+        return {"self_merged_count": 0, "self_merged_ratio": 0, "self_merged_prs_analyzed": 0}
 
-    Args:
-        pull_requests: List of pull requests
+    self_merged_count = 0
+    merged_prs_count = 0
+    prs_analyzed_for_self_merge = 0
 
-    Returns:
-        Dictionary of self-merge metrics
-    """
-    if not pull_requests:
-        return {"self_merged_count": 0, "self_merged_ratio": 0}
-
-    # Count self-merged PRs
-    self_merged = 0
-    merged_prs = 0
-
+    # Limit analysis to a sample to avoid too many API calls, e.g., last 100 merged PRs
+    # Or only those PRs for which we already fetched reviews/comments.
+    # For now, let's check all PRs in the fetched list (can be up to MAX_PAGES * per_page).
     for pr in pull_requests:
-        if pr.get("merged"):
-            merged_prs += 1
+        if not pr.get("merged"):
+            continue
 
-            author = pr.get("user", {}).get("login")
-            merger = pr.get("merged_by", {}).get("login")
+        merged_prs_count += 1
+        prs_analyzed_for_self_merge += 1
+        author_login = pr.get("user", {}).get("login")
+        merged_by_login = pr.get("merged_by", {}).get("login")
 
-            if author and merger and author == merger:
-                self_merged += 1
+        if author_login and merged_by_login and author_login == merged_by_login:
+            self_merged_count += 1
+            logger.debug(f"[{repo_name}] PR #{pr.get('number')} self-merged by {author_login} (via merged_by field).")
+        elif author_login and not merged_by_login and pr.get("merge_commit_sha"):
+            # merged_by is null, try to get committer of merge_commit_sha
+            merge_sha = pr.get("merge_commit_sha")
+            logger.debug(f"[{repo_name}] PR #{pr.get('number')} merged_by is null. Fetching merge commit {merge_sha} to check committer.")
+            commit_details = github_client.get_commit_details(repo_name, merge_sha)
+            if commit_details and commit_details.get("author") and commit_details.get("author", {}).get("login") == author_login:
+                # If committer login of merge commit matches PR author login
+                # Note: GitHub API commit details 'author' is the GH user who authored the commit data,
+                # 'committer' is the GH user who committed it. For merges, these can be different.
+                # A true self-merge is if the PR author *is also the one who effectively pushed the merge commit*.
+                # This can be complex if force-pushes or different git UIs are used.
+                # A simpler check: if PR author is the commit.author.login of the merge commit.
+                self_merged_count += 1
+                logger.debug(f"[{repo_name}] PR #{pr.get('number')} determined self-merged by {author_login} (via merge commit author).")
+            elif commit_details and commit_details.get("committer") and commit_details.get("committer", {}).get("login") == author_login:
+                self_merged_count += 1 # If PR author is the committer of the merge commit
+                logger.debug(f"[{repo_name}] PR #{pr.get('number')} determined self-merged by {author_login} (via merge commit committer).")
 
-    # Calculate metrics
-    self_merged_ratio = self_merged / merged_prs if merged_prs > 0 else 0
+    self_merged_ratio = self_merged_count / merged_prs_count if merged_prs_count > 0 else 0
 
-    return {"self_merged_count": self_merged, "self_merged_ratio": round(self_merged_ratio, 3)}
+    logger.info(f"[{repo_name or 'unknown'}] Self-merge analysis: {self_merged_count} self-merged out of {merged_prs_count} merged PRs analyzed (Ratio: {self_merged_ratio:.2%}).")
+    return {
+        "self_merged_count": self_merged_count,
+        "self_merged_ratio": round(self_merged_ratio, 3),
+        "self_merged_prs_analyzed": prs_analyzed_for_self_merge
+    }

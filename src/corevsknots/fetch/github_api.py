@@ -455,6 +455,24 @@ class GitHubAPIClient:
 
         return stats
 
+    def get_commit_details(self, repo: str, commit_sha: str) -> Optional[Dict[str, Any]]:
+        """
+        Get detailed information for a specific commit.
+        Args:
+            repo: Repository name (e.g., 'bitcoin/bitcoin')
+            commit_sha: Commit SHA
+        Returns:
+            Commit details or None if not found.
+        """
+        endpoint = f"/repos/{repo}/commits/{commit_sha}"
+        try:
+            return self._make_request(endpoint)
+        except requests.HTTPError as e:
+            # Not all SHAs might be fetchable this way (e.g. if it's a tag object first)
+            # Or if it's a very old commit no longer easily accessible.
+            logger.warning(f"Failed to get commit details for {repo} SHA {commit_sha}: {e}. Status: {e.response.status_code}")
+            return None
+
     def get_repository_metrics(self, repo: str, months: int = 12) -> Dict[str, Any]:
         """
         Get comprehensive repository metrics.

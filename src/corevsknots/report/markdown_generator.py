@@ -12,6 +12,10 @@ from typing import Any, Dict, List
 from ..utils.logger import get_logger
 from .chart_generator import generate_charts, generate_comparison_charts
 
+# Define for fork-aware logic in reporting
+KNOTS_REPO_IDENTIFIER = "bitcoinknots/bitcoin"
+CORE_REPO_IDENTIFIER = "bitcoin/bitcoin"
+
 logger = get_logger(__name__)
 
 
@@ -1044,20 +1048,39 @@ def generate_comparison_report_content(metrics: Dict[str, Any], charts: Dict[str
         f"| Overall Health Score | {health_score1:.1f}/10 | {health_score2:.1f}/10 | {health_difference:+.1f} |\n"
     )
 
-    # Contributor metrics
-    sections.append(
-        f"| Total Contributors | {total_contributors1} | {total_contributors2} | {contributor_difference:+d} |\n"
-    )
-    sections.append(
-        f"| Bus Factor | {bus_factor1} | {bus_factor2} | {bus_factor_difference:+d} |\n"
-    )
+    # Contributor metrics - adjusted for fight mode
+    is_fight = metrics.get("analysis_metadata", {}).get("is_fight_mode")
+    c1_metrics = metrics["repo1"]["metrics"].get("contributor", {})
+    c2_metrics = metrics["repo2"]["metrics"].get("contributor", {})
 
-    # Commit metrics
+    total_contrib1 = c1_metrics.get("total_contributors", 0)
+    bus_factor1_val = c1_metrics.get("bus_factor", 0) # General bus factor for Core
+
+    if is_fight and repo2_name == KNOTS_REPO_IDENTIFIER: # KNOTS_REPO_IDENTIFIER needs to be available here
+        total_contrib2 = c2_metrics.get("knots_contributors_with_original_work", 0)
+        bus_factor2_val = c2_metrics.get("knots_original_bus_factor", 0)
+        sections.append(f"| Total Contributors (Original for Knots) | {total_contrib1} | {total_contrib2} | {total_contrib1 - total_contrib2:+d} |\n")
+        sections.append(f"| Bus Factor (Original for Knots) | {bus_factor1_val} | {bus_factor2_val} | {bus_factor1_val - bus_factor2_val:+d} |\n")
+    else:
+        total_contrib2 = c2_metrics.get("total_contributors", 0)
+        bus_factor2_val = c2_metrics.get("bus_factor", 0)
+        sections.append(f"| Total Contributors | {total_contrib1} | {total_contrib2} | {total_contrib1 - total_contrib2:+d} |\n")
+        sections.append(f"| Bus Factor | {bus_factor1_val} | {bus_factor2_val} | {bus_factor1_val - bus_factor2_val:+d} |\n")
+
+    # Commit metrics - commits_per_day for Knots should already be original due to earlier processing
+    commit_metrics1 = metrics["repo1"]["metrics"].get("commit", {})
+    commit_metrics2 = metrics["repo2"]["metrics"].get("commit", {})
+    cpd1 = commit_metrics1.get("commits_per_day", 0)
+    # In fight mode, commits_per_day for Knots is based on its original commits due to filtering in calculate_commit_metrics
+    cpd2 = commit_metrics2.get("commits_per_day", 0)
+    commit_msg_q1 = commit_metrics1.get("commit_message_quality", {}).get("quality_score", 0)
+    commit_msg_q2 = commit_metrics2.get("commit_message_quality", {}).get("quality_score", 0)
+
     sections.append(
-        f"| Commits per Day | {commits_per_day1:.1f} | {commits_per_day2:.1f} | {commits_difference:+.1f} |\n"
+        f"| Commits per Day (Original for Knots if fight) | {cpd1:.1f} | {cpd2:.1f} | {cpd1 - cpd2:+.1f} |\n"
     )
     sections.append(
-        f"| Commit Message Quality | {message_quality1:.1f}/10 | {message_quality2:.1f}/10 | {quality_difference:+.1f} |\n"
+        f"| Commit Message Quality | {commit_msg_q1:.1f}/10 | {commit_msg_q2:.1f}/10 | {commit_msg_q1 - commit_msg_q2:+.1f} |\n"
     )
 
     # PR metrics

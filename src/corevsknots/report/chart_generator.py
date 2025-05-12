@@ -5,7 +5,7 @@ This module generates charts and visualizations for repository metrics.
 """
 
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import matplotlib
 
@@ -17,6 +17,7 @@ from ..utils.logger import get_logger
 
 logger = get_logger(__name__)
 
+KNOTS_REPO_IDENTIFIER = "bitcoinknots/bitcoin" # Define if not already there
 
 def generate_charts(metrics: Dict[str, Any], output_dir: str) -> Dict[str, str]:
     """
@@ -37,7 +38,7 @@ def generate_charts(metrics: Dict[str, Any], output_dir: str) -> Dict[str, str]:
 
     # Generate contributor charts
     if "contributor" in metrics:
-        contributor_charts = generate_contributor_charts(metrics["contributor"], charts_dir)
+        contributor_charts = generate_contributor_charts(metrics["contributor"], charts_dir, metrics.get("repository",{}).get("name"))
         charts.update(contributor_charts)
 
     # Generate commit charts
@@ -163,32 +164,43 @@ def generate_comparison_charts(comparison: Dict[str, Any], output_dir: str) -> D
     return charts
 
 
-def generate_contributor_charts(metrics: Dict[str, Any], output_dir: str) -> Dict[str, str]:
+def generate_contributor_charts(metrics: Dict[str, Any], output_dir: str, repo_name: Optional[str] = None) -> Dict[str, str]:
     """
     Generate charts for contributor metrics.
 
     Args:
         metrics: Contributor metrics
         output_dir: Output directory for charts
+        repo_name: Name of the repository
 
     Returns:
         Dictionary mapping chart names to file paths
     """
     charts = {}
+    is_knots_repo = repo_name == KNOTS_REPO_IDENTIFIER
 
     # Top contributors chart
-    if "contributors_by_commits" in metrics and metrics["contributors_by_commits"]:
+    top_contributors_data = None
+    chart_title_suffix = "by Contributions (GH API)"
+    if is_knots_repo and "knots_top_original_contributors" in metrics and metrics["knots_top_original_contributors"]:
+        top_contributors_data = metrics["knots_top_original_contributors"]
+        chart_title_suffix = "by Original Knots Commits"
+        logger.info(f"[{repo_name}] Generating top contributors chart based on original Knots commits.")
+    elif "top_contributors" in metrics and metrics["top_contributors"]:
+        top_contributors_data = metrics["top_contributors"]
+
+    if top_contributors_data:
         try:
             fig, ax = plt.subplots(figsize=(10, 6))
 
-            top_contributors = metrics["contributors_by_commits"][:10]
+            top_contributors = top_contributors_data[:10]
             names = [contributor[0] for contributor in top_contributors]
             commits = [contributor[1] for contributor in top_contributors]
 
             ax.barh(names, commits, color="skyblue")
             ax.set_xlabel("Number of Commits")
             ax.set_ylabel("Contributor")
-            ax.set_title("Top 10 Contributors by Commits")
+            ax.set_title(f"Top 10 Contributors {chart_title_suffix}")
 
             # Add count labels
             for i, v in enumerate(commits):
@@ -197,25 +209,30 @@ def generate_contributor_charts(metrics: Dict[str, Any], output_dir: str) -> Dic
             plt.tight_layout()
 
             # Save chart
-            chart_path = os.path.join(output_dir, "top_contributors.png")
+            chart_path = os.path.join(output_dir, f"top_contributors_{repo_name}.png")
             fig.savefig(chart_path)
             plt.close(fig)
 
             charts["top_contributors"] = chart_path
         except Exception as e:
-            logger.error(f"Failed to generate top contributors chart: {e}")
+            logger.error(f"[{repo_name or 'Unknown'}] Failed to generate top contributors chart: {e}")
 
     # Bus factor chart
-    if "bus_factor" in metrics:
+    bus_factor_val = None
+    bus_factor_title_suffix = "(GH API Contributions)"
+    if is_knots_repo and "knots_original_bus_factor" in metrics:
+        bus_factor_val = metrics["knots_original_bus_factor"]
+        bus_factor_title_suffix = "(Original Knots Work)"
+        logger.info(f"[{repo_name}] Generating bus factor chart based on original Knots bus factor.")
+    elif "bus_factor" in metrics:
+        bus_factor_val = metrics["bus_factor"]
+
+    if bus_factor_val is not None and "total_contributors" in metrics: # total_contributors still needed for context
         try:
             fig, ax = plt.subplots(figsize=(8, 6))
 
-            bus_factor = metrics["bus_factor"]
-            total_contributors = metrics["total_contributors"]
-
-            # Create gauge chart
             bus_factor_ratio = (
-                min(1.0, bus_factor / total_contributors) if total_contributors > 0 else 0
+                min(1.0, bus_factor_val / metrics["total_contributors"]) if metrics["total_contributors"] > 0 else 0
             )
 
             # Create a colormap
@@ -233,27 +250,27 @@ def generate_contributor_charts(metrics: Dict[str, Any], output_dir: str) -> Dic
             )
 
             plt.annotate(
-                f"Bus Factor: {bus_factor}", xy=(0, 0), ha="center", va="center", fontsize=16
+                f"Bus Factor: {bus_factor_val}", xy=(0, 0), ha="center", va="center", fontsize=16
             )
 
             plt.annotate(
-                f"Out of {total_contributors} contributors",
+                f"Out of {metrics['total_contributors']} contributors",
                 xy=(0, -0.2),
                 ha="center",
                 va="center",
                 fontsize=12,
             )
 
-            plt.title("Bus Factor", fontsize=14)
+            plt.title(f"Bus Factor {bus_factor_title_suffix}", fontsize=14)
 
             # Save chart
-            chart_path = os.path.join(output_dir, "bus_factor.png")
+            chart_path = os.path.join(output_dir, f"bus_factor_{repo_name}.png")
             fig.savefig(chart_path)
             plt.close(fig)
 
             charts["bus_factor"] = chart_path
         except Exception as e:
-            logger.error(f"Failed to generate bus factor chart: {e}")
+            logger.error(f"[{repo_name or 'Unknown'}] Failed to generate bus factor chart: {e}")
 
     return charts
 
@@ -890,11 +907,10 @@ def generate_contributor_comparison_chart(
     # Bus factor comparison
     try:
         fig, ax = plt.subplots(figsize=(10, 6))
-
         bus_factor1 = metrics1.get("bus_factor", 0)
-        bus_factor2 = metrics2.get("bus_factor", 0)
+        bus_factor2 = metrics2.get("knots_original_bus_factor", metrics2.get("bus_factor", 0))
 
-        repos = [repo1_name, repo2_name]
+        repos = [f"{repo1_name}\n(General)", f"{repo2_name}\n(Original Work)"]
         bus_factors = [bus_factor1, bus_factor2]
 
         colors = ["#3F51B5", "#E91E63"]
@@ -921,12 +937,11 @@ def generate_contributor_comparison_chart(
     # Contributor count comparison
     try:
         fig, ax = plt.subplots(figsize=(10, 6))
-
         total_contributors1 = metrics1.get("total_contributors", 0)
-        total_contributors2 = metrics2.get("total_contributors", 0)
-
         active_contributors1 = metrics1.get("active_contributors", 0)
-        active_contributors2 = metrics2.get("active_contributors", 0)
+
+        total_contributors2 = metrics2.get("knots_contributors_with_original_work", metrics2.get("total_contributors", 0))
+        active_contributors2 = metrics2.get("knots_contributors_with_original_work", metrics2.get("active_contributors", 0))
 
         repos = [repo1_name, repo2_name]
         total = [total_contributors1, total_contributors2]
@@ -935,8 +950,8 @@ def generate_contributor_comparison_chart(
         x = np.arange(len(repos))
         width = 0.35
 
-        ax.bar(x - width / 2, total, width, label="Total Contributors", color="#3F51B5")
-        ax.bar(x + width / 2, active, width, label="Active Contributors", color="#03A9F4")
+        ax.bar(x - width / 2, total, width, label=f"Total Contrib. (Knots: Original)", color="#3F51B5")
+        ax.bar(x + width / 2, active, width, label=f"Active Contrib. (Knots: Original)", color="#03A9F4")
 
         ax.set_ylabel("Number of Contributors")
         ax.set_title("Contributor Count Comparison")
