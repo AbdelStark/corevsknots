@@ -5,10 +5,7 @@ This module calculates metrics related to test coverage, test quality,
 and testing practices.
 """
 
-import os
-import re
-from collections import Counter
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
 

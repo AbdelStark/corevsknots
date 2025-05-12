@@ -4,9 +4,7 @@ Time utilities for the Bitcoin Repository Health Analysis Tool.
 This module provides functions for working with dates and times.
 """
 
-import logging
 from datetime import datetime, timedelta
-from typing import Optional, Union
 
 # Define ISO 8601 format
 ISO_FORMAT = "%Y-%m-%dT%H:%M:%SZ"

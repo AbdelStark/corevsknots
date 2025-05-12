@@ -4,19 +4,14 @@ Chart generator for repository metrics.
 This module generates charts and visualizations for repository metrics.
 """
 
-import base64
-import json
-import logging
 import os
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict
 
 import matplotlib
 
 matplotlib.use("Agg")  # Use non-interactive backend
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import numpy as np
-from matplotlib.figure import Figure
 
 from ..utils.logger import get_logger
 
@@ -225,10 +220,11 @@ def generate_contributor_charts(metrics: Dict[str, Any], output_dir: str) -> Dic
 
             # Create a colormap
             cmap = plt.cm.RdYlGn
-            colors = cmap(np.linspace(0, 1, 100))
+            # colors = cmap(np.linspace(0, 1, 100)) # F841: Unused
 
             # Create gauge chart
-            gauge = plt.pie(
+            # gauge = plt.pie( # F841: Unused
+            plt.pie(
                 [bus_factor_ratio, 1 - bus_factor_ratio],
                 colors=[cmap(int(bus_factor_ratio * 100)), "whitesmoke"],
                 startangle=90,
@@ -338,7 +334,8 @@ def generate_commit_charts(metrics: Dict[str, Any], output_dir: str) -> Dict[str
             quality_score = quality_metrics.get("quality_score", 0)
 
             # Create gauge chart
-            gauge = plt.pie(
+            # gauge = plt.pie( # F841: Unused
+            plt.pie(
                 [quality_score / 10, 1 - quality_score / 10],
                 colors=[
                     (
@@ -443,7 +440,8 @@ def generate_pr_charts(metrics: Dict[str, Any], output_dir: str) -> Dict[str, st
             velocity_score = metrics.get("pr_velocity_score", 0)
 
             # Create gauge chart for PR velocity
-            gauge = plt.pie(
+            # gauge = plt.pie( # F841: Unused
+            plt.pie(
                 [velocity_score / 10, 1 - velocity_score / 10],
                 colors=[
                     (
@@ -505,7 +503,8 @@ def generate_review_charts(metrics: Dict[str, Any], output_dir: str) -> Dict[str
             thoroughness_score = metrics["review_thoroughness_score"]
 
             # Create gauge chart
-            gauge = plt.pie(
+            # gauge = plt.pie( # F841: Unused
+            plt.pie(
                 [thoroughness_score / 10, 1 - thoroughness_score / 10],
                 colors=[
                     (
@@ -553,7 +552,8 @@ def generate_review_charts(metrics: Dict[str, Any], output_dir: str) -> Dict[str
                 "whitesmoke",
             ]
 
-            gauge = plt.pie(
+            # gauge = plt.pie( # F841: Unused
+            plt.pie(
                 [independent_review_ratio, self_merged_ratio],
                 colors=colors,
                 startangle=90,
@@ -608,7 +608,8 @@ def generate_cicd_charts(metrics: Dict[str, Any], output_dir: str) -> Dict[str, 
             success_rate = metrics["workflow_success_rate"]
 
             # Create gauge chart
-            gauge = plt.pie(
+            # gauge = plt.pie( # F841: Unused
+            plt.pie(
                 [success_rate, 1 - success_rate],
                 colors=[
                     (
@@ -711,7 +712,8 @@ def generate_issue_charts(metrics: Dict[str, Any], output_dir: str) -> Dict[str,
             responsiveness_score = metrics["responsiveness_score"]
 
             # Create gauge chart
-            gauge = plt.pie(
+            # gauge = plt.pie( # F841: Unused
+            plt.pie(
                 [responsiveness_score / 10, 1 - responsiveness_score / 10],
                 colors=[
                     (
@@ -765,7 +767,8 @@ def generate_health_chart(metrics: Dict[str, Any], output_dir: str) -> Dict[str,
             health_score = metrics["overall_health_score"]
 
             # Create gauge chart
-            gauge = plt.pie(
+            # gauge = plt.pie( # F841: Unused
+            plt.pie(
                 [health_score / 10, 1 - health_score / 10],
                 colors=[
                     (

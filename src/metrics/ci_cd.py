@@ -5,10 +5,8 @@ This module calculates metrics related to Continuous Integration and
 Continuous Deployment workflows and practices.
 """
 
-import os
 import re
-from collections import Counter
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
 

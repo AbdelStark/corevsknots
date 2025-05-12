@@ -5,11 +5,10 @@ This module coordinates the analysis of repositories, fetching data
 and calculating metrics.
 """
 
-import logging
-import os
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Optional
 
+# from .fetch import fetch_data, fetch_comparison_data # Removed F401
 from .fetch.git_cli import GitCLI
 from .fetch.github_api import GitHubAPIClient
 from .metrics.ci_cd import calculate_cicd_metrics
@@ -19,8 +18,10 @@ from .metrics.contributor import calculate_contributor_metrics
 from .metrics.issues import calculate_issue_metrics
 from .metrics.pull_requests import calculate_pr_metrics
 from .metrics.tests import calculate_test_metrics
+
+# from .report import generate_report # Removed F401
 from .utils.logger import get_logger
-from .utils.time_utils import format_date, months_ago, parse_date
+from .utils.time_utils import format_date, months_ago
 
 logger = get_logger(__name__)
 
@@ -94,7 +95,10 @@ def analyze_repository(
     # Calculate overall health score
     metrics["overall_health_score"] = calculate_overall_health_score(metrics)
 
+    logger.info(f"Using cached metrics for {repo}")
     return metrics
+
+    logger.info("Cache miss or invalid, fetching fresh data...")
 
 
 def compare_repositories(

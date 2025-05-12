@@ -5,9 +5,8 @@ This module calculates metrics related to the code review process,
 review thoroughness, and review culture.
 """
 
-from collections import Counter, defaultdict
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Set, Tuple
+from collections import Counter
+from typing import Any, Dict, List
 
 from ..utils.logger import get_logger
 from ..utils.time_utils import parse_date

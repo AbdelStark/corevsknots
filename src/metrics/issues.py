@@ -7,7 +7,7 @@ and project management practices.
 
 from collections import Counter
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List
 
 from ..utils.logger import get_logger
 from ..utils.time_utils import parse_date

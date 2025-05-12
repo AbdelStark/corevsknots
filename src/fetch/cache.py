@@ -7,7 +7,6 @@ the number of API calls and improve performance.
 
 import hashlib
 import json
-import logging
 import os
 import time
 from typing import Any, Dict, Optional

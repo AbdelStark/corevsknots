@@ -5,16 +5,14 @@ This module provides a wrapper for Git command-line operations to analyze
 local repository metrics that may not be available through the GitHub API.
 """
 
-import logging
 import os
 import re
 import subprocess
 import tempfile
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
-from ..utils.time_utils import format_date, months_ago, parse_date
+from ..utils.time_utils import format_date, months_ago
 
 logger = get_logger(__name__)
 

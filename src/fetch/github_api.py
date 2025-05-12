@@ -5,11 +5,9 @@ This module provides a client for interacting with the GitHub API to fetch
 data about repositories, commits, pull requests, issues, and other metrics.
 """
 
-import logging
 import os
 import time
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional
 
 import requests
 

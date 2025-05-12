@@ -4,11 +4,10 @@ Markdown report generator.
 This module generates markdown reports from repository metrics.
 """
 
-import logging
 import os
 import re
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 
 from ..utils.logger import get_logger
 from .chart_generator import generate_charts, generate_comparison_charts
@@ -1000,10 +999,8 @@ def generate_comparison_report_content(metrics: Dict[str, Any], charts: Dict[str
     # Summary table of key metrics
     sections.append("\n## Summary of Key Metrics\n")
 
-    sections.append("| Metric | " + repo1_name + " | " + repo2_name + " | Difference |\n")
-    sections.append(
-        "|--------|" + "-" * len(repo1_name) + "|" + "-" * len(repo2_name) + "|----------|\n"
-    )
+    sections.append(f"| Metric | {repo1_name} | {repo2_name} | Difference |\n")
+    sections.append(f"|--------|{'-' * len(repo1_name)}|{'-' * len(repo2_name)}|----------|\n")
 
     # Overall health
     sections.append(

@@ -5,9 +5,8 @@ This module calculates metrics related to repository pull request patterns,
 review process, and lifecycle.
 """
 
-from collections import Counter, defaultdict
-from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple
+from collections import Counter
+from typing import Any, Dict, List
 
 from ..utils.logger import get_logger
 from ..utils.time_utils import parse_date

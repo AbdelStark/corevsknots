@@ -5,9 +5,7 @@ This module calculates metrics related to repository contributor diversity,
 activity, and distribution.
 """
 
-import logging
 from collections import Counter
-from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from ..utils.logger import get_logger
