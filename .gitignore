@@ -59,3 +59,5 @@ charts/
 *.log
 
 .cursor
+
+**/.DS_Store

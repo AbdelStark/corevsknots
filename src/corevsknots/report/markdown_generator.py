@@ -277,12 +277,22 @@ def generate_single_report_content(metrics: Dict[str, Any], charts: Dict[str, st
         )
 
         if repo_name == KNOTS_REPO_IDENTIFIER and "knots_original_commit_authors_count" in contributor_metrics:
-            sections.append("\n### Bitcoin Knots Specific Contributor Analysis\n")
-            sections.append(f"- Authors with original Knots commits: {contributor_metrics['knots_contributors_with_original_work']}\n")
-            sections.append(f"- Authors primarily merging Core changes: {contributor_metrics['knots_contributors_only_merging_core']}\n")
-            # Add more details or charts if desired based on these new metrics
+            sections.append("\n### Bitcoin Knots Specific Contributor Analysis (based on recent commit activity)\n")
+            sections.append(f"- Authors with original Knots commits: {contributor_metrics.get('knots_contributors_with_original_work', 'N/A')}\n")
+            sections.append(f"- Authors primarily merging Core changes (and no original work): {contributor_metrics.get('knots_contributors_only_merging_core', 'N/A')}\n")
+            sections.append(f"- Total authors involved in Core merges: {contributor_metrics.get('core_merge_commit_authors_count', 'N/A')}\n")
+            if "knots_top_original_contributors" in contributor_metrics:
+                sections.append("- Top Original Knots Contributors (by original commits):\n")
+                for author, count in contributor_metrics["knots_top_original_contributors"]:
+                    sections.append(f"  - {author}: {count} original commits\n")
+            if "knots_original_bus_factor" in contributor_metrics:
+                sections.append(f"- **Bus Factor (Knots Original Work)**: {contributor_metrics['knots_original_bus_factor']}\n")
+            if "knots_original_contributor_gini" in contributor_metrics:
+                sections.append(f"- **Gini Coefficient (Knots Original Work)**: {contributor_metrics['knots_original_contributor_gini']:.3f}\n")
 
-        # Bus factor assessment
+        # Original Bus factor assessment (based on GitHub API total contributions)
+        sections.append("\n### General Contributor Stats (from GitHub API /contributions)\n")
+        sections.append(f"The repository has a **general bus factor of {bus_factor}** (based on overall contributions data from GitHub API).\n")
         if bus_factor >= 5:
             sections.append(
                 "🟢 **Good**: The repository has a healthy bus factor, reducing the risk of project disruption if key contributors leave.\n"
@@ -817,11 +827,25 @@ def generate_comparison_report_content(metrics: Dict[str, Any], charts: Dict[str
         sections.append("Both repositories have the same bus factor.\n")
 
     if metrics.get("analysis_metadata", {}).get("is_fight_mode"):
-        knots_metrics = metrics["repo2"]["metrics"].get("contributor", {})
-        if "knots_original_commit_authors_count" in knots_metrics:
-            sections.append("\n### Bitcoin Knots Specifics in Comparison\n")
-            sections.append(f"- **{repo2_name} (Knots)** had {knots_metrics['knots_contributors_with_original_work']} authors with original work (excluding only Core merges).\n")
-            # Potentially compare this to Core's active contributors or show as a percentage
+        core_contrib_metrics = metrics["repo1"]["metrics"].get("contributor", {})
+        knots_contrib_metrics = metrics["repo2"]["metrics"].get("contributor", {})
+
+        sections.append("\n### Core vs. Knots Fork-Specific Contributor Insights (based on recent commit activity)\n")
+
+        core_active = core_contrib_metrics.get("active_contributors", "N/A")
+        knots_original_active = knots_contrib_metrics.get("knots_contributors_with_original_work", "N/A")
+        knots_only_merging = knots_contrib_metrics.get("knots_contributors_only_merging_core", "N/A")
+        knots_total_involved_in_merges = knots_contrib_metrics.get("core_merge_commit_authors_count", "N/A")
+
+        sections.append(f"- **{repo1_name} (Core)**: {core_active} active contributors (based on recent commits).\n")
+        sections.append(f"- **{repo2_name} (Knots)**: {knots_original_active} contributors with original work to Knots.\n")
+        sections.append(f"  - Additionally, {knots_only_merging} contributors to Knots appeared to *only* merge changes from Core (no other original Knots commits detected in recent activity).\n")
+        sections.append(f"  - Total authors involved in Core merges on Knots: {knots_total_involved_in_merges}.\n")
+
+        if "knots_original_bus_factor" in knots_contrib_metrics:
+            sections.append(f"- **Bus Factor (Knots Original Work)**: {knots_contrib_metrics['knots_original_bus_factor']} (Core general bus factor: {core_contrib_metrics.get('bus_factor', 'N/A')})\n")
+        if "knots_original_contributor_gini" in knots_contrib_metrics:
+            sections.append(f"- **Gini Coefficient (Knots Original Work)**: {knots_contrib_metrics['knots_original_contributor_gini']:.3f} (Core general Gini: {core_contrib_metrics.get('contributor_gini', 0.0):.3f})\n")
 
     # Contributor comparison charts
     if "contributor_count_comparison" in charts:
