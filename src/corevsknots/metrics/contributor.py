@@ -5,6 +5,7 @@ This module calculates metrics related to repository contributor diversity,
 activity, and distribution.
 """
 
+import re
 from collections import Counter
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -12,9 +13,30 @@ from ..utils.logger import get_logger
 
 logger = get_logger(__name__)
 
+CORE_REPO_IDENTIFIER = "bitcoin/bitcoin" # Define for checking
+KNOTS_REPO_IDENTIFIER = "bitcoinknots/bitcoin"
+
+def is_core_merge_commit(commit_message: str) -> bool:
+    """Check if a commit message suggests a merge from Bitcoin Core."""
+    core_merge_patterns = [
+        "Merge bitcoin/bitcoin#",
+        "Merge remote-tracking branch 'upstream/master'", # Common for forks
+        "Merge remote-tracking branch 'upstream/main'",
+        "Merge pull request #\\d+ from bitcoin/bitcoin",
+        "Sync with bitcoin/bitcoin",
+        # Add more patterns if observed
+    ]
+    for pattern in core_merge_patterns:
+        if pattern.lower() in commit_message.lower():
+            return True
+    # Heuristic: if message is exactly "Merge branch 'X' of https://github.com/bitcoin/bitcoin into Y"
+    if re.match(r"Merge branch '.*' of https://github.com/bitcoin/bitcoin into ", commit_message, re.IGNORECASE):
+        return True
+    return False
 
 def calculate_contributor_metrics(
-    github_data: Dict[str, Any], git_data: Optional[Dict[str, Any]] = None
+    github_data: Dict[str, Any], git_data: Optional[Dict[str, Any]] = None,
+    repo_name: Optional[str] = None # Added to provide context
 ) -> Dict[str, Any]:
     """
     Calculate contributor-related metrics from GitHub API data and Git CLI data.
@@ -22,11 +44,15 @@ def calculate_contributor_metrics(
     Args:
         github_data: Repository data fetched from GitHub API
         git_data: Repository data fetched from Git CLI (optional)
+        repo_name: Name of the repository (optional)
 
     Returns:
         Dictionary of contributor metrics
     """
     metrics = {}
+    is_knots_repo = repo_name == KNOTS_REPO_IDENTIFIER
+    if is_knots_repo:
+        logger.info(f"[{repo_name}] Applying Knots-specific contributor logic.")
 
     # Extract contributors from GitHub data
     github_contributors = github_data.get("contributors", [])
@@ -36,7 +62,7 @@ def calculate_contributor_metrics(
 
     # If no contributors, return empty metrics
     if metrics["total_contributors"] == 0:
-        logger.warning("No contributors found in GitHub data")
+        logger.warning(f"[{repo_name or 'unknown'}] No contributors found in GitHub data")
         return metrics
 
     # Contributor distribution (by number of commits)
@@ -65,20 +91,53 @@ def calculate_contributor_metrics(
 
     # Recent activity (from commits)
     commits = github_data.get("commits", [])
+    knots_original_commit_authors = set()
+    core_merge_commit_authors = set()
+
     if commits:
         # Extract unique contributors from recent commits
         commit_authors = set()
         for commit in commits:
+            author_login = None
             if commit.get("author") and commit["author"].get("login"):
-                commit_authors.add(commit["author"]["login"])
+                author_login = commit["author"]["login"]
             elif commit.get("commit", {}).get("author", {}).get("name"):
-                commit_authors.add(commit["commit"]["author"]["name"])
+                author_login = commit["commit"]["author"]["name"]
+
+            if author_login:
+                commit_authors.add(author_login)
+                if is_knots_repo and "commit" in commit and "message" in commit["commit"]:
+                    if is_core_merge_commit(commit["commit"]["message"]):
+                        core_merge_commit_authors.add(author_login)
+                    else:
+                        knots_original_commit_authors.add(author_login)
 
         metrics["active_contributors"] = len(commit_authors)
-        metrics["active_ratio"] = metrics["active_contributors"] / metrics["total_contributors"]
+        metrics["active_ratio"] = metrics["active_contributors"] / metrics["total_contributors"] if metrics["total_contributors"] > 0 else 0
+
+        if is_knots_repo:
+            metrics["knots_original_commit_authors_count"] = len(knots_original_commit_authors)
+            metrics["core_merge_commit_authors_count"] = len(core_merge_commit_authors)
+            # Contributors who only made merge commits (and no original Knots commits)
+            only_merging_authors = core_merge_commit_authors - knots_original_commit_authors
+            metrics["knots_contributors_only_merging_core"] = len(only_merging_authors)
+            metrics["knots_contributors_with_original_work"] = len(knots_original_commit_authors)
+            # Adjust bus factor for Knots based on original work
+            # This needs original commit counts per author, not just GH contributions API
+            # For a more accurate Knots bus factor, we'd need to re-calculate contributors_by_commits based on original Knots commits.
+            # This is a placeholder / simplification for now.
+            if knots_original_commit_authors:
+                # Simplified: bus factor of those with any original work
+                # A proper calculation would need commit counts for *original* commits.
+                logger.warning("Knots bus factor calculation is simplified and may not be fully accurate yet.")
     else:
         metrics["active_contributors"] = 0
         metrics["active_ratio"] = 0
+        if is_knots_repo:
+            metrics["knots_original_commit_authors_count"] = 0
+            metrics["core_merge_commit_authors_count"] = 0
+            metrics["knots_contributors_only_merging_core"] = 0
+            metrics["knots_contributors_with_original_work"] = 0
 
     # Additional metrics from Git CLI data if available
     if git_data and "contributors" in git_data:

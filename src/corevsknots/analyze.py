@@ -114,6 +114,7 @@ def compare_repositories(
     local_path1: Optional[str] = None,
     local_path2: Optional[str] = None,
     use_cache: bool = True,
+    is_fight_mode: bool = False
 ) -> Dict[str, Any]:
     """
     Compare two GitHub repositories.
@@ -126,11 +127,12 @@ def compare_repositories(
         local_path1: Path to first local repository clone
         local_path2: Path to second local repository clone
         use_cache: Whether to use cache for API responses
+        is_fight_mode: Whether to apply special Core vs Knots comparison logic
 
     Returns:
         Dictionary containing metrics for both repositories
     """
-    logger.info(f"Comparing repositories: {repo1} vs {repo2}")
+    logger.info(f"Comparing repositories: {repo1} vs {repo2}{' (FIGHT MODE!)' if is_fight_mode else ''}")
 
     # Analyze both repositories
     metrics1 = analyze_repository(repo1, months, github_token, local_path1, use_cache)
@@ -140,8 +142,12 @@ def compare_repositories(
     comparison = {
         "repo1": {"name": repo1, "metrics": metrics1},
         "repo2": {"name": repo2, "metrics": metrics2},
-        "comparison": compare_metrics(metrics1, metrics2),
-        "analysis_metadata": {"date": datetime.now().isoformat(), "period_months": months},
+        "comparison": compare_metrics(metrics1, metrics2, is_fight_mode, repo1_name=repo1, repo2_name=repo2),
+        "analysis_metadata": {
+            "date": datetime.now().isoformat(),
+            "period_months": months,
+            "is_fight_mode": is_fight_mode
+        },
     }
 
     return comparison
@@ -187,7 +193,7 @@ def calculate_all_metrics(
     # Calculate contributor metrics
     logger.info(f"[{repo_name_for_logging}] Calculating contributor metrics...")
     try:
-        metrics["contributor"] = calculate_contributor_metrics(github_data, git_data)
+        metrics["contributor"] = calculate_contributor_metrics(github_data, git_data, repo_name=repo_name_for_logging)
         logger.info(f"[{repo_name_for_logging}] Contributor metrics calculated.")
     except Exception as e:
         logger.error(f"[{repo_name_for_logging}] Failed to calculate contributor metrics: {e}")
@@ -396,13 +402,16 @@ def calculate_overall_health_score(metrics: Dict[str, Any]) -> float:
     return round(overall_score, 1)
 
 
-def compare_metrics(metrics1: Dict[str, Any], metrics2: Dict[str, Any]) -> Dict[str, Any]:
+def compare_metrics(metrics1: Dict[str, Any], metrics2: Dict[str, Any], is_fight_mode: bool = False, repo1_name: Optional[str] = None, repo2_name: Optional[str] = None) -> Dict[str, Any]:
     """
     Compare metrics between two repositories.
 
     Args:
         metrics1: Metrics for the first repository
         metrics2: Metrics for the second repository
+        is_fight_mode: Whether to apply special Core vs Knots comparison logic
+        repo1_name: Name of the first repository
+        repo2_name: Name of the second repository
 
     Returns:
         Dictionary of metric comparisons
@@ -439,6 +448,18 @@ def compare_metrics(metrics1: Dict[str, Any], metrics2: Dict[str, Any]) -> Dict[
 
     # Compare test metrics
     comparison["test"] = compare_test_metrics(metrics1.get("test", {}), metrics2.get("test", {}))
+
+    # If it's a fight, potentially add specific Core vs Knots comparison logic here or in sub-functions
+    if is_fight_mode and repo1_name == "bitcoin/bitcoin" and repo2_name == "bitcoinknots/bitcoin":
+        logger.info("Applying special Core vs Knots comparison logic...")
+        # Example: Adjust contributor comparison if we have more data
+        # comparison["contributor"] = compare_contributor_metrics_fork_aware(
+        #     metrics1.get("contributor", {}),
+        #     metrics2.get("contributor", {}),
+        #     github_data1=metrics1.get("_raw_github_data"), # Hypothetical raw data access
+        #     github_data2=metrics2.get("_raw_github_data")
+        # )
+        pass # Placeholder for now
 
     # Compare overall health score
     comparison["overall"] = {

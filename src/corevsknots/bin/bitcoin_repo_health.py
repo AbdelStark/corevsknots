@@ -4,20 +4,21 @@ Bitcoin Repository Health Analysis Tool
 Usage:
     bitcoin-repo-health analyze [--repo=<repo>] [--output=<path>] [--months=<months>] [--token=<token>] [--local-path=<local>] [--use-cache | --no-cache] [--verbose]
     bitcoin-repo-health compare [--repo1=<repo1>] [--repo2=<repo2>] [--output=<path>] [--months=<months>] [--token=<token>] [--local-path1=<local1>] [--local-path2=<local2>] [--use-cache | --no-cache] [--verbose]
+    bitcoin-repo-health fight [--output=<path>] [--months=<months>] [--token=<token>] [--local-path1=<local1>] [--local-path2=<local2>] [--use-cache | --no-cache] [--verbose]
     bitcoin-repo-health report [--metrics=<file>] [--output=<path>] [--format=<format>]
     bitcoin-repo-health -h | --help
     bitcoin-repo-health --version
 
 Options:
-    --repo=<repo>               Repository name (e.g., bitcoin/bitcoin).
+    --repo=<repo>               Repository name (e.g., bitcoin/bitcoin) for analyze.
     --repo1=<repo1>             First repository name for comparison.
     --repo2=<repo2>             Second repository name for comparison.
     --output=<path>             Output directory for reports [default: ./reports].
     --months=<months>           Analysis period in months [default: 12].
     --token=<token>             GitHub personal access token.
     --local-path=<local>        Path to local repository clone for single analysis.
-    --local-path1=<local1>      Path to first local repository clone for comparison.
-    --local-path2=<local2>      Path to second local repository clone for comparison.
+    --local-path1=<local1>      Path to first local repository clone (for compare or fight).
+    --local-path2=<local2>      Path to second local repository clone (for compare or fight).
     --use-cache                 Use cached API responses [default: True].
     --no-cache                  Do not use cached API responses.
     --metrics=<file>            Path to previously collected metrics JSON file for generating a report.
@@ -38,6 +39,8 @@ from ..analyze import analyze_repository, compare_repositories
 from ..report import generate_report
 from ..utils.logger import get_logger, setup_logger
 
+CORE_REPO = "bitcoin/bitcoin"
+KNOTS_REPO = "bitcoinknots/bitcoin"
 
 def main():
     args = docopt(__doc__, version=f"Bitcoin Repo Health {__version__}")
@@ -68,12 +71,17 @@ def main():
             report_path = generate_report(metrics, args['--output'], f"{repo.replace('/', '_')}_health_report", args['--format'], template="single")
             logger.info(f"Report generated at: {report_path}")
 
-        elif args['compare']:
-            repo1 = args['--repo1']
-            repo2 = args['--repo2']
-            if not repo1 or not repo2:
-                print("Error: --repo1 and --repo2 are required for compare command.")
-                sys.exit(1)
+        elif args['compare'] or args['fight']:
+            if args['fight']:
+                repo1 = CORE_REPO
+                repo2 = KNOTS_REPO
+                logger.info(f"Initiating a Core vs Knots FIGHT! ({repo1} vs {repo2})")
+            else: # compare command
+                repo1 = args['--repo1']
+                repo2 = args['--repo2']
+                if not repo1 or not repo2:
+                    print("Error: --repo1 and --repo2 are required for compare command.")
+                    sys.exit(1)
 
             logger.info(f"Comparing repositories: {repo1} vs {repo2}")
             comparison_data = compare_repositories(
@@ -83,9 +91,12 @@ def main():
                 github_token=args['--token'],
                 local_path1=args['--local-path1'],
                 local_path2=args['--local-path2'],
-                use_cache=not args['--no-cache']
+                use_cache=not args['--no-cache'],
+                is_fight_mode=(args['fight'] is True) # Pass a flag for special handling
             )
             report_name = f"{repo1.replace('/', '_')}_vs_{repo2.replace('/', '_')}_comparison"
+            if args['fight']:
+                report_name = f"CORE_vs_KNOTS_FIGHT_REPORT"
             report_path = generate_report(comparison_data, args['--output'], report_name, args['--format'], template="comparison")
             logger.info(f"Comparison report generated at: {report_path}")
 
