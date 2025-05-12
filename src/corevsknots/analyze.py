@@ -104,7 +104,8 @@ def analyze_repository(
         github_data,
         git_data,
         repo_name_for_logging=repo,
-        core_commit_shas=(core_commit_shas_for_knots if repo == KNOTS_REPO_IDENTIFIER else None)
+        core_commit_shas=(core_commit_shas_for_knots if repo == KNOTS_REPO_IDENTIFIER else None),
+        github_client_instance=github_client
     )
     logger.info(f"All metrics calculation complete for {repo}.")
 
@@ -123,7 +124,7 @@ def analyze_repository(
 
     # Calculate overall health score
     logger.debug(f"Calculating overall health score for {repo}...")
-    metrics["overall_health_score"] = calculate_overall_health_score(metrics)
+    metrics["overall_health_score"] = calculate_overall_health_score(metrics, repo_name=repo)
 
     logger.info(f"Analysis complete for repository: {repo}")
     return metrics
@@ -185,7 +186,8 @@ def calculate_all_metrics(
     github_data: Dict[str, Any],
     git_data: Optional[Dict[str, Any]] = None,
     repo_name_for_logging: str = "unknown_repo",
-    core_commit_shas: Optional[set[str]] = None # New parameter
+    core_commit_shas: Optional[set[str]] = None,
+    github_client_instance: Optional[GitHubAPIClient] = None
 ) -> Dict[str, Any]:
     """
     Calculate all repository metrics.
@@ -195,6 +197,7 @@ def calculate_all_metrics(
         git_data: Repository data fetched from Git CLI (optional)
         repo_name_for_logging: Name of the repository for logging purposes
         core_commit_shas: Set of commit SHAs for Bitcoin Core if analyzing Knots
+        github_client_instance: GitHubAPIClient instance for passing to calculate_code_review_metrics
 
     Returns:
         Dictionary of all repository metrics
@@ -256,7 +259,11 @@ def calculate_all_metrics(
     # Calculate code review metrics
     logger.info(f"[{repo_name_for_logging}] Calculating code review metrics...")
     try:
-        metrics["code_review"] = calculate_code_review_metrics(github_data)
+        metrics["code_review"] = calculate_code_review_metrics(
+                                    github_data,
+                                    repo_name=repo_name_for_logging,
+                                    github_client=github_client_instance
+                                )
         logger.info(f"[{repo_name_for_logging}] Code review metrics calculated.")
     except Exception as e:
         logger.error(f"[{repo_name_for_logging}] Failed to calculate code review metrics: {e}")
@@ -293,17 +300,12 @@ def calculate_all_metrics(
     return metrics
 
 
-def calculate_overall_health_score(metrics: Dict[str, Any]) -> float:
-    """
-    Calculate an overall repository health score.
+def calculate_overall_health_score(metrics: Dict[str, Any], repo_name: Optional[str] = None) -> float:
+    """Calculate an overall repository health score."""
+    is_knots_fight_mode = repo_name == KNOTS_REPO_IDENTIFIER and metrics.get("analysis_metadata", {}).get("is_fight_mode", False)
+    # Or, more simply, if knots_original_bus_factor exists, it implies we are in a fight and this is Knots
+    is_knots_with_original_metrics = repo_name == KNOTS_REPO_IDENTIFIER and "knots_original_bus_factor" in metrics.get("contributor", {})
 
-    Args:
-        metrics: Repository metrics
-
-    Returns:
-        Overall health score (0-10)
-    """
-    # Define weights for each category
     weights = {
         "contributor": 0.15,
         "commit": 0.15,
@@ -314,14 +316,12 @@ def calculate_overall_health_score(metrics: Dict[str, Any]) -> float:
         "test": 0.1,
     }
 
-    # Extract scores from each category
     scores = {}
 
-    # Contributor score
-    contributor = metrics.get("contributor", {})
-    if contributor:
-        bus_factor = contributor.get("bus_factor", 1)
-        contributor_count = contributor.get("total_contributors", 0)
+    contributor_metrics = metrics.get("contributor", {})
+    if contributor_metrics:
+        bus_factor = contributor_metrics.get("knots_original_bus_factor") if is_knots_with_original_metrics else contributor_metrics.get("bus_factor", 1)
+        contributor_count = contributor_metrics.get("total_contributors", 0)
 
         # Higher bus factor and more contributors are better
         if bus_factor >= 10:
@@ -345,11 +345,10 @@ def calculate_overall_health_score(metrics: Dict[str, Any]) -> float:
     else:
         scores["contributor"] = 0
 
-    # Commit score
-    commit = metrics.get("commit", {})
-    if commit:
-        commit_frequency = commit.get("commit_frequency", "inactive")
-        commit_message_quality = commit.get("commit_message_quality", {}).get("quality_score", 0)
+    commit_metrics = metrics.get("commit", {})
+    if commit_metrics:
+        commit_frequency = commit_metrics.get("commit_frequency", "inactive")
+        commit_message_quality = commit_metrics.get("commit_message_quality", {}).get("quality_score", 0)
 
         # Score based on commit frequency
         if commit_frequency == "very_active":
@@ -368,7 +367,6 @@ def calculate_overall_health_score(metrics: Dict[str, Any]) -> float:
     else:
         scores["commit"] = 0
 
-    # Pull request score
     pr = metrics.get("pull_request", {})
     if pr:
         merged_ratio = pr.get("merged_ratio", 0)
@@ -379,7 +377,6 @@ def calculate_overall_health_score(metrics: Dict[str, Any]) -> float:
     else:
         scores["pull_request"] = 0
 
-    # Code review score
     review = metrics.get("code_review", {})
     if review:
         review_thoroughness = review.get("review_thoroughness_score", 0)
@@ -390,7 +387,6 @@ def calculate_overall_health_score(metrics: Dict[str, Any]) -> float:
     else:
         scores["code_review"] = 0
 
-    # CI/CD score
     ci_cd = metrics.get("ci_cd", {})
     if ci_cd:
         has_ci = ci_cd.get("has_ci", False)
@@ -404,7 +400,6 @@ def calculate_overall_health_score(metrics: Dict[str, Any]) -> float:
     else:
         scores["ci_cd"] = 0
 
-    # Issue score
     issue = metrics.get("issue", {})
     if issue:
         responsiveness = issue.get("responsiveness_score", 0)
@@ -415,7 +410,6 @@ def calculate_overall_health_score(metrics: Dict[str, Any]) -> float:
     else:
         scores["issue"] = 0
 
-    # Test score
     test = metrics.get("test", {})
     if test:
         has_tests = test.get("has_tests", False)

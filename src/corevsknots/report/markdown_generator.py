@@ -262,67 +262,77 @@ def generate_single_report_content(metrics: Dict[str, Any], charts: Dict[str, st
     # Contributor metrics
     if "contributor" in metrics:
         sections.append("\n## Contributor Base and Activity\n")
-
         contributor_metrics = metrics["contributor"]
-        bus_factor = contributor_metrics.get("bus_factor", 0)
-        total_contributors = contributor_metrics.get("total_contributors", 0)
-        active_contributors = contributor_metrics.get("active_contributors", 0)
-        active_ratio = contributor_metrics.get("active_ratio", 0)
+        is_knots_repo_with_original = repo_name == KNOTS_REPO_IDENTIFIER and "knots_original_bus_factor" in contributor_metrics
+
+        total_contributors_api = contributor_metrics.get("total_contributors", 0)
+        active_contributors_api = contributor_metrics.get("active_contributors", 0)
+        active_ratio_api = contributor_metrics.get("active_ratio", 0.0)
 
         sections.append(
-            f"The repository has **{total_contributors} total contributors**, "
-            f"with **{active_contributors} active contributors** in the last {metrics.get('repository', {}).get('analysis_period_months', 12)} months "
-            f"({active_ratio:.1%} activity ratio).\n"
+            f"The repository has **{total_contributors_api} total contributors (GitHub API view)**, "
+            f"with **{active_contributors_api} active contributors** in the analyzed period (based on any commit activity, {active_ratio_api:.1%} activity ratio overall).\n"
         )
 
-        sections.append(
-            f"The repository has a **bus factor of {bus_factor}**, meaning that's how many contributors would need to leave "
-            "before the project would be in serious trouble.\n"
-        )
+        bus_factor_for_assessment = contributor_metrics.get("bus_factor", 0) # Default to general
+        gini_for_display = contributor_metrics.get("contributor_gini", 0.0)
+        bus_factor_context = "(General, from GH API contributions)"
 
-        if repo_name == KNOTS_REPO_IDENTIFIER and "knots_original_commit_authors_count" in contributor_metrics:
+        if is_knots_repo_with_original:
             sections.append("\n### Bitcoin Knots Specific Contributor Analysis (based on recent commit activity)\n")
             sections.append(f"- Authors with original Knots commits: {contributor_metrics.get('knots_contributors_with_original_work', 'N/A')}\n")
             sections.append(f"- Authors primarily merging Core changes (and no original work): {contributor_metrics.get('knots_contributors_only_merging_core', 'N/A')}\n")
-            sections.append(f"- Total authors involved in Core merges: {contributor_metrics.get('core_merge_commit_authors_count', 'N/A')}\n")
-            if "knots_top_original_contributors" in contributor_metrics:
-                sections.append("- Top Original Knots Contributors (by original commits):\n")
+
+            bus_factor_for_assessment = contributor_metrics.get('knots_original_bus_factor', bus_factor_for_assessment)
+            gini_for_display = contributor_metrics.get('knots_original_contributor_gini', gini_for_display)
+            bus_factor_context = "(Knots Original Work)"
+            sections.append(f"- **Bus Factor {bus_factor_context}**: {bus_factor_for_assessment}\n")
+            sections.append(f"- **Gini Coefficient {bus_factor_context}**: {gini_for_display:.3f}\n")
+
+            sections.append("\n#### Top Original Knots Contributors (by original commits):\n")
+            if "knots_top_original_contributors" in contributor_metrics and contributor_metrics["knots_top_original_contributors"]:
                 for author, count in contributor_metrics["knots_top_original_contributors"]:
                     sections.append(f"  - {author}: {count} original commits\n")
-            if "knots_original_bus_factor" in contributor_metrics:
-                sections.append(f"- **Bus Factor (Knots Original Work)**: {contributor_metrics['knots_original_bus_factor']}\n")
-            if "knots_original_contributor_gini" in contributor_metrics:
-                sections.append(f"- **Gini Coefficient (Knots Original Work)**: {contributor_metrics['knots_original_contributor_gini']:.3f}\n")
+            else:
+                sections.append("  - No original Knots commit authors identified in the analyzed period.\n")
+        else: # For Core or other general repos
+            sections.append(f"- **Bus Factor {bus_factor_context}**: {bus_factor_for_assessment}\n")
+            sections.append(f"- **Gini Coefficient {bus_factor_context}**: {gini_for_display:.3f}\n")
+            sections.append("\n#### Top Contributors (by GH API contributions):\n")
+            if "top_contributors" in contributor_metrics and contributor_metrics["top_contributors"]:
+                 for author, count in contributor_metrics["top_contributors"]:
+                    sections.append(f"  - {author}: {count} contributions\n")
+            else:
+                sections.append("  - No contributor data from GitHub API.\n")
 
-        # Original Bus factor assessment (based on GitHub API total contributions)
-        sections.append("\n### General Contributor Stats (from GitHub API /contributions)\n")
-        sections.append(f"The repository has a **general bus factor of {bus_factor}** (based on overall contributions data from GitHub API).\n")
-        if bus_factor >= 5:
+        sections.append(
+            f"\nThe repository has a calculated bus factor of {bus_factor_for_assessment} {bus_factor_context}. "
+            f"This estimates how many key contributors would need to leave before the project might face significant disruption based on the analyzed contribution patterns.\n"
+        )
+        if bus_factor_for_assessment >= 5:
             sections.append(
-                "🟢 **Good**: The repository has a healthy bus factor, reducing the risk of project disruption if key contributors leave.\n"
+                "🟢 **Good**: The repository appears to have a healthy contributor spread, reducing risk.\n"
             )
-        elif bus_factor >= 2:
+        elif bus_factor_for_assessment >= 2:
             sections.append(
-                "🟡 **Moderate**: The repository has some contributor redundancy but could improve its bus factor to reduce risk.\n"
+                "🟡 **Moderate**: There is some contributor redundancy, but risk could be further reduced by broadening expertise.\n"
             )
         else:
             sections.append(
-                "🔴 **Poor**: The repository has a dangerously low bus factor, creating significant risk if key contributors leave.\n"
+                "🔴 **Poor**: The repository may have a high dependency on a very small number of contributors, posing a significant risk.\n"
             )
-
-        # Top contributors chart
+        # Charts are already adapted to show Knots original if repo_name is passed to generate_contributor_charts
         if "top_contributors" in charts:
             chart_path = os.path.relpath(
                 charts["top_contributors"], os.path.dirname(os.path.join(os.getcwd(), "dummy"))
             )
-            sections.append(f"![Top Contributors]({chart_path})\n")
+            sections.append(f"![Top Contributors {bus_factor_context}]({chart_path})\n")
 
-        # Bus factor chart
         if "bus_factor" in charts:
             chart_path = os.path.relpath(
                 charts["bus_factor"], os.path.dirname(os.path.join(os.getcwd(), "dummy"))
             )
-            sections.append(f"![Bus Factor]({chart_path})\n")
+            sections.append(f"![Bus Factor {bus_factor_context}]({chart_path})\n")
 
     # Commit metrics
     if "commit" in metrics:

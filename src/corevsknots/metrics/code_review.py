@@ -293,49 +293,52 @@ def calculate_self_merge_metrics(pull_requests: List[Dict[str, Any]],
                                  github_client: Optional[Any] = None
                                 ) -> Dict[str, Any]:
     """Calculate metrics related to self-merge practices."""
-    if not pull_requests or not repo_name or not github_client:
-        logger.warning(f"[{repo_name or 'unknown'}] Missing data for accurate self-merge calculation (PRs, repo_name, or github_client).")
+    if not pull_requests: # Check only for PRs; repo_name & client check can be more granular
+        logger.warning(f"[{repo_name or 'unknown'}] No pull requests provided for self-merge calculation.")
         return {"self_merged_count": 0, "self_merged_ratio": 0, "self_merged_prs_analyzed": 0}
+    if not repo_name or not github_client:
+        logger.warning(f"[{repo_name or 'unknown'}] Missing repo_name or github_client for accurate self-merge calculation. Using basic merged_by check only.")
+        # Fallback to basic check if client is missing, or return empty if strictness is preferred
 
     self_merged_count = 0
     merged_prs_count = 0
     prs_analyzed_for_self_merge = 0
 
-    # Limit analysis to a sample to avoid too many API calls, e.g., last 100 merged PRs
-    # Or only those PRs for which we already fetched reviews/comments.
-    # For now, let's check all PRs in the fetched list (can be up to MAX_PAGES * per_page).
     for pr in pull_requests:
-        if not pr.get("merged"):
+        # Check if the PR was merged by looking at the 'merged_at' field
+        if not pr.get("merged_at"):
             continue
 
         merged_prs_count += 1
         prs_analyzed_for_self_merge += 1
+
+        pr_number = pr.get("number", "N/A")
         author_login = pr.get("user", {}).get("login")
         merged_by_login = pr.get("merged_by", {}).get("login")
+        logger.debug(f"[{repo_name}] PR #{pr_number}: Author={author_login}, MergedBy={merged_by_login}, MergedAt={pr.get('merged_at')}")
 
+        is_self_merge = False
         if author_login and merged_by_login and author_login == merged_by_login:
-            self_merged_count += 1
-            logger.debug(f"[{repo_name}] PR #{pr.get('number')} self-merged by {author_login} (via merged_by field).")
-        elif author_login and not merged_by_login and pr.get("merge_commit_sha"):
-            # merged_by is null, try to get committer of merge_commit_sha
+            is_self_merge = True
+            logger.debug(f"  PR #{pr_number}: Identified as self-merge (merged_by field).")
+        elif author_login and not merged_by_login and pr.get("merge_commit_sha") and github_client and repo_name:
             merge_sha = pr.get("merge_commit_sha")
-            logger.debug(f"[{repo_name}] PR #{pr.get('number')} merged_by is null. Fetching merge commit {merge_sha} to check committer.")
+            logger.debug(f"  PR #{pr_number}: merged_by is null. Fetching merge commit {merge_sha}...")
             commit_details = github_client.get_commit_details(repo_name, merge_sha)
-            if commit_details and commit_details.get("author") and commit_details.get("author", {}).get("login") == author_login:
-                # If committer login of merge commit matches PR author login
-                # Note: GitHub API commit details 'author' is the GH user who authored the commit data,
-                # 'committer' is the GH user who committed it. For merges, these can be different.
-                # A true self-merge is if the PR author *is also the one who effectively pushed the merge commit*.
-                # This can be complex if force-pushes or different git UIs are used.
-                # A simpler check: if PR author is the commit.author.login of the merge commit.
-                self_merged_count += 1
-                logger.debug(f"[{repo_name}] PR #{pr.get('number')} determined self-merged by {author_login} (via merge commit author).")
-            elif commit_details and commit_details.get("committer") and commit_details.get("committer", {}).get("login") == author_login:
-                self_merged_count += 1 # If PR author is the committer of the merge commit
-                logger.debug(f"[{repo_name}] PR #{pr.get('number')} determined self-merged by {author_login} (via merge commit committer).")
+            if commit_details:
+                commit_author_login = commit_details.get("author", {}).get("login")
+                commit_committer_login = commit_details.get("committer", {}).get("login")
+                logger.debug(f"    Merge commit {merge_sha}: Author={commit_author_login}, Committer={commit_committer_login}")
+                if commit_author_login == author_login or commit_committer_login == author_login:
+                    is_self_merge = True
+                    logger.debug(f"  PR #{pr_number}: Identified as self-merge (merge commit author/committer match).")
+            else:
+                logger.warning(f"  PR #{pr_number}: Could not fetch details for merge commit {merge_sha}.")
+
+        if is_self_merge:
+            self_merged_count += 1
 
     self_merged_ratio = self_merged_count / merged_prs_count if merged_prs_count > 0 else 0
-
     logger.info(f"[{repo_name or 'unknown'}] Self-merge analysis: {self_merged_count} self-merged out of {merged_prs_count} merged PRs analyzed (Ratio: {self_merged_ratio:.2%}).")
     return {
         "self_merged_count": self_merged_count,
