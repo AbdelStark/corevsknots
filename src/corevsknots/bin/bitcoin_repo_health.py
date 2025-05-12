@@ -131,12 +131,22 @@ def main():
 
             # Contributor summary
             print("\nContributors:")
-            print(f"  Total: {repo1_name}: {metrics1.get('contributor', {}).get('total_contributors', 'N/A')}  vs  {repo2_name}: {metrics2.get('contributor', {}).get('total_contributors', 'N/A')}")
+            print(f"  Total (GH API): {repo1_name}: {metrics1.get('contributor', {}).get('total_contributors', 'N/A')}  vs  {repo2_name}: {metrics2.get('contributor', {}).get('total_contributors', 'N/A')}")
             if args['fight']:
-                print(f"  Original to Knots: {metrics2.get('contributor', {}).get('knots_contributors_with_original_work', 'N/A')}")
-                print(f"  Knots Bus Factor (Original): {metrics2.get('contributor', {}).get('knots_original_bus_factor', 'N/A')}")
+                print(f"  Original Authors (Knots): {metrics2.get('contributor', {}).get('knots_contributors_with_original_work', 'N/A')}")
+                print(f"  Bus Factor (Knots Original): {metrics2.get('contributor', {}).get('knots_original_bus_factor', 'N/A')} (Core General: {metrics1.get('contributor', {}).get('bus_factor', 'N/A')})")
+                print(f"  Gini (Knots Original): {metrics2.get('contributor', {}).get('knots_original_contributor_gini', 0.0):.3f} (Core General: {metrics1.get('contributor', {}).get('contributor_gini', 0.0):.3f})")
             else:
                 print(f"  Bus Factor: {repo1_name}: {metrics1.get('contributor', {}).get('bus_factor', 'N/A')}  vs  {repo2_name}: {metrics2.get('contributor', {}).get('bus_factor', 'N/A')}")
+                print(f"  Gini Coefficient: {repo1_name}: {metrics1.get('contributor', {}).get('contributor_gini', 0.0):.3f}  vs  {repo2_name}: {metrics2.get('contributor', {}).get('contributor_gini', 0.0):.3f}")
+            # Add Org diversity if available (comes from git_data, might be empty if git analysis failed)
+            org_count1 = metrics1.get('contributor', {}).get('organization_count', 'N/A')
+            org_div1 = metrics1.get('contributor', {}).get('organization_diversity', 0.0)
+            org_count2 = metrics2.get('contributor', {}).get('organization_count', 'N/A')
+            org_div2 = metrics2.get('contributor', {}).get('organization_diversity', 0.0)
+            if org_count1 != 'N/A' or org_count2 != 'N/A': # Only print if at least one has data
+                 print(f"  Org Count (Email Domains): {repo1_name}: {org_count1}  vs  {repo2_name}: {org_count2}")
+                 print(f"  Org Diversity (Shannon): {repo1_name}: {org_div1:.3f}  vs  {repo2_name}: {org_div2:.3f}")
 
             # Commit summary
             print("\nCommits (per day, original for Knots in fight mode):")
