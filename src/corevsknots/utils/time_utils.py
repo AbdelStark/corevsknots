@@ -54,6 +54,17 @@ def format_date(date: datetime, fmt: str = ISO_FORMAT) -> str:
     return date.strftime(fmt)
 
 
+def format_date_for_git(date: datetime) -> str:
+    """
+    Format a datetime object as a string suitable for Git commands (YYYY-MM-DD).
+    Args:
+        date: Datetime object
+    Returns:
+        Formatted date string (e.g., "2023-01-15")
+    """
+    return date.strftime("%Y-%m-%d")
+
+
 def months_ago(months: int) -> datetime:
     """
     Get a datetime object representing N months ago.

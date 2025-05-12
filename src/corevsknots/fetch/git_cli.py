@@ -12,7 +12,7 @@ import tempfile
 from typing import Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
-from ..utils.time_utils import format_date, months_ago
+from ..utils.time_utils import format_date_for_git, months_ago
 
 logger = get_logger(__name__)
 
@@ -22,37 +22,46 @@ class GitCLI:
     Wrapper for Git command-line operations.
     """
 
-    def __init__(self, repo_path: Optional[str] = None, clone_url: Optional[str] = None):
+    def __init__(self, repo_path: Optional[str] = None, clone_url: Optional[str] = None, default_branch_hint: Optional[str] = None):
         """
         Initialize the Git CLI wrapper.
 
         Args:
             repo_path: Path to the local repository (if None, a temporary directory will be used)
             clone_url: URL to clone the repository (if None and repo_path doesn't exist, an error will be raised)
+            default_branch_hint: A hint for the default branch name (e.g., 'main', 'master')
         """
         self.repo_path = repo_path
         self.temp_dir = None
 
-        # Check if repo_path exists
         if repo_path and not os.path.exists(os.path.join(repo_path, ".git")):
-            # If repo_path doesn't exist but clone_url is provided, clone the repository
             if clone_url:
                 logger.info(f"Cloning repository {clone_url} to {repo_path}")
                 os.makedirs(repo_path, exist_ok=True)
                 self._execute_git_command(["clone", clone_url, repo_path])
+                if default_branch_hint:
+                    try:
+                        logger.info(f"Attempting to checkout default branch hint: {default_branch_hint} in {repo_path}")
+                        self._execute_git_command(["checkout", default_branch_hint], cwd=repo_path) # Ensure cwd is correct for checkout
+                    except subprocess.CalledProcessError as e:
+                        logger.warning(f"Failed to checkout branch {default_branch_hint} in {repo_path}, continuing with current HEAD: {e}")
             else:
                 raise ValueError(f"Repository not found at {repo_path} and clone_url not provided")
-
-        # If repo_path is not provided, create a temporary directory and clone the repository
         elif not repo_path:
             if not clone_url:
                 raise ValueError("Either repo_path or clone_url must be provided")
-
             self.temp_dir = tempfile.TemporaryDirectory()
             self.repo_path = self.temp_dir.name
-
             logger.info(f"Cloning repository {clone_url} to temporary directory {self.repo_path}")
-            self._execute_git_command(["clone", clone_url, self.repo_path])
+            # For temp clones, the clone command itself sets up the repo_path, subsequent commands use it as cwd by default
+            self._execute_git_command(["clone", clone_url, "."], cwd=self.repo_path) # Clone into the temp dir
+            if default_branch_hint:
+                try:
+                    logger.info(f"Attempting to checkout default branch hint: {default_branch_hint} in temp clone {self.repo_path}")
+                    self._execute_git_command(["checkout", default_branch_hint]) # cwd will default to self.repo_path
+                except subprocess.CalledProcessError as e:
+                    logger.warning(f"Failed to checkout branch {default_branch_hint} in temp clone, continuing with current HEAD: {e}")
+        # If repo_path is provided and valid, we assume it's already setup and potentially on the desired branch.
 
     def __del__(self):
         """
@@ -110,14 +119,26 @@ class GitCLI:
             Number of commits
         """
         args = ["rev-list", "--count", branch]
-
         if since:
             args.append(f"--since={since}")
         if until:
             args.append(f"--until={until}")
 
-        output = self._execute_git_command(args)
-        return int(output)
+        try:
+            output = self._execute_git_command(args)
+            return int(output)
+        except subprocess.CalledProcessError as e:
+            if "Needed a single revision" in e.stderr or \
+               (hasattr(e, 'stdout') and e.stdout == "" and e.stderr and "fatal:" in e.stderr):
+                logger.warning(f"Git rev-list command for count failed (likely no revisions in range for branch '{branch}' since '{since}', until '{until}'), returning 0. stderr: {e.stderr.strip()}")
+                return 0
+            else:
+                logger.error(f"Git rev-list command for count failed unexpectedly for branch '{branch}'. stderr: {e.stderr.strip()}")
+                raise
+        except ValueError as e:
+            error_arg_detail = str(e.args[0]) if hasattr(e, "args") and e.args else "N/A"
+            logger.error(f"Git rev-list output for count was not an integer for branch '{branch}'. Output: '{error_arg_detail}'. Error: {e}")
+            return 0
 
     def get_commits(
         self,
@@ -125,7 +146,7 @@ class GitCLI:
         until: Optional[str] = None,
         branch: str = "HEAD",
         max_count: Optional[int] = None,
-        format_string: str = "%H|%an|%ae|%at|%s",
+        format_string: str = "%H%x00%an%x00%ae%x00%at%x00%s",
     ) -> List[Dict[str, Any]]:
         """
         Get commits from the repository.
@@ -149,24 +170,31 @@ class GitCLI:
         if max_count:
             args.append(f"--max-count={max_count}")
 
+        # Add --no-show-signature to prevent signature data from interfering with parsing
+        args.append("--no-show-signature")
+
         output = self._execute_git_command(args)
         commits = []
-
-        for line in output.split("\n"):
+        for i, line in enumerate(output.split('\n')):
             if not line:
                 continue
-
-            parts = line.split("|")
+            parts = line.split("\x00")  # Split by null byte
             if len(parts) >= 5:
-                commit = {
-                    "sha": parts[0],
-                    "author_name": parts[1],
-                    "author_email": parts[2],
-                    "timestamp": int(parts[3]),
-                    "message": parts[4],
-                }
-                commits.append(commit)
-
+                try:
+                    commit = {
+                        "sha": parts[0],
+                        "author_name": parts[1],
+                        "author_email": parts[2],
+                        "timestamp": int(parts[3]),
+                        "message": parts[4],
+                    }
+                    commits.append(commit)
+                except ValueError as ve:
+                    logger.error(f"Error parsing commit line {i+1} for timestamp: '{line}'. Parts: {parts}. Error: {ve}")
+                except Exception as e:
+                    logger.error(f"Generic error parsing commit line {i+1}: '{line}'. Error: {e}")
+            else:
+                logger.warning(f"Skipping malformed commit line {i+1} (expected >= 5 parts, got {len(parts)}): '{line}'")
         return commits
 
     def get_contributors(
@@ -183,25 +211,35 @@ class GitCLI:
             Dictionary mapping email to contributor information
         """
         args = ["shortlog", "-sne", "HEAD"]
-
         if since:
             args.append(f"--since={since}")
         if until:
             args.append(f"--until={until}")
 
-        output = self._execute_git_command(args)
+        output: Optional[str] = None
+        try:
+            output = self._execute_git_command(args)
+        except subprocess.CalledProcessError as e:
+            if "Needed a single revision" in e.stderr or \
+               (hasattr(e, 'stdout') and e.stdout == "" and e.stderr and "fatal:" in e.stderr):
+                logger.warning(f"Git shortlog command failed (likely no revisions in range since '{since}', until '{until}'), returning empty contributors. stderr: {e.stderr.strip()}")
+                return {}
+            else:
+                logger.error(f"Git shortlog command failed unexpectedly. stderr: {e.stderr.strip()}")
+                return {} # Return empty on other unexpected errors to prevent cascading failures
+
         contributors = {}
-
-        for line in output.split("\n"):
-            if not line:
-                continue
-
-            # Parse the shortlog output (e.g., "123\tJohn Doe <john@example.com>")
-            match = re.match(r"^\s*(\d+)\s+(.+)\s+<(.+)>$", line)
-            if match:
-                count, name, email = match.groups()
-                contributors[email] = {"name": name, "email": email, "commits": int(count)}
-
+        if output: # Process output only if command was successful and output is not None
+            for line in output.split('\n'):
+                if not line:
+                    continue
+                match = re.match(r"^\s*(\d+)\s+(.+)\s+<(.+)>$", line)
+                if match:
+                    count, name, email = match.groups()
+                    try:
+                        contributors[email] = {"name": name, "email": email, "commits": int(count)}
+                    except ValueError:
+                        logger.error(f"Could not parse commit count '{count}' for contributor: {name} <{email}>")
         return contributors
 
     def get_file_changes(
@@ -211,37 +249,50 @@ class GitCLI:
         Get the number of files changed, insertions, and deletions.
 
         Args:
-            since: Start date (ISO 8601 format or Git-compatible date format)
-            until: End date (ISO 8601 format or Git-compatible date format)
+            since: Start date (YYYY-MM-DD format for Git)
+            until: End date (YYYY-MM-DD format for Git)
 
         Returns:
             Dictionary with file change statistics
         """
-        args = ["diff", "--shortstat"]
+        args = ["log", "--shortstat", "--pretty=format:"]  # Empty pretty format to only get stats
 
         if since:
-            args.append(f"{since}..HEAD")
-        elif until:
-            args.append(f"HEAD..{until}")
+            args.append(f"--since={since}")
+        if until:
+            args.append(f"--until={until}")
+
+        # If neither since nor until is specified, get stats for all commits on current HEAD
+        # This might be very slow for large repos. Consider defaulting to a limited range or specific commit.
+        if not since and not until:
+            args.append("HEAD")
 
         output = self._execute_git_command(args)
 
-        # Parse the shortstat output (e.g., "10 files changed, 100 insertions(+), 50 deletions(-)")
-        files = insertions = deletions = 0
+        total_files_changed = 0
+        total_insertions = 0
+        total_deletions = 0
 
-        match_files = re.search(r"(\d+) files? changed", output)
-        if match_files:
-            files = int(match_files.group(1))
+        # Each commit's stats are on a new line after an empty line from pretty=format:
+        # Example: " 1 file changed, 1 insertion(+)"
+        for line in output.split("\n"):
+            line = line.strip()
+            if not line:  # Skip empty lines from pretty format
+                continue
 
-        match_insertions = re.search(r"(\d+) insertions?\(\+\)", output)
-        if match_insertions:
-            insertions = int(match_insertions.group(1))
+            match_files = re.search(r"(\d+) files? changed", line)
+            if match_files:
+                total_files_changed += int(match_files.group(1))
 
-        match_deletions = re.search(r"(\d+) deletions?\(-\)", output)
-        if match_deletions:
-            deletions = int(match_deletions.group(1))
+            match_insertions = re.search(r"(\d+) insertions?\(\+\)", line)
+            if match_insertions:
+                total_insertions += int(match_insertions.group(1))
 
-        return {"files_changed": files, "insertions": insertions, "deletions": deletions}
+            match_deletions = re.search(r"(\d+) deletions?\(-\)", line)
+            if match_deletions:
+                total_deletions += int(match_deletions.group(1))
+
+        return {"files_changed": total_files_changed, "insertions": total_insertions, "deletions": total_deletions}
 
     def get_branch_count(self) -> int:
         """
@@ -327,9 +378,9 @@ class GitCLI:
             Dictionary mapping month to commit count
         """
         since_date = months_ago(months)
-        since = format_date(since_date)
+        since_for_git = format_date_for_git(since_date)
 
-        args = ["log", "--date=format:%Y-%m", "--pretty=format:%cd", f"--since={since}", "HEAD"]
+        args = ["log", "--date=format:%Y-%m", "--pretty=format:%cd", f"--since={since_for_git}", "HEAD"]
 
         output = self._execute_git_command(args)
         activity = {}
@@ -436,9 +487,9 @@ class GitCLI:
             Dictionary of repository metrics
         """
         since_date = months_ago(months)
-        since = format_date(since_date)
+        since_for_git = format_date_for_git(since_date)
 
-        logger.info(f"Analyzing repository at {self.repo_path} for the last {months} months")
+        logger.info(f"Analyzing repository at {self.repo_path} for the last {months} months (since {since_for_git})")
 
         metrics = {}
 
@@ -451,14 +502,14 @@ class GitCLI:
 
         # Commit count
         try:
-            metrics["commit_count"] = self.get_commit_count(since=since)
+            metrics["commit_count"] = self.get_commit_count(since=since_for_git)
         except subprocess.CalledProcessError as e:
             logger.warning(f"Failed to get commit count: {e}")
             metrics["commit_count"] = 0
 
         # Contributors
         try:
-            metrics["contributors"] = self.get_contributors(since=since)
+            metrics["contributors"] = self.get_contributors(since=since_for_git)
             metrics["contributor_count"] = len(metrics["contributors"])
         except subprocess.CalledProcessError as e:
             logger.warning(f"Failed to get contributors: {e}")
@@ -467,14 +518,14 @@ class GitCLI:
 
         # Commit distribution
         try:
-            metrics["commit_distribution"] = self.get_commit_authors_distribution(since=since)
+            metrics["commit_distribution"] = self.get_commit_authors_distribution(since=since_for_git)
         except subprocess.CalledProcessError as e:
             logger.warning(f"Failed to get commit distribution: {e}")
             metrics["commit_distribution"] = {}
 
         # File changes
         try:
-            metrics["file_changes"] = self.get_file_changes(since=since)
+            metrics["file_changes"] = self.get_file_changes(since=since_for_git)
         except subprocess.CalledProcessError as e:
             logger.warning(f"Failed to get file changes: {e}")
             metrics["file_changes"] = {"files_changed": 0, "insertions": 0, "deletions": 0}
@@ -494,19 +545,22 @@ class GitCLI:
 
         # Direct commits to main branch
         try:
-            # Try to detect the main branch
-            for branch in ["master", "main", "development", "dev"]:
+            main_branch = None
+            # Try to detect the main branch: main, then master, then development, then dev
+            for branch_candidate in ["main", "master", "development", "dev"]:
                 try:
-                    self._execute_git_command(["rev-parse", "--verify", branch])
-                    main_branch = branch
+                    self._execute_git_command(["rev-parse", "--verify", branch_candidate])
+                    main_branch = branch_candidate
+                    logger.debug(f"Detected main branch for git operations: {main_branch}")
                     break
                 except subprocess.CalledProcessError:
                     continue
-            else:
-                # Default to master if no branch is found
-                main_branch = "master"
 
-            direct_commits = self.get_direct_commits_to_branch(branch=main_branch, since=since)
+            if not main_branch:
+                logger.warning("Could not reliably determine main branch for git operations, defaulting to trying 'HEAD' for direct commits.")
+                main_branch = "HEAD" # Fallback to HEAD which might give all local branches not ideal but better than erroring
+
+            direct_commits = self.get_direct_commits_to_branch(branch=main_branch, since=since_for_git)
             metrics["direct_commits"] = direct_commits
             metrics["direct_commit_count"] = len(direct_commits)
         except subprocess.CalledProcessError as e:

@@ -17,6 +17,8 @@ from .cache import Cache
 
 logger = get_logger(__name__)
 
+MAX_PAGES = 50
+
 
 class GitHubAPIClient:
     """
@@ -167,8 +169,8 @@ class GitHubAPIClient:
 
             if more_pages:
                 page += 1
-            if page > 30:
-                logger.warning(f"Reached page limit (30) for {endpoint}. Stopping pagination.")
+            if page > MAX_PAGES:
+                logger.warning(f"Reached page limit ({MAX_PAGES}) for {endpoint}. Stopping pagination.")
                 more_pages = False
 
         logger.info(f"Finished fetching paginated data for {endpoint}. Total items: {len(all_items)}.")

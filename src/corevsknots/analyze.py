@@ -58,14 +58,15 @@ def analyze_repository(
 
     logger.info(f"Fetching GitHub data since: {since} for {repo}...")
     github_data = github_client.get_repository_metrics(repo, months)
-    logger.info(f"GitHub data fetching complete for {repo}.")
+    default_branch = github_data.get("repo_info", {}).get("default_branch")
+    logger.info(f"[{repo}] Determined default branch from GitHub API: {default_branch}")
 
     # Initialize Git CLI client if local path is provided
     git_data = None
     if local_path:
         logger.info(f"Analyzing local repository at: {local_path} for {repo}...")
         try:
-            git_client = GitCLI(repo_path=local_path)
+            git_client = GitCLI(repo_path=local_path, default_branch_hint=default_branch)
             git_data = git_client.get_repository_metrics(months)
             logger.info(f"Local git analysis complete for {repo} at {local_path}.")
         except Exception as e:
@@ -74,7 +75,7 @@ def analyze_repository(
         try:
             logger.info(f"Attempting temporary clone of repository {repo}...")
             repo_url = f"https://github.com/{repo}.git"
-            git_client = GitCLI(clone_url=repo_url)
+            git_client = GitCLI(clone_url=repo_url, default_branch_hint=default_branch)
             git_data = git_client.get_repository_metrics(months)
             logger.info(f"Temporary clone and local git analysis complete for {repo}.")
         except Exception as e:
