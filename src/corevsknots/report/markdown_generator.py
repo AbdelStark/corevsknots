@@ -334,6 +334,14 @@ def generate_single_report_content(metrics: Dict[str, Any], charts: Dict[str, st
             )
             sections.append(f"![Bus Factor {bus_factor_context}]({chart_path})\n")
 
+        knots_org_count = knots_contrib_metrics.get("organization_count", "N/A")
+        knots_org_diversity = knots_contrib_metrics.get("organization_diversity", 0.0)
+        core_org_count = core_contrib_metrics.get("organization_count", "N/A") # From git_data
+        core_org_diversity = core_contrib_metrics.get("organization_diversity", 0.0) # From git_data
+
+        sections.append(f"- **Organizational Diversity (Knots Original Commit Authors)**: {knots_org_count} domains, Diversity Score: {knots_org_diversity:.3f}\n")
+        sections.append(f"- **Organizational Diversity (Core All Commit Authors via git log)**: {core_org_count} domains, Diversity Score: {core_org_diversity:.3f}\n")
+
     # Commit metrics
     if "commit" in metrics:
         sections.append("\n## Commit Activity and Patterns\n")
@@ -845,7 +853,6 @@ def generate_comparison_report_content(metrics: Dict[str, Any], charts: Dict[str
         knots_contrib_metrics = metrics["repo2"]["metrics"].get("contributor", {})
 
         sections.append("\n### Core vs. Knots Fork-Specific Contributor Insights (based on recent commit activity)\n")
-
         core_active = core_contrib_metrics.get("active_contributors", "N/A")
         knots_original_active = knots_contrib_metrics.get("knots_contributors_with_original_work", "N/A")
         knots_only_merging = knots_contrib_metrics.get("knots_contributors_only_merging_core", "N/A")
@@ -859,7 +866,15 @@ def generate_comparison_report_content(metrics: Dict[str, Any], charts: Dict[str
         if "knots_original_bus_factor" in knots_contrib_metrics:
             sections.append(f"- **Bus Factor (Knots Original Work)**: {knots_contrib_metrics['knots_original_bus_factor']} (Core general bus factor: {core_contrib_metrics.get('bus_factor', 'N/A')})\n")
         if "knots_original_contributor_gini" in knots_contrib_metrics:
-            sections.append(f"- **Gini Coefficient (Knots Original Work)**: {knots_contrib_metrics['knots_original_contributor_gini']:.3f} (Core general Gini: {core_contrib_metrics.get('contributor_gini', 0.0):.3f})\n")
+            sections.append(f"- **Gini Coefficient (Knots Original Work)**: {knots_contrib_metrics['knots_original_contributor_gini']:.3f} (Core General Gini: {core_contrib_metrics.get('contributor_gini', 0.0):.3f})\n")
+
+        knots_org_count = knots_contrib_metrics.get("organization_count", "N/A")
+        knots_org_diversity = knots_contrib_metrics.get("organization_diversity", 0.0)
+        core_org_count = core_contrib_metrics.get("organization_count", "N/A") # This is from Core's git_data
+        core_org_diversity = core_contrib_metrics.get("organization_diversity", 0.0)
+
+        sections.append(f"- **Organizational Diversity (Knots Original Commit Authors)**: {knots_org_count} domains, Diversity Score: {knots_org_diversity:.3f}\n")
+        sections.append(f"- **Organizational Diversity (Core All Commit Authors via git log)**: {core_org_count} domains, Diversity Score: {core_org_diversity:.3f}\n")
 
     # Contributor comparison charts
     if "contributor_count_comparison" in charts:

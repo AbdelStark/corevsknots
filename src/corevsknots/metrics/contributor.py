@@ -84,6 +84,7 @@ def calculate_contributor_metrics(
     knots_author_core_merge_commit_counts = Counter()
     # For Core, or non-Knots repos, treat all commits (not matching merge patterns) as "original" for consistency in this logic block
     non_knots_author_commit_counts = Counter()
+    knots_original_author_emails = set() # New: to store emails of original Knots commit authors
 
     commits_data = github_data.get("commits", [])
     if commits_data:
@@ -98,15 +99,20 @@ def calculate_contributor_metrics(
                 all_commit_authors_in_period.add(author_login)
                 commit_sha = commit.get('sha')
                 commit_message = commit.get("commit", {}).get("message", "")
+                # Get author email from the commit object itself (more reliable for git history)
+                git_commit_author_email = commit.get("commit", {}).get("author", {}).get("email")
 
                 if is_knots_repo:
-                    is_merged_from_core = (core_commit_shas is not None and commit_sha in core_commit_shas) or is_core_merge_commit(commit_message) # Heuristic fallback
+                    is_merged_from_core = (core_commit_shas is not None and commit_sha in core_commit_shas) or \
+                                          is_core_merge_commit(commit_message)
                     if is_merged_from_core:
                         core_merge_commit_authors.add(author_login)
                         knots_author_core_merge_commit_counts[author_login] += 1
                     else:
                         knots_original_commit_authors.add(author_login)
                         knots_author_original_commit_counts[author_login] += 1
+                        if git_commit_author_email: # Collect email for original commit
+                            knots_original_author_emails.add(git_commit_author_email)
                 else: # For Core or other repos, count all non-heuristic-merge commits towards this count
                     if not is_core_merge_commit(commit_message): # Basic check to exclude obvious upstream merges for Core itself
                         non_knots_author_commit_counts[author_login] += 1
@@ -163,20 +169,28 @@ def calculate_contributor_metrics(
     if not (not is_knots_repo and "bus_factor" in metrics):
         metrics["bus_factor"] = calculate_bus_factor(contributors_by_gh_api_contributions)
 
-    # Additional metrics from Git CLI data if available
-    if git_data and "contributors" in git_data:
+    # Organizational Diversity
+    if is_knots_repo:
+        if knots_original_author_emails:
+            # Create a mock contributors dict for count_email_domains just for these emails
+            knots_original_contributors_for_domain_count = {email: {} for email in knots_original_author_emails}
+            metrics["email_domains"] = count_email_domains(knots_original_contributors_for_domain_count)
+            metrics["organization_count"] = len(metrics["email_domains"])
+            metrics["organization_diversity"] = calculate_diversity_score(list(metrics["email_domains"].values())) # Pass list of counts
+            logger.info(f"[{repo_name}] Knots original work org diversity: Count={metrics['organization_count']}, Diversity={metrics['organization_diversity']:.3f}")
+        else:
+            metrics["email_domains"] = {}
+            metrics["organization_count"] = 0
+            metrics["organization_diversity"] = 0.0
+    elif git_data and "contributors" in git_data: # For Core or general repos with git_data
         git_contributors = git_data["contributors"]
-
-        # Count unique contributor emails
         metrics["email_domains"] = count_email_domains(git_contributors)
-
-        # Organizational diversity (based on email domains)
         metrics["organization_count"] = len(metrics["email_domains"])
-
-        # Calculate organization diversity score (Shannon entropy)
-        metrics["organization_diversity"] = calculate_diversity_score(
-            metrics["email_domains"].values()
-        )
+        metrics["organization_diversity"] = calculate_diversity_score(list(metrics["email_domains"].values()))
+    else: # Fallback if no relevant data
+        metrics["email_domains"] = {}
+        metrics["organization_count"] = 0
+        metrics["organization_diversity"] = 0.0
 
     return metrics
 
