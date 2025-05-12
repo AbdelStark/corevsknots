@@ -5,17 +5,35 @@ This module calculates metrics related to repository commit patterns,
 frequency, and distribution.
 """
 
+import re
 from collections import Counter
 from typing import Any, Dict, List, Optional
 
 from ..utils.logger import get_logger
 from ..utils.time_utils import parse_date
+from .contributor import CORE_REPO_IDENTIFIER, KNOTS_REPO_IDENTIFIER, is_core_merge_commit
 
 logger = get_logger(__name__)
 
+# Temporary re-definition for is_core_merge_commit for standalone use if needed for this edit
+# (Ideally, move to a shared util if used by multiple metric modules)
+TEMP_KNOTS_REPO_IDENTIFIER = "bitcoinknots/bitcoin"
+
+def temp_is_core_merge_commit(commit_message: str) -> bool:
+    core_merge_patterns = [
+        "Merge bitcoin/bitcoin#", "Merge remote-tracking branch 'upstream/master'",
+        "Merge remote-tracking branch 'upstream/main'", "Merge pull request #\\d+ from bitcoin/bitcoin",
+        "Sync with bitcoin/bitcoin"
+    ]
+    for pattern in core_merge_patterns:
+        if pattern.lower() in commit_message.lower(): return True
+    if re.match(r"Merge branch \'.*\' of https://github.com/bitcoin/bitcoin into ", commit_message, re.IGNORECASE):
+        return True
+    return False
 
 def calculate_commit_metrics(
-    github_data: Dict[str, Any], git_data: Optional[Dict[str, Any]] = None
+    github_data: Dict[str, Any], git_data: Optional[Dict[str, Any]] = None,
+    repo_name: Optional[str] = None, core_commit_shas: Optional[set[str]] = None
 ) -> Dict[str, Any]:
     """
     Calculate commit-related metrics from GitHub API data and Git CLI data.
@@ -23,49 +41,65 @@ def calculate_commit_metrics(
     Args:
         github_data: Repository data fetched from GitHub API
         git_data: Repository data fetched from Git CLI (optional)
+        repo_name: Repository name (optional)
+        core_commit_shas: Set of core commit SHAs (optional)
 
     Returns:
         Dictionary of commit metrics
     """
     metrics = {}
+    is_knots_repo = repo_name == KNOTS_REPO_IDENTIFIER
 
-    # Extract commits from GitHub data
-    github_commits = github_data.get("commits", [])
+    raw_commits = github_data.get("commits", [])
+    original_commits_for_repo = []
 
-    # Basic commit count
-    metrics["total_commits"] = len(github_commits)
+    if is_knots_repo and core_commit_shas is not None:
+        logger.info(f"[{repo_name}] Filtering Knots commits against {len(core_commit_shas)} Core SHAs.")
+        for commit in raw_commits:
+            # Primary check: SHA matching against Core commits
+            if commit.get('sha') in core_commit_shas:
+                # This commit is from Core, skip for original Knots analysis
+                continue
+            # Secondary check: message patterns (for commits not found in Core by SHA, e.g. rebased merges)
+            if is_core_merge_commit(commit.get("commit", {}).get("message", "")):
+                # This looks like a Core merge by message, even if SHA differs, skip.
+                continue
+            original_commits_for_repo.append(commit)
+        logger.info(f"[{repo_name}] Found {len(original_commits_for_repo)} original Knots commits out of {len(raw_commits)} total fetched for period after SHA and message filtering.")
+    else: # For Core or if core_commit_shas not provided (or not a Knots repo)
+        if repo_name == CORE_REPO_IDENTIFIER: # Use imported CORE_REPO_IDENTIFIER
+            for commit in raw_commits:
+                if not is_core_merge_commit(commit.get("commit", {}).get("message", "")):
+                    original_commits_for_repo.append(commit)
+        else:
+            original_commits_for_repo = raw_commits
 
-    # If no commits, return empty metrics
-    if metrics["total_commits"] == 0:
-        logger.warning("No commits found in GitHub data")
+    metrics["total_commits_in_period"] = len(raw_commits) # Total fetched in period
+    metrics["original_commits_in_period"] = len(original_commits_for_repo) # Original after filtering for Knots
+
+    if not original_commits_for_repo:
+        logger.warning(f"[{repo_name or 'unknown'}] No original commits to analyze for the period.")
+        # Return basic counts and empty/default for other metrics
+        metrics.update({"commits_per_day": 0, "commit_frequency": "inactive", "commit_message_quality": {"quality_score": 0}})
         return metrics
 
-    # Commit frequency (commits per day/week/month)
-    metrics.update(calculate_commit_frequency(github_commits))
+    # All subsequent metrics based on original_commits_for_repo
+    metrics.update(calculate_commit_frequency(original_commits_for_repo))
+    metrics.update(calculate_commit_size_metrics(original_commits_for_repo))
+    metrics["commit_message_quality"] = analyze_commit_messages(original_commits_for_repo)
+    metrics.update(analyze_commit_authorship(original_commits_for_repo)) # This now reflects authors of original commits
+    metrics.update(analyze_merge_commits(original_commits_for_repo)) # Merge commits within the original set (e.g. feature branches in Knots)
+    metrics.update(analyze_commit_activity_patterns(original_commits_for_repo))
 
-    # Commit size and impact
-    metrics.update(calculate_commit_size_metrics(github_commits))
-
-    # Commit message quality
-    metrics["commit_message_quality"] = analyze_commit_messages(github_commits)
-
-    # Commit authorship
-    metrics.update(analyze_commit_authorship(github_commits))
-
-    # Merge commits vs direct commits
-    metrics.update(analyze_merge_commits(github_commits))
-
-    # Direct commits to main branch (from Git CLI data)
-    if git_data and "direct_commits" in git_data:
-        metrics["direct_commit_count"] = git_data["direct_commit_count"]
-        metrics["direct_commit_ratio"] = (
-            git_data["direct_commit_count"] / metrics["total_commits"]
-            if metrics["total_commits"] > 0
+    # direct_commit_ratio might need context if it was based on total_commits vs original_commits for Knots
+    if git_data and "direct_commit_count" in git_data:
+        metrics["direct_commit_count_git"] = git_data["direct_commit_count"]
+        # Ratio of direct to original commits might be more insightful for Knots
+        metrics["direct_to_original_commit_ratio"] = (
+            git_data["direct_commit_count"] / len(original_commits_for_repo)
+            if original_commits_for_repo
             else 0
         )
-
-    # Commit activity by day of week and hour
-    metrics.update(analyze_commit_activity_patterns(github_commits))
 
     return metrics
 

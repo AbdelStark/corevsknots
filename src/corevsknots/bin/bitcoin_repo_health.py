@@ -118,5 +118,36 @@ def main():
         logger.error(f"An error occurred: {e}", exc_info=args['--verbose'])
         sys.exit(1)
 
+    # Display summary if compare or fight was successful and data is available
+    if (args['compare'] or args['fight']) and 'comparison_data' in locals() and comparison_data:
+        try:
+            print("\n--- Repository Health Comparison Summary ---")
+            repo1_name = comparison_data['repo1']['name']
+            repo2_name = comparison_data['repo2']['name']
+            metrics1 = comparison_data['repo1']['metrics']
+            metrics2 = comparison_data['repo2']['metrics']
+
+            print(f"Overall Score: {repo1_name}: {metrics1.get('overall_health_score', 'N/A')}/10  vs  {repo2_name}: {metrics2.get('overall_health_score', 'N/A')}/10")
+
+            # Contributor summary
+            print("\nContributors:")
+            print(f"  Total: {repo1_name}: {metrics1.get('contributor', {}).get('total_contributors', 'N/A')}  vs  {repo2_name}: {metrics2.get('contributor', {}).get('total_contributors', 'N/A')}")
+            if args['fight']:
+                print(f"  Original to Knots: {metrics2.get('contributor', {}).get('knots_contributors_with_original_work', 'N/A')}")
+                print(f"  Knots Bus Factor (Original): {metrics2.get('contributor', {}).get('knots_original_bus_factor', 'N/A')}")
+            else:
+                print(f"  Bus Factor: {repo1_name}: {metrics1.get('contributor', {}).get('bus_factor', 'N/A')}  vs  {repo2_name}: {metrics2.get('contributor', {}).get('bus_factor', 'N/A')}")
+
+            # Commit summary
+            print("\nCommits (per day, original for Knots in fight mode):")
+            commits1_per_day = metrics1.get('commit', {}).get('commits_per_day', 'N/A')
+            commits2_per_day = metrics2.get('commit', {}).get('commits_per_day', 'N/A')
+            print(f"  Frequency: {repo1_name}: {commits1_per_day}  vs  {repo2_name}: {commits2_per_day}")
+            print(f"  Msg Quality: {repo1_name}: {metrics1.get('commit', {}).get('commit_message_quality', {}).get('quality_score','N/A')}/10  vs  {repo2_name}: {metrics2.get('commit', {}).get('commit_message_quality', {}).get('quality_score','N/A')}/10")
+
+            print(f"\nFull report generated at: {report_path}")
+        except Exception as e:
+            logger.error(f"Error generating CLI summary: {e}")
+
 if __name__ == '__main__':
     main()

@@ -18,6 +18,7 @@ from .cache import Cache
 logger = get_logger(__name__)
 
 MAX_PAGES = 50
+MAX_PAGES_PER_ENDPOINT = 50
 
 
 class GitHubAPIClient:
@@ -94,7 +95,9 @@ class GitHubAPIClient:
                 logger.warning(f"Rate limit nearly exceeded. Waiting {wait_time:.1f} seconds before request to {url}...")
                 time.sleep(wait_time + 1)
 
-        logger.info(f"Fetching data from GitHub API: {url} (Params: {params})")
+        logger.debug(f"Fetching: {url}")
+        if params:
+            logger.debug(f"Params: {params}")
         response = requests.get(url, headers=self.headers, params=params)
 
         if "X-RateLimit-Remaining" in response.headers:
@@ -136,7 +139,11 @@ class GitHubAPIClient:
         all_items: List[Dict[str, Any]] = []
         page = 1
         more_pages = True
-        logger.info(f"Fetching paginated data from endpoint: {endpoint} (Params: {params})")
+        logger.info(f"Fetching paginated: {endpoint}")
+        if params and params.get("per_page") == 100:
+            logger.debug(f"Initial params (excluding page): {{k: v for k, v in params.items() if k != 'page'}}")
+        else:
+            logger.debug(f"Initial params: {params}")
 
         while more_pages:
             params["page"] = page
@@ -173,7 +180,7 @@ class GitHubAPIClient:
                 logger.warning(f"Reached page limit ({MAX_PAGES}) for {endpoint}. Stopping pagination.")
                 more_pages = False
 
-        logger.info(f"Finished fetching paginated data for {endpoint}. Total items: {len(all_items)}.")
+        logger.info(f"Finished paginated for {endpoint}. Total items: {len(all_items)}.")
         return all_items
 
     def get_repository(self, repo: str) -> Dict[str, Any]:
@@ -462,7 +469,7 @@ class GitHubAPIClient:
         since_date = months_ago(months)
         since = format_date(since_date)
 
-        logger.info(f"Fetching metrics for {repo} since {since}")
+        logger.info(f"Fetching overall metrics for {repo} since {since}")
 
         metrics = {}
 

@@ -36,7 +36,8 @@ def is_core_merge_commit(commit_message: str) -> bool:
 
 def calculate_contributor_metrics(
     github_data: Dict[str, Any], git_data: Optional[Dict[str, Any]] = None,
-    repo_name: Optional[str] = None # Added to provide context
+    repo_name: Optional[str] = None,
+    core_commit_shas: Optional[set[str]] = None # New param
 ) -> Dict[str, Any]:
     """
     Calculate contributor-related metrics from GitHub API data and Git CLI data.
@@ -45,6 +46,7 @@ def calculate_contributor_metrics(
         github_data: Repository data fetched from GitHub API
         git_data: Repository data fetched from Git CLI (optional)
         repo_name: Name of the repository (optional)
+        core_commit_shas: Set of SHA-1 hashes of Core merge commits (optional)
 
     Returns:
         Dictionary of contributor metrics
@@ -74,12 +76,14 @@ def calculate_contributor_metrics(
     metrics["contributors_by_commits"] = contributors_by_gh_api_contributions # This remains the GH API view
     metrics["top_contributors"] = contributors_by_gh_api_contributions[:10]
 
-    # Initialize active/original author sets
-    all_commit_authors = set()
-    knots_original_commit_authors = set() # Authors who made at least one original commit to Knots
-    core_merge_commit_authors = set()   # Authors who made at least one Core merge commit to Knots
-    # For Knots: count original commits per author
+    # Initialize active/original author sets and counts
+    all_commit_authors_in_period = set()
+    knots_original_commit_authors = set()
+    core_merge_commit_authors = set()
     knots_author_original_commit_counts = Counter()
+    knots_author_core_merge_commit_counts = Counter()
+    # For Core, or non-Knots repos, treat all commits (not matching merge patterns) as "original" for consistency in this logic block
+    non_knots_author_commit_counts = Counter()
 
     commits_data = github_data.get("commits", [])
     if commits_data:
@@ -91,47 +95,52 @@ def calculate_contributor_metrics(
                 author_login = commit["commit"]["author"]["name"]
 
             if author_login:
-                all_commit_authors.add(author_login)
-                if is_knots_repo and "commit" in commit and "message" in commit["commit"]:
-                    commit_message = commit["commit"]["message"]
-                    if is_core_merge_commit(commit_message):
+                all_commit_authors_in_period.add(author_login)
+                commit_sha = commit.get('sha')
+                commit_message = commit.get("commit", {}).get("message", "")
+
+                if is_knots_repo:
+                    is_merged_from_core = (core_commit_shas is not None and commit_sha in core_commit_shas) or is_core_merge_commit(commit_message) # Heuristic fallback
+                    if is_merged_from_core:
                         core_merge_commit_authors.add(author_login)
+                        knots_author_core_merge_commit_counts[author_login] += 1
                     else:
                         knots_original_commit_authors.add(author_login)
                         knots_author_original_commit_counts[author_login] += 1
-                elif not is_knots_repo: # For Core (or any non-Knots repo), all non-merge like commits are original
-                    # This could be further refined if Core also merges from other sources
-                    # but for Core vs Knots, this distinction is most important for Knots.
-                    if not is_core_merge_commit(commit.get("commit", {}).get("message", "")): # crude check for core
-                        knots_original_commit_authors.add(author_login) # reuse for general active authors
-                        knots_author_original_commit_counts[author_login] +=1
+                else: # For Core or other repos, count all non-heuristic-merge commits towards this count
+                    if not is_core_merge_commit(commit_message): # Basic check to exclude obvious upstream merges for Core itself
+                        non_knots_author_commit_counts[author_login] += 1
 
-        metrics["active_contributors"] = len(all_commit_authors)
+        metrics["active_contributors"] = len(all_commit_authors_in_period)
         metrics["active_ratio"] = metrics["active_contributors"] / metrics["total_contributors"] if metrics["total_contributors"] > 0 else 0
 
         if is_knots_repo:
             metrics["knots_original_commit_authors_count"] = len(knots_original_commit_authors)
             metrics["core_merge_commit_authors_count"] = len(core_merge_commit_authors)
-            only_merging_authors = core_merge_commit_authors - knots_original_commit_authors
-            metrics["knots_contributors_only_merging_core"] = len(only_merging_authors)
+            knots_authors_only_merging = core_merge_commit_authors - knots_original_commit_authors
+            metrics["knots_contributors_only_merging_core"] = len(knots_authors_only_merging)
             metrics["knots_contributors_with_original_work"] = len(knots_original_commit_authors)
 
-            # Recalculate contributor lists for Knots based on original commits
-            knots_contributors_by_original_commits_list = sorted(
-                knots_author_original_commit_counts.items(),
-                key=lambda item: item[1],
-                reverse=True
-            )
-            metrics["knots_contributors_by_original_commits"] = knots_contributors_by_original_commits_list
-            metrics["knots_top_original_contributors"] = knots_contributors_by_original_commits_list[:10]
-            if knots_contributors_by_original_commits_list:
-                original_commits_counts = [c[1] for c in knots_contributors_by_original_commits_list]
-                metrics["knots_original_contributor_gini"] = calculate_gini_coefficient(original_commits_counts)
-                metrics["knots_original_bus_factor"] = calculate_bus_factor(knots_contributors_by_original_commits_list)
+            knots_contrib_by_original = sorted(knots_author_original_commit_counts.items(), key=lambda item: item[1], reverse=True)
+            metrics["knots_contributors_by_original_commits"] = knots_contrib_by_original
+            metrics["knots_top_original_contributors"] = knots_contrib_by_original[:10]
+            if knots_contrib_by_original:
+                original_counts = [c[1] for c in knots_contrib_by_original]
+                metrics["knots_original_contributor_gini"] = calculate_gini_coefficient(original_counts)
+                metrics["knots_original_bus_factor"] = calculate_bus_factor(knots_contrib_by_original)
             else:
-                metrics["knots_original_contributor_gini"] = 0 # or 1.0 if preferred for no data
+                metrics["knots_original_contributor_gini"] = 0.0
                 metrics["knots_original_bus_factor"] = 0
-            logger.info(f"[{repo_name}] Knots original work: Gini={metrics.get('knots_original_contributor_gini')}, BusFactor={metrics.get('knots_original_bus_factor')}")
+            logger.info(f"[{repo_name}] Knots original work (based on {len(commits_data)} recent commits): Gini={metrics.get('knots_original_contributor_gini')}, BusFactor={metrics.get('knots_original_bus_factor')}")
+        else: # For Core or other repos, use non_knots_author_commit_counts for a comparable Gini/BusFactor
+            core_like_contrib_by_commits = sorted(non_knots_author_commit_counts.items(), key=lambda item: item[1], reverse=True)
+            if core_like_contrib_by_commits:
+                core_like_counts = [c[1] for c in core_like_contrib_by_commits]
+                metrics["contributor_gini"] = calculate_gini_coefficient(core_like_counts)
+                metrics["bus_factor"] = calculate_bus_factor(core_like_contrib_by_commits)
+            else:
+                metrics["contributor_gini"] = 0.0
+                metrics["bus_factor"] = 0
     else:
         metrics["active_contributors"] = 0
         metrics["active_ratio"] = 0
@@ -141,13 +150,17 @@ def calculate_contributor_metrics(
             metrics["knots_contributors_only_merging_core"] = 0
             metrics["knots_contributors_with_original_work"] = 0
 
-    # Default Gini and Bus Factor (uses GH API contributions for non-Knots or as a fallback)
-    if not (is_knots_repo and "knots_original_bus_factor" in metrics): # if not already set by knots specific logic
-        if len(contributors_by_gh_api_contributions) > 1:
-            commits_counts_gh_api = [c[1] for c in contributors_by_gh_api_contributions]
+    # General Gini/Bus Factor from GH API /contributors as overall view, remove if Knots version is preferred as primary
+    # For clarity, let's ensure general bus_factor & gini are always present from GH API for all repos for now.
+    if len(contributors_by_gh_api_contributions) > 1:
+        commits_counts_gh_api = [c[1] for c in contributors_by_gh_api_contributions]
+        # Only set general gini if not already set by non-Knots path above
+        if not (not is_knots_repo and "contributor_gini" in metrics):
             metrics["contributor_gini"] = calculate_gini_coefficient(commits_counts_gh_api)
-        else:
-            metrics["contributor_gini"] = 1.0
+    elif not (not is_knots_repo and "contributor_gini" in metrics):
+        metrics["contributor_gini"] = 1.0
+
+    if not (not is_knots_repo and "bus_factor" in metrics):
         metrics["bus_factor"] = calculate_bus_factor(contributors_by_gh_api_contributions)
 
     # Additional metrics from Git CLI data if available

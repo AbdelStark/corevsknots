@@ -25,6 +25,19 @@ from .utils.time_utils import format_date, months_ago
 
 logger = get_logger(__name__)
 
+CORE_REPO_IDENTIFIER = "bitcoin/bitcoin"
+KNOTS_REPO_IDENTIFIER = "bitcoinknots/bitcoin"
+
+def get_core_commit_shas_for_period(months: int, github_token: Optional[str], use_cache: bool) -> set[str]:
+    """Helper to fetch commit SHAs for Bitcoin Core for a given period."""
+    logger.info(f"Fetching Bitcoin Core commit SHAs for the last {months} months for fork comparison...")
+    core_client = GitHubAPIClient(token=github_token, use_cache=use_cache)
+    since_date = months_ago(months)
+    since = format_date(since_date)
+    core_commits_data = core_client.get_commits(CORE_REPO_IDENTIFIER, since=since)
+    core_shas = {commit['sha'] for commit in core_commits_data if 'sha' in commit}
+    logger.info(f"Fetched {len(core_shas)} unique Bitcoin Core commit SHAs for comparison period.")
+    return core_shas
 
 def analyze_repository(
     repo: str,
@@ -32,6 +45,8 @@ def analyze_repository(
     github_token: Optional[str] = None,
     local_path: Optional[str] = None,
     use_cache: bool = True,
+    # New parameter to pass Core's commit SHAs if analyzing Knots
+    core_commit_shas_for_knots: Optional[set[str]] = None
 ) -> Dict[str, Any]:
     """
     Analyze a GitHub repository.
@@ -42,6 +57,7 @@ def analyze_repository(
         github_token: GitHub personal access token
         local_path: Path to local repository clone
         use_cache: Whether to use cache for API responses
+        core_commit_shas_for_knots: Set of commit SHAs for Bitcoin Core if analyzing Knots
 
     Returns:
         Dictionary of repository metrics
@@ -60,6 +76,7 @@ def analyze_repository(
     github_data = github_client.get_repository_metrics(repo, months)
     default_branch = github_data.get("repo_info", {}).get("default_branch")
     logger.info(f"[{repo}] Determined default branch from GitHub API: {default_branch}")
+    logger.info(f"GitHub data fetching complete for {repo}.")
 
     # Initialize Git CLI client if local path is provided
     git_data = None
@@ -82,7 +99,13 @@ def analyze_repository(
             logger.error(f"Failed to clone and analyze repository {repo}: {e}")
 
     logger.info(f"Calculating all metrics for {repo}...")
-    metrics = calculate_all_metrics(github_data, git_data, repo_name_for_logging=repo)
+    # Pass core_commit_shas_for_knots if this is the Knots repo
+    metrics = calculate_all_metrics(
+        github_data,
+        git_data,
+        repo_name_for_logging=repo,
+        core_commit_shas=(core_commit_shas_for_knots if repo == KNOTS_REPO_IDENTIFIER else None)
+    )
     logger.info(f"All metrics calculation complete for {repo}.")
 
     # Add repository metadata
@@ -134,9 +157,14 @@ def compare_repositories(
     """
     logger.info(f"Comparing repositories: {repo1} vs {repo2}{' (FIGHT MODE!)' if is_fight_mode else ''}")
 
-    # Analyze both repositories
-    metrics1 = analyze_repository(repo1, months, github_token, local_path1, use_cache)
-    metrics2 = analyze_repository(repo2, months, github_token, local_path2, use_cache)
+    core_shas_for_knots_comparison: Optional[set[str]] = None
+    if is_fight_mode or (repo1 == CORE_REPO_IDENTIFIER and repo2 == KNOTS_REPO_IDENTIFIER):
+        core_shas_for_knots_comparison = get_core_commit_shas_for_period(months, github_token, use_cache)
+
+    metrics1 = analyze_repository(repo1, months, github_token, local_path1, use_cache,
+                                  core_commit_shas_for_knots=(core_shas_for_knots_comparison if repo1 == KNOTS_REPO_IDENTIFIER else None))
+    metrics2 = analyze_repository(repo2, months, github_token, local_path2, use_cache,
+                                  core_commit_shas_for_knots=(core_shas_for_knots_comparison if repo2 == KNOTS_REPO_IDENTIFIER else None))
 
     # Structure the comparison result
     comparison = {
@@ -154,7 +182,10 @@ def compare_repositories(
 
 
 def calculate_all_metrics(
-    github_data: Dict[str, Any], git_data: Optional[Dict[str, Any]] = None, repo_name_for_logging: str = "unknown_repo"
+    github_data: Dict[str, Any],
+    git_data: Optional[Dict[str, Any]] = None,
+    repo_name_for_logging: str = "unknown_repo",
+    core_commit_shas: Optional[set[str]] = None # New parameter
 ) -> Dict[str, Any]:
     """
     Calculate all repository metrics.
@@ -163,6 +194,7 @@ def calculate_all_metrics(
         github_data: Repository data fetched from GitHub API
         git_data: Repository data fetched from Git CLI (optional)
         repo_name_for_logging: Name of the repository for logging purposes
+        core_commit_shas: Set of commit SHAs for Bitcoin Core if analyzing Knots
 
     Returns:
         Dictionary of all repository metrics
@@ -193,7 +225,9 @@ def calculate_all_metrics(
     # Calculate contributor metrics
     logger.info(f"[{repo_name_for_logging}] Calculating contributor metrics...")
     try:
-        metrics["contributor"] = calculate_contributor_metrics(github_data, git_data, repo_name=repo_name_for_logging)
+        metrics["contributor"] = calculate_contributor_metrics(github_data, git_data,
+                                                              repo_name=repo_name_for_logging,
+                                                              core_commit_shas=core_commit_shas)
         logger.info(f"[{repo_name_for_logging}] Contributor metrics calculated.")
     except Exception as e:
         logger.error(f"[{repo_name_for_logging}] Failed to calculate contributor metrics: {e}")
@@ -202,7 +236,9 @@ def calculate_all_metrics(
     # Calculate commit metrics
     logger.info(f"[{repo_name_for_logging}] Calculating commit metrics...")
     try:
-        metrics["commit"] = calculate_commit_metrics(github_data, git_data)
+        metrics["commit"] = calculate_commit_metrics(github_data, git_data,
+                                                     repo_name=repo_name_for_logging,
+                                                     core_commit_shas=core_commit_shas)
         logger.info(f"[{repo_name_for_logging}] Commit metrics calculated.")
     except Exception as e:
         logger.error(f"[{repo_name_for_logging}] Failed to calculate commit metrics: {e}")
