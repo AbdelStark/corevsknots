@@ -43,6 +43,8 @@ const CodeReviewSection: React.FC<CodeReviewSectionProps> = ({ reportData, fight
         primaryFighterKey={fighterKey}
         unit="/10"
         tooltip="Score (0-10) indicating review thoroughness (multiple reviewers, substantive comments/changes requested). Higher is better."
+        showBar={true}
+        barMaxValue={10}
       />
       <MetricDisplay
         label="Self-Merged Ratio"
@@ -52,6 +54,8 @@ const CodeReviewSection: React.FC<CodeReviewSectionProps> = ({ reportData, fight
         unit="%"
         lowerIsBetter={true}
         tooltip="Percentage of merged PRs that were merged by the PR author. Lower indicates more independent review."
+        showBar={true}
+        barMaxValue={100}
       />
       <MetricDisplay
         label="Avg. Time to First Review"
@@ -69,6 +73,8 @@ const CodeReviewSection: React.FC<CodeReviewSectionProps> = ({ reportData, fight
         primaryFighterKey={fighterKey}
         unit="/10"
         tooltip="Score (0-10) indicating speed of first review. Higher is better."
+        showBar={true}
+        barMaxValue={10}
       />
     </MetricCard>
   );

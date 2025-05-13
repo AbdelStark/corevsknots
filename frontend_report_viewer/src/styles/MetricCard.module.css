@@ -116,6 +116,30 @@
   animation: blinkWin 1s infinite alternate; /* Blinking animation */
 }
 
+/* Style for the whole metric pair when primary fighter is winning/losing */
+.metricPairWinning {
+  /* background-color: rgba(46, 204, 113, 0.1); */ /* Subtle green highlight */
+  /* border-left: 3px solid #2ecc71; */
+}
+
+.metricPairLosing {
+  /* background-color: rgba(192, 57, 43, 0.05); */ /* Subtle red highlight */
+  /* border-left: 3px solid #c0392b; */
+}
+
+.metricIcon {
+  margin-right: 0.3em;
+  font-size: 0.9em;
+}
+
+.winningIcon {
+  color: #2ecc71; /* Green */
+}
+
+.losingIcon {
+  color: #c0392b; /* Red */
+}
+
 @keyframes blinkWin {
   from { opacity: 1; }
   to { opacity: 0.5; }

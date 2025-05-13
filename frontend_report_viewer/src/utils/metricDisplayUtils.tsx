@@ -52,7 +52,8 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
   let primaryStyle = primaryFighterKey === 'repo1' ? homeStyles.valueRepo1 : homeStyles.valueRepo2;
   let opponentStyle = primaryFighterKey === 'repo1' ? homeStyles.valueRepo2 : homeStyles.valueRepo1;
   let primaryIsWinner = false;
-  let opponentIsWinner = false;
+  let pairStyle = homeStyles.metricPair; // Default style for the pair
+  let icon = null;
 
   const better = isBetter(primaryValue as number, opponentValue as number, lowerIsBetter);
 
@@ -60,10 +61,13 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
     primaryStyle = `${primaryStyle} ${cardStyles.metricValueBetter}`;
     opponentStyle = `${opponentStyle} ${cardStyles.metricValueWorse}`;
     primaryIsWinner = true;
+    pairStyle = `${homeStyles.metricPair} ${cardStyles.metricPairWinning}`;
+    icon = <span className={`${cardStyles.metricIcon} ${cardStyles.winningIcon}`}>▲</span>; // Up arrow for winning
   } else if (better === false) { // Opponent is better
     opponentStyle = `${opponentStyle} ${cardStyles.metricValueBetter}`;
     primaryStyle = `${primaryStyle} ${cardStyles.metricValueWorse}`;
-    opponentIsWinner = true; // Though we only show WIN! for primary here
+    pairStyle = `${homeStyles.metricPair} ${cardStyles.metricPairLosing}`;
+    icon = <span className={`${cardStyles.metricIcon} ${cardStyles.losingIcon}`}>▼</span>; // Down arrow for losing
   }
 
   const diff = (primaryValue !== undefined && opponentValue !== undefined && typeof primaryValue === 'number' && typeof opponentValue === 'number')
@@ -88,8 +92,8 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
   const primaryBarColor = primaryFighterKey === 'repo1' ? '#45aaf2' : '#ff6b81';
 
   return (
-    <div className={homeStyles.metricPair} title={tooltip}>
-      <span className={homeStyles.metricLabel}>{label}:</span>
+    <div className={pairStyle} title={tooltip}>
+      <span className={homeStyles.metricLabel}>{icon}{label}:</span>
       <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
         <span className={primaryStyle}>
           {valPrimaryDisplay}
@@ -100,6 +104,7 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
             value={primaryValue}
             maxValue={barMaxValue}
             barColor={primaryBarColor}
+            height="10px" // Slightly smaller bar for inline
           />
         )}
         <span className={cardStyles.metricValue} style={{ marginLeft: '10px', minWidth: '70px', display: 'inline-block' }}>

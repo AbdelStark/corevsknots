@@ -40,6 +40,8 @@ const CiCdSection: React.FC<CiCdSectionProps> = ({ reportData, fighterKey, displ
             primaryFighterKey={fighterKey}
             unit="%"
             tooltip="Percentage of CI workflow runs that succeeded."
+            showBar={true}
+            barMaxValue={100}
           />
           <MetricDisplay
             label="Workflows per Day"
@@ -62,6 +64,8 @@ const CiCdSection: React.FC<CiCdSectionProps> = ({ reportData, fighterKey, displ
             primaryFighterKey={fighterKey}
             unit="%"
             tooltip="Ratio of Pull Requests that triggered a CI run."
+            showBar={true}
+            barMaxValue={100}
           />
         </>
       )}

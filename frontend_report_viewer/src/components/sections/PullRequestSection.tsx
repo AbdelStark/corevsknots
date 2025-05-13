@@ -34,6 +34,8 @@ const PullRequestSection: React.FC<PullRequestSectionProps> = ({ reportData, fig
         primaryFighterKey={fighterKey}
         unit="%"
         tooltip="Percentage of PRs that were merged."
+        showBar={true}
+        barMaxValue={100}
       />
       <MetricDisplay
         label="Avg. Time to Merge"
@@ -51,6 +53,8 @@ const PullRequestSection: React.FC<PullRequestSectionProps> = ({ reportData, fig
         primaryFighterKey={fighterKey}
         unit="/10"
         tooltip="Score (0-10) indicating PR processing speed. Higher is better."
+        showBar={true}
+        barMaxValue={10}
       />
       <MetricDisplay
         label="Avg. PR Size"
@@ -69,6 +73,8 @@ const PullRequestSection: React.FC<PullRequestSectionProps> = ({ reportData, fig
         unit="%"
         lowerIsBetter={true}
         tooltip="Percentage of PRs changing more than 1000 lines. Lower is often better."
+        showBar={true}
+        barMaxValue={100}
       />
       <MetricDisplay
         label="External PR Ratio"
@@ -77,6 +83,8 @@ const PullRequestSection: React.FC<PullRequestSectionProps> = ({ reportData, fig
         primaryFighterKey={fighterKey}
         unit="%"
         tooltip="Percentage of PRs submitted by non-core contributors. Higher can indicate broader community involvement."
+        showBar={true}
+        barMaxValue={100}
       />
     </MetricCard>
   );

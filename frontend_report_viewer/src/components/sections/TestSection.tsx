@@ -45,6 +45,8 @@ const TestSection: React.FC<TestSectionProps> = ({ reportData, fighterKey, displ
             primaryFighterKey={fighterKey}
             unit="/10"
             tooltip="Score (0-10) evaluating overall testing practices. Higher is better."
+            showBar={true}
+            barMaxValue={10}
           />
         </>
       )}

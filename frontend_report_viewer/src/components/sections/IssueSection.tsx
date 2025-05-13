@@ -41,6 +41,8 @@ const IssueSection: React.FC<IssueSectionProps> = ({ reportData, fighterKey, dis
         primaryFighterKey={fighterKey}
         unit="%"
         tooltip="Percentage of issues that are closed."
+        showBar={true}
+        barMaxValue={100}
       />
       <MetricDisplay
         label="Avg. Time to Close"
@@ -58,6 +60,8 @@ const IssueSection: React.FC<IssueSectionProps> = ({ reportData, fighterKey, dis
         primaryFighterKey={fighterKey}
         unit="/10"
         tooltip="Score (0-10) based on how quickly issues are addressed/closed. Higher is better."
+        showBar={true}
+        barMaxValue={10}
       />
       <MetricDisplay
         label="Stale Issue Ratio"
@@ -67,6 +71,8 @@ const IssueSection: React.FC<IssueSectionProps> = ({ reportData, fighterKey, dis
         unit="%"
         lowerIsBetter={true}
         tooltip="Percentage of open issues that haven't been updated in a while (e.g., >30 days). Lower is better."
+        showBar={true}
+        barMaxValue={100}
       />
     </MetricCard>
   );
