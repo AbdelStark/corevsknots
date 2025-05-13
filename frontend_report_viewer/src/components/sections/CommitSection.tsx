@@ -35,6 +35,8 @@ const CommitSection: React.FC<CommitSectionProps> = ({ reportData, fighterKey, d
         primaryFighterKey={fighterKey}
         unit="/10"
         tooltip="Score (0-10) based on commit message length and descriptiveness. Higher is better."
+        showBar={true}
+        barMaxValue={10}
       />
       <MetricDisplay
         label="Avg. Commit Size"

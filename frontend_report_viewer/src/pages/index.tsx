@@ -85,14 +85,6 @@ export default function Home() {
 
         {reportData && (
           <>
-            <div className={styles.reportMeta}>
-                <p>
-                    Comparing {reportData.repo1.name} vs {reportData.repo2.name}
-                </p>
-                <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
-                <p>Period: {reportData.analysis_metadata.period_months} Months</p>
-                {reportData.analysis_metadata.is_fight_mode && <p className={styles.fightModeText}>FIGHT MODE ENGAGED!</p>}
-            </div>
 
             {/* Overall Scores Health Bar - Placed above columns */}
             <OverallScoresSection reportData={reportData} />
@@ -120,6 +112,12 @@ export default function Home() {
                 <TestSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
               </div>
             </div>
+
+            <div className={styles.reportMeta}>
+                <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
+                <p>Period: {reportData.analysis_metadata.period_months} Months</p>
+            </div>
+
           </>
         )}
       </main>

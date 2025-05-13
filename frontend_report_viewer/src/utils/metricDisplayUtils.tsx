@@ -1,3 +1,4 @@
+import InlineMetricBar from '@/components/InlineMetricBar';
 import homeStyles from '@/styles/Home.module.css';
 import cardStyles from '@/styles/MetricCard.module.css';
 import React from 'react';
@@ -21,6 +22,8 @@ export interface MetricDisplayProps {
   // To correctly style the primary fighter's value (repo1 or repo2 color)
   primaryFighterKey: 'repo1' | 'repo2';
   precision?: number;
+  showBar?: boolean;
+  barMaxValue?: number;
 }
 
 export const MetricDisplay: React.FC<MetricDisplayProps> = ({
@@ -32,6 +35,8 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
   tooltip,
   primaryFighterKey,
   precision,
+  showBar = false,
+  barMaxValue,
 }) => {
   const formatValue = (val: string | number | undefined, p?: number): string => {
     if (val === undefined || val === null) return 'N/A';
@@ -80,17 +85,23 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
     else if (opponentWins) diffStyle = `${cardStyles.metricValueBetter} ${opponentStyle.includes(homeStyles.valueRepo1) ? homeStyles.valueRepo1 : homeStyles.valueRepo2 }`;
   }
 
+  const primaryBarColor = primaryFighterKey === 'repo1' ? '#45aaf2' : '#ff6b81';
+
   return (
     <div className={homeStyles.metricPair} title={tooltip}>
       <span className={homeStyles.metricLabel}>{label}:</span>
-      <div style={{ textAlign: 'right' }}>
+      <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', justifyContent:'flex-end' }}>
         <span className={primaryStyle}>
           {valPrimaryDisplay}
           {primaryIsWinner && <span className={cardStyles.winIndicator}> WIN!</span>}
         </span>
-        {/* Removed direct VS text from here, can be part of overall card design */}
-        {/* <span className={cardStyles.vsText}>vs</span> */}
-        {/* <span className={opponentStyle}>{valOpponentDisplay}</span> */}
+        {showBar && typeof primaryValue === 'number' && (
+          <InlineMetricBar
+            value={primaryValue}
+            maxValue={barMaxValue}
+            barColor={primaryBarColor}
+          />
+        )}
         <span className={cardStyles.metricValue} style={{ marginLeft: '10px', minWidth: '70px', display: 'inline-block' }}>
             (<span className={diffStyle}>{diffDisplay}</span>)
         </span>

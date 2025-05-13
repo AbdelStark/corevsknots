@@ -1,0 +1,20 @@
+/* src/styles/InlineMetricBar.module.css */
+.barContainer {
+  width: 100px; /* Or a percentage of its parent in MetricDisplay */
+  background-color: #3d3d6b; /* Darker background for the bar track */
+  border-radius: 0px; /* Sharp edges */
+  overflow: hidden;
+  border: 1px solid #576574; /* Subtle border for the track */
+  margin-left: 0.5rem; /* Space it from the text value */
+  display: inline-block; /* To sit next to text */
+  vertical-align: middle;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 0px; /* Sharp edges */
+  transition: width 0.5s ease-out;
+  /* Glow for the fill */
+  /* box-shadow: 0 0 3px currentColor, 0 0 5px currentColor; */
+  /* CurrentColor will take the backgroundColor of the barFill */
+}
