@@ -1,7 +1,7 @@
 // src/components/sections/OverallScoresSection.tsx
-import ComparisonBarChart from '@/components/ComparisonBarChart';
+import HealthBarChart from '@/components/HealthBarChart';
 import MetricCard from '@/components/MetricCard';
-import styles from '@/styles/Home.module.css'; // Re-using some styles for now
+import styles from '@/styles/Home.module.css';
 import { ComparisonData } from '@/types/reportTypes';
 import React from 'react';
 
@@ -10,31 +10,28 @@ interface OverallScoresSectionProps {
 }
 
 const OverallScoresSection: React.FC<OverallScoresSectionProps> = ({ reportData }) => {
-  if (!reportData.repo1.metrics.overall_health_score || !reportData.repo2.metrics.overall_health_score) {
-    return null; // Or a placeholder if scores are missing
-  }
+  const score1 = reportData.repo1.metrics.overall_health_score;
+  const score2 = reportData.repo2.metrics.overall_health_score;
 
   return (
     <>
-      {reportData.repo1.metrics.overall_health_score !== undefined && reportData.repo2.metrics.overall_health_score !== undefined && (
-        <ComparisonBarChart
+      {score1 !== undefined && score2 !== undefined && (
+        <HealthBarChart
           repo1Name={reportData.repo1.name}
           repo2Name={reportData.repo2.name}
-          repo1Score={reportData.repo1.metrics.overall_health_score}
-          repo2Score={reportData.repo2.metrics.overall_health_score}
-          chartTitle="Overall Health Score Comparison"
-          scoreSuffix="/10"
+          repo1Score={score1}
+          repo2Score={score2}
           maxValue={10}
         />
       )}
       <MetricCard title="Overall Health Scores">
         <div className={styles.metricPair}>
           <span className={styles.metricLabel}>{reportData.repo1.name}:</span>
-          <span className={`${styles.metricValue} ${styles.valueRepo1}`}>{reportData.repo1.metrics.overall_health_score?.toFixed(1)}/10</span>
+          <span className={`${styles.metricValue} ${styles.valueRepo1}`}>{score1?.toFixed(1) ?? 'N/A'}/10</span>
         </div>
         <div className={styles.metricPair}>
           <span className={styles.metricLabel}>{reportData.repo2.name}:</span>
-          <span className={`${styles.metricValue} ${styles.valueRepo2}`}>{reportData.repo2.metrics.overall_health_score?.toFixed(1)}/10</span>
+          <span className={`${styles.metricValue} ${styles.valueRepo2}`}>{score2?.toFixed(1) ?? 'N/A'}/10</span>
         </div>
       </MetricCard>
     </>

@@ -49,49 +49,58 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Core vs Knots Health Comparison</title>
-        <meta name="description" content="Comparison report for Bitcoin Core and Bitcoin Knots repository health" />
+        <title>Core VS Knots: Health Battle!</title>
+        <meta name="description" content="Bitcoin Core vs. Bitcoin Knots repository health comparison - Arcade Style!" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
         <div className={styles.headerContainer}>
             <h1 className={styles.title}>
-            Core <span className={styles.vsText}>VS</span> Knots
+              <a href={reportData ? getRepoUrl(reportData.repo1.name) : '#'} target="_blank" rel="noopener noreferrer" className={styles.fighterNameLink}>{reportData?.repo1.name || 'Fighter 1'}</a>
+              <span className={styles.vsTextLarge}>VS</span>
+              <a href={reportData ? getRepoUrl(reportData.repo2.name) : '#'} target="_blank" rel="noopener noreferrer" className={styles.fighterNameLink}>{reportData?.repo2.name || 'Fighter 2'}</a>
             </h1>
-            <p className={styles.description}>
-            Repository Health Battle!
-            </p>
         </div>
 
-        {loading && <p className={styles.description}>Loading report data...</p>}
-        {error && <p className={styles.description} style={{ color: '#ff4757' }}>Error: {error}</p>}
+        {loading && <p className={styles.description}>SELECT YOUR FIGHTER! (Loading...)</p>}
+        {error && <p className={`${styles.description} ${styles.errorMessage}`}>SYSTEM ERROR! ({error})</p>}
 
         {reportData && (
           <>
             <div className={styles.reportMeta}>
-                <p>
-                    Comparing
-                    <a href={getRepoUrl(reportData.repo1.name)} target="_blank" rel="noopener noreferrer">{reportData.repo1.name}</a>
-                    vs
-                    <a href={getRepoUrl(reportData.repo2.name)} target="_blank" rel="noopener noreferrer">{reportData.repo2.name}</a>
-                </p>
                 <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
-                <p>Analysis Period: {reportData.analysis_metadata.period_months} months</p>
-                {reportData.analysis_metadata.is_fight_mode && <p><strong>FIGHT MODE!</strong></p>}
+                <p>Period: {reportData.analysis_metadata.period_months} Months</p>
+                {reportData.analysis_metadata.is_fight_mode && <p className={styles.fightModeText}>FIGHT MODE ENGAGED!</p>}
             </div>
 
-            <div className={styles.reportContainer}>
-                {/* This div will conceptually hold the two fighter columns */}
-                {/* For now, sections will stack, but styling could make them side-by-side later */}
-                <OverallScoresSection reportData={reportData} />
-                <ContributorSection reportData={reportData} />
-                <CommitSection reportData={reportData} />
-                <PullRequestSection reportData={reportData} />
-                <CodeReviewSection reportData={reportData} />
-                <CiCdSection reportData={reportData} />
-                <IssueSection reportData={reportData} />
-                <TestSection reportData={reportData} />
+            {/* Overall Scores Health Bar - Placed above columns */}
+            <OverallScoresSection reportData={reportData} />
+
+            <div className={styles.fightersContainer}>
+              {/* Fighter 1 Column (Core) */}
+              <div className={`${styles.fighterColumn} ${styles.fighterColumn1}`}>
+                {/* <h2 className={styles.fighterTitle}>{reportData.repo1.name}</h2> */} {/* Title now in main header */}
+                <ContributorSection reportData={reportData} fighterKey="repo1" />
+                <CommitSection reportData={reportData} fighterKey="repo1" />
+                <PullRequestSection reportData={reportData} fighterKey="repo1" />
+                <CodeReviewSection reportData={reportData} fighterKey="repo1" />
+                <CiCdSection reportData={reportData} fighterKey="repo1" />
+                <IssueSection reportData={reportData} fighterKey="repo1" />
+                <TestSection reportData={reportData} fighterKey="repo1" />
+              </div>
+
+              {/* Fighter 2 Column (Knots) */}
+              <div className={`${styles.fighterColumn} ${styles.fighterColumn2}`}>
+                {/* <h2 className={styles.fighterTitle}>{reportData.repo2.name}</h2> */} {/* Title now in main header */}
+                <ContributorSection reportData={reportData} fighterKey="repo2" />
+                <CommitSection reportData={reportData} fighterKey="repo2" />
+                <PullRequestSection reportData={reportData} fighterKey="repo2" />
+                <CodeReviewSection reportData={reportData} fighterKey="repo2" />
+                <CiCdSection reportData={reportData} fighterKey="repo2" />
+                <IssueSection reportData={reportData} fighterKey="repo2" />
+                <TestSection reportData={reportData} fighterKey="repo2" />
+              </div>
             </div>
           </>
         )}

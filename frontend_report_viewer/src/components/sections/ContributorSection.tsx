@@ -6,55 +6,70 @@ import React from 'react';
 
 interface ContributorSectionProps {
   reportData: ComparisonData;
+  fighterKey: 'repo1' | 'repo2'; // Added fighterKey
 }
 
-const ContributorSection: React.FC<ContributorSectionProps> = ({ reportData }) => {
-  const metrics1 = reportData.repo1.metrics.contributor;
-  const metrics2 = reportData.repo2.metrics.contributor;
+const ContributorSection: React.FC<ContributorSectionProps> = ({ reportData, fighterKey }) => {
+  const metrics = reportData[fighterKey].metrics.contributor;
+  const repoName = reportData[fighterKey].name;
+  // Determine opponent for specific fight mode comparisons if necessary
+  // const opponentKey = fighterKey === 'repo1' ? 'repo2' : 'repo1';
+  // const opponentMetrics = reportData[opponentKey].metrics.contributor;
 
-  if (!metrics1 || !metrics2) {
-    return <MetricCard title="Contributor Comparison"><p>Contributor data not available.</p></MetricCard>;
+  if (!metrics) {
+    return <MetricCard title={`${repoName} - Contributors`}><p>Contributor data not available.</p></MetricCard>;
   }
 
   return (
-    <MetricCard title="Contributor Comparison">
+    <MetricCard title={`${repoName} - Contributors`}>
       <div className={styles.metricPair}>
-        <span className={styles.metricLabel}>Total Contributors (API):</span>
-        <span>
-          <span className={styles.valueRepo1}>{metrics1.total_contributors}</span> vs <span className={styles.valueRepo2}>{metrics2.total_contributors}</span>
-        </span>
+        <span className={styles.metricLabel}>Total (API):</span>
+        <span className={styles.metricValue}>{metrics.total_contributors ?? 'N/A'}</span>
+      </div>
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Active:</span>
+        <span className={styles.metricValue}>{metrics.active_contributors ?? 'N/A'}</span>
+      </div>
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Active Ratio:</span>
+        <span className={styles.metricValue}>{(metrics.active_ratio !== undefined ? (metrics.active_ratio * 100).toFixed(1) : 'N/A')}%</span>
       </div>
 
-      {reportData.analysis_metadata.is_fight_mode ? (
+      {/* Fight Mode Specific for Knots (repo2) */}
+      {reportData.analysis_metadata.is_fight_mode && fighterKey === 'repo2' && (
         <>
           <div className={styles.metricPair}>
             <span className={styles.metricLabel}>Original Knots Authors:</span>
-            <span className={`${styles.metricValue} ${styles.valueRepo2}`}>{metrics2.knots_contributors_with_original_work}</span>
+            <span className={styles.metricValue}>{metrics.knots_contributors_with_original_work ?? 'N/A'}</span>
           </div>
           <div className={styles.metricPair}>
             <span className={styles.metricLabel}>Knots Bus Factor (Original):</span>
-            <span className={`${styles.metricValue} ${styles.valueRepo2}`}>{metrics2.knots_original_bus_factor}</span>
+            <span className={styles.metricValue}>{metrics.knots_original_bus_factor ?? 'N/A'}</span>
           </div>
           <div className={styles.metricPair}>
-            <span className={styles.metricLabel}>Core Bus Factor (General):</span>
-            <span className={`${styles.metricValue} ${styles.valueRepo1}`}>{metrics1.bus_factor}</span>
+            <span className={styles.metricLabel}>Knots Gini (Original):</span>
+            <span className={styles.metricValue}>{metrics.knots_original_contributor_gini?.toFixed(3) ?? 'N/A'}</span>
           </div>
-          {/* TODO: Add Gini, Org Diversity for fight mode */}
-        </>
-      ) : (
-        <>
-          {metrics1.bus_factor !== undefined && metrics2.bus_factor !== undefined && (
-            <div className={styles.metricPair}>
-              <span className={styles.metricLabel}>Bus Factor:</span>
-              <span>
-                <span className={styles.valueRepo1}>{metrics1.bus_factor}</span> vs <span className={styles.valueRepo2}>{metrics2.bus_factor}</span>
-              </span>
-            </div>
-          )}
-          {/* TODO: Add Gini, Org Diversity for general comparison */}
         </>
       )}
-       {/* TODO: Consider adding charts for bus factor, contributor counts etc. */}
+      {/* General Bus Factor & Gini */}
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Bus Factor (General):</span>
+        <span className={styles.metricValue}>{metrics.bus_factor ?? 'N/A'}</span>
+      </div>
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Gini (General):</span>
+        <span className={styles.metricValue}>{metrics.contributor_gini?.toFixed(3) ?? 'N/A'}</span>
+      </div>
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Org. Count (Email Domains):</span>
+        <span className={styles.metricValue}>{metrics.organization_count ?? 'N/A'}</span>
+      </div>
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Org. Diversity (Shannon):</span>
+        <span className={styles.metricValue}>{metrics.organization_diversity?.toFixed(3) ?? 'N/A'}</span>
+      </div>
+      {/* TODO: Add charts for bus factor, Gini, org diversity */}
     </MetricCard>
   );
 };

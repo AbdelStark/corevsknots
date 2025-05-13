@@ -1,63 +1,49 @@
 // src/components/sections/CodeReviewSection.tsx
-import ComparisonBarChart from '@/components/ComparisonBarChart';
 import MetricCard from '@/components/MetricCard';
-import styles from '@/styles/Home.module.css';
 import { ComparisonData } from '@/types/reportTypes';
 import React from 'react';
+// import ComparisonBarChart from '@/components/ComparisonBarChart'; // Removed for single fighter view
+import styles from '@/styles/Home.module.css';
 
 interface CodeReviewSectionProps {
   reportData: ComparisonData;
+  fighterKey: 'repo1' | 'repo2';
 }
 
-const CodeReviewSection: React.FC<CodeReviewSectionProps> = ({ reportData }) => {
-  const metrics1 = reportData.repo1.metrics.code_review;
-  const metrics2 = reportData.repo2.metrics.code_review;
+const CodeReviewSection: React.FC<CodeReviewSectionProps> = ({ reportData, fighterKey }) => {
+  const metrics = reportData[fighterKey].metrics.code_review;
+  const repoName = reportData[fighterKey].name;
 
-  if (!metrics1 || !metrics2) {
-    return <MetricCard title="Code Review Process Comparison"><p>Code Review data not available.</p></MetricCard>;
+  if (!metrics) {
+    return <MetricCard title={`${repoName} - Code Review`}><p>Code Review data not available.</p></MetricCard>;
   }
 
-  const repo1Name = reportData.repo1.name;
-  const repo2Name = reportData.repo2.name;
-
   return (
-    <MetricCard title="Code Review Process Comparison">
+    <MetricCard title={`${repoName} - Code Review`}>
       <div className={styles.metricPair}>
-        <span className={styles.metricLabel}>Review Thoroughness:</span>
-        <span>
-          <span className={styles.valueRepo1}>{metrics1.review_thoroughness_score?.toFixed(1)}/10</span> vs <span className={styles.valueRepo2}>{metrics2.review_thoroughness_score?.toFixed(1)}/10</span>
-        </span>
+        <span className={styles.metricLabel}>Reviews per PR:</span>
+        <span className={styles.metricValue}>{metrics.reviews_per_pr?.toFixed(1)}</span>
       </div>
-      {metrics1.review_thoroughness_score !== undefined && metrics2.review_thoroughness_score !== undefined && (
-        <ComparisonBarChart
-          repo1Name={repo1Name}
-          repo2Name={repo2Name}
-          repo1Score={metrics1.review_thoroughness_score}
-          repo2Score={metrics2.review_thoroughness_score}
-          chartTitle="Review Thoroughness Score"
-          scoreSuffix="/10"
-          maxValue={10}
-        />
-      )}
-
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Comments per PR:</span>
+        <span className={styles.metricValue}>{metrics.comments_per_pr?.toFixed(1)}</span>
+      </div>
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Thoroughness Score:</span>
+        <span className={styles.metricValue}>{metrics.review_thoroughness_score?.toFixed(1)}/10</span>
+      </div>
       <div className={styles.metricPair}>
         <span className={styles.metricLabel}>Self-Merged Ratio:</span>
-        <span>
-          <span className={styles.valueRepo1}>{(metrics1.self_merged_ratio !== undefined ? (metrics1.self_merged_ratio * 100).toFixed(1) : 'N/A')}%</span> vs <span className={styles.valueRepo2}>{(metrics2.self_merged_ratio !== undefined ? (metrics2.self_merged_ratio * 100).toFixed(1) : 'N/A')}%</span>
-        </span>
+        <span className={styles.metricValue}>{(metrics.self_merged_ratio !== undefined ? (metrics.self_merged_ratio * 100).toFixed(1) : 'N/A')}%</span>
       </div>
-      {metrics1.self_merged_ratio !== undefined && metrics2.self_merged_ratio !== undefined && (
-        <ComparisonBarChart
-          repo1Name={repo1Name}
-          repo2Name={repo2Name}
-          repo1Score={metrics1.self_merged_ratio * 100}
-          repo2Score={metrics2.self_merged_ratio * 100}
-          chartTitle="Self-Merged Ratio (Lower is Better)"
-          scoreSuffix="%"
-          maxValue={Math.max(metrics1.self_merged_ratio * 100 || 0, metrics2.self_merged_ratio * 100 || 0, 10) * 1.2}
-        />
-      )}
-      {/* TODO: Add other code review metrics */}
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Avg. Time to First Review:</span>
+        <span className={styles.metricValue}>{metrics.avg_time_to_first_review?.toFixed(1)} hours</span>
+      </div>
+      <div className={styles.metricPair}>
+        <span className={styles.metricLabel}>Responsiveness Score:</span>
+        <span className={styles.metricValue}>{metrics.review_responsiveness_score?.toFixed(1)}/10</span>
+      </div>
     </MetricCard>
   );
 };

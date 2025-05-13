@@ -11,7 +11,7 @@
 .headerContainer {
   width: 100%;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem; /* Reduced bottom margin */
   padding: 1rem;
   border-bottom: 4px solid #feca57; /* Neon yellow border */
 }
@@ -24,15 +24,47 @@
   color: #feca57;
   text-transform: uppercase;
   letter-spacing: 2px;
+  display: flex; /* For VS layout */
+  justify-content: center;
+  align-items: center;
+  gap: 1rem; /* Space around VS */
+}
+
+.fighterNameLink {
+  color: #feca57;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+.fighterNameLink:hover {
+  color: #ff4757;
+}
+
+.vsTextLarge {
+  font-size: 2rem; /* Smaller than main title, but still large */
+  color: #ff4757; /* Neon Red for VS */
+  text-shadow: 2px 2px #000000, -2px -2px #000000, 2px -2px #000000, -2px 2px #000000; /* Black outline */
+  padding: 0 0.5rem;
 }
 
 .description {
   line-height: 1.5;
-  font-size: 0.8rem; /* Adjusted for pixel font */
+  font-size: 1rem; /* Adjusted for pixel font */
   text-align: center;
-  margin: 0.5rem 0 1.5rem 0;
+  margin: 0.5rem 0 0 0; /* Margin only top */
   color: #e0e0e0;
-  max-width: 700px;
+}
+
+.errorMessage {
+    color: #ff4757 !important; /* Ensure error message is visible */
+    font-weight: bold;
+}
+
+.fightModeText {
+    color: #ff4757; /* Neon red */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px #000;
 }
 
 .reportMeta {
@@ -40,6 +72,8 @@
   margin-bottom: 2rem;
   font-size: 0.8rem;
   color: #aaa;
+  max-width: 1200px;
+  padding: 0; /* Remove padding if fightersContainer handles it */
 }
 .reportMeta p {
   margin: 0.25rem 0;
@@ -54,28 +88,33 @@
   padding: 0 1rem; /* Add some horizontal padding */
 }
 
-.reportContainer h2 {
-  font-size: 1.6rem;
-  color: #ff4757; /* Neon red for sub-section titles */
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
-}
-
 /* Styles for the main comparison content (e.g. two columns) will be added later */
 .fightersContainer {
   display: flex;
   flex-direction: row;
-  justify-content: space-around; /* This will be for the two main columns */
+  justify-content: space-between; /* Max space between columns */
   width: 100%;
-  gap: 2rem;
-  margin-top: 2rem;
+  max-width: 1300px; /* Allow a bit more width for two columns */
+  gap: 1.5rem; /* Gap between fighter columns */
+  margin-top: 1rem; /* Reduced top margin */
 }
 
 .fighterColumn {
-  flex: 1;
-  /* Styles for each fighter's column of stats can be added here */
+  flex: 1; /* Each column takes equal space */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center cards within the column */
+  padding: 1rem;
+  border: 3px dashed #576574; /* Dashed border for each fighter zone */
+  border-radius: 10px;
+}
+
+.fighterColumn1 {
+  border-color: #45aaf2; /* Blue tint for fighter 1 */
+}
+
+.fighterColumn2 {
+  border-color: #ff6b81; /* Red tint for fighter 2 */
 }
 
 /* metricPair, metricLabel, metricValue, valueRepo1, valueRepo2 are now primarily in MetricCard.module.css */
