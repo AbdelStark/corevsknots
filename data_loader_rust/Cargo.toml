@@ -1,0 +1,31 @@
+[package]
+name = "data_loader_rust"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# duckdb = { version = "0.10", features = ["bundled", "chrono"] } # Bundled for ease of use
+rusqlite = { version = "0.31", features = [
+    "bundled",
+    "chrono",
+] } # Using SQLite instead
+git2 = "0.19"
+reqwest = { version = "0.12", features = [
+    "json",
+    "blocking",
+    "rustls-tls",
+] } # Using blocking for simplicity first, can switch to async
+tokio = { version = "1", features = [
+    "full",
+] } # Still needed for async runtime if reqwest goes async, useful for other tasks too
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4.5", features = ["derive", "env"] }
+thiserror = "1.0"
+log = "0.4"
+env_logger = "0.11"
+url = "2.5" # Added for URL parsing
+# TODO: Add other potential dependencies like `indicatif` for progress bars

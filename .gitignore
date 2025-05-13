@@ -61,3 +61,5 @@ charts/
 .cursor
 
 **/.DS_Store
+**/target
+**/.db
