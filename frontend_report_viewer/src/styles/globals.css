@@ -8,6 +8,7 @@ body {
   line-height: 1.6;
   font-size: 16px;
   color: #333;
+  background-color: #f4f7f6; /* Lighter, slightly off-white background */
 }
 
 * {
@@ -15,7 +16,7 @@ body {
 }
 
 a {
-  color: #0070f3;
+  color: #0070f3; /* Next.js blue, good for links */
   text-decoration: none;
 }
 
@@ -26,4 +27,20 @@ a:hover {
 img {
   max-width: 100%;
   display: block;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50; /* Dark blue/grey for headers */
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+p {
+  margin-bottom: 1em;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 2rem 0;
 }

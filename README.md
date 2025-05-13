@@ -113,34 +113,6 @@ Or pass it directly:
 bitcoin-repo-health analyze --repo bitcoin/bitcoin --token your_token_here
 ```
 
-### Configuration File
-
-You can use a YAML configuration file to customize the analysis:
-
-```yaml
-# config.yaml
-period: 12
-output_dir: ./reports
-output_format: markdown
-use_cache: true
-github_token: your_token_here
-repositories:
-  bitcoin_core:
-    name: bitcoin/bitcoin
-    clone_url: https://github.com/bitcoin/bitcoin.git
-    default_branch: master
-  bitcoin_knots:
-    name: bitcoinknots/bitcoin
-    clone_url: https://github.com/bitcoinknots/bitcoin.git
-    default_branch: master
-```
-
-Then use it with:
-
-```bash
-bitcoin-repo-health analyze --repo bitcoin/bitcoin --config config.yaml
-```
-
 ## Example Reports
 
 ### Repository Health Report
