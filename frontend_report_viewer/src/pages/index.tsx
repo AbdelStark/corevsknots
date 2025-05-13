@@ -20,6 +20,13 @@ const getRepoUrl = (repoFullName: string): string => {
   return `https://github.com/${repoFullName}`;
 };
 
+// Function to get display name
+const getDisplayName = (repoFullName: string): string => {
+  if (repoFullName.toLowerCase().includes('bitcoinknots')) return 'Knots';
+  if (repoFullName.toLowerCase().includes('bitcoin/bitcoin')) return 'Core';
+  return repoFullName; // Fallback
+}
+
 export default function Home() {
   const [reportData, setReportData] = useState<ComparisonData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,9 +64,23 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.headerContainer}>
             <h1 className={styles.title}>
-              <a href={reportData ? getRepoUrl(reportData.repo1.name) : '#'} target="_blank" rel="noopener noreferrer" className={styles.fighterNameLink}>{reportData?.repo1.name || 'Fighter 1'}</a>
+              <a
+                href={reportData ? getRepoUrl(reportData.repo1.name) : '#'}
+                target="_blank" rel="noopener noreferrer"
+                className={styles.fighterNameLink}
+                title={`View ${reportData?.repo1.name} on GitHub`}
+              >
+                {reportData ? getDisplayName(reportData.repo1.name) : 'Fighter 1'}
+              </a>
               <span className={styles.vsTextLarge}>VS</span>
-              <a href={reportData ? getRepoUrl(reportData.repo2.name) : '#'} target="_blank" rel="noopener noreferrer" className={styles.fighterNameLink}>{reportData?.repo2.name || 'Fighter 2'}</a>
+              <a
+                href={reportData ? getRepoUrl(reportData.repo2.name) : '#'}
+                target="_blank" rel="noopener noreferrer"
+                className={styles.fighterNameLink}
+                title={`View ${reportData?.repo2.name} on GitHub`}
+              >
+                {reportData ? getDisplayName(reportData.repo2.name) : 'Fighter 2'}
+              </a>
             </h1>
         </div>
 
@@ -69,6 +90,9 @@ export default function Home() {
         {reportData && (
           <>
             <div className={styles.reportMeta}>
+                <p>
+                    Comparing {reportData.repo1.name} vs {reportData.repo2.name}
+                </p>
                 <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
                 <p>Period: {reportData.analysis_metadata.period_months} Months</p>
                 {reportData.analysis_metadata.is_fight_mode && <p className={styles.fightModeText}>FIGHT MODE ENGAGED!</p>}
@@ -81,25 +105,25 @@ export default function Home() {
               {/* Fighter 1 Column (Core) */}
               <div className={`${styles.fighterColumn} ${styles.fighterColumn1}`}>
                 {/* <h2 className={styles.fighterTitle}>{reportData.repo1.name}</h2> */} {/* Title now in main header */}
-                <ContributorSection reportData={reportData} fighterKey="repo1" />
-                <CommitSection reportData={reportData} fighterKey="repo1" />
-                <PullRequestSection reportData={reportData} fighterKey="repo1" />
-                <CodeReviewSection reportData={reportData} fighterKey="repo1" />
-                <CiCdSection reportData={reportData} fighterKey="repo1" />
-                <IssueSection reportData={reportData} fighterKey="repo1" />
-                <TestSection reportData={reportData} fighterKey="repo1" />
+                <ContributorSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
+                <CommitSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
+                <PullRequestSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
+                <CodeReviewSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
+                <CiCdSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
+                <IssueSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
+                <TestSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
               </div>
 
               {/* Fighter 2 Column (Knots) */}
               <div className={`${styles.fighterColumn} ${styles.fighterColumn2}`}>
                 {/* <h2 className={styles.fighterTitle}>{reportData.repo2.name}</h2> */} {/* Title now in main header */}
-                <ContributorSection reportData={reportData} fighterKey="repo2" />
-                <CommitSection reportData={reportData} fighterKey="repo2" />
-                <PullRequestSection reportData={reportData} fighterKey="repo2" />
-                <CodeReviewSection reportData={reportData} fighterKey="repo2" />
-                <CiCdSection reportData={reportData} fighterKey="repo2" />
-                <IssueSection reportData={reportData} fighterKey="repo2" />
-                <TestSection reportData={reportData} fighterKey="repo2" />
+                <ContributorSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
+                <CommitSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
+                <PullRequestSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
+                <CodeReviewSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
+                <CiCdSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
+                <IssueSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
+                <TestSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
               </div>
             </div>
           </>
