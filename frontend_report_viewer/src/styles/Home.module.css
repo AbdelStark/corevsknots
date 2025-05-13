@@ -1,0 +1,39 @@
+/* src/styles/Home.module.css */
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 2rem;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.title {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 3rem;
+  font-weight: 600;
+  text-align: center;
+  color: #1a1a1a;
+}
+
+.description {
+  line-height: 1.5;
+  font-size: 1.2rem;
+  text-align: center;
+  margin: 2rem 0;
+  color: #4a4a4a;
+}
+
+.reportContainer {
+  margin-top: 2rem;
+  padding: 2rem;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 1000px; /* Adjust as needed */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Add more styles for report elements, charts, etc. */

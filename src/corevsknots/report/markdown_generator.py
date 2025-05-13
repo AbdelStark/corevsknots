@@ -42,6 +42,16 @@ def generate_report(
     # Create output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
 
+    # Always generate the JSON data file for later use, if not the primary format
+    json_report_path = os.path.join(output_dir, f"{output_name}.json")
+    try:
+        import json
+        with open(json_report_path, "w") as f:
+            json.dump(metrics, f, indent=2)
+        logger.info(f"Generated accompanying JSON data report: {json_report_path}")
+    except Exception as e:
+        logger.error(f"Failed to generate accompanying JSON data report: {e}")
+
     # Generate charts
     if template == "comparison":
         charts = generate_comparison_charts(metrics, output_dir)
@@ -54,7 +64,9 @@ def generate_report(
     elif output_format == "html":
         report_path = generate_html_report(metrics, charts, output_dir, output_name, template)
     elif output_format == "json":
-        report_path = generate_json_report(metrics, output_dir, output_name)
+        # If JSON is the primary format, we've already created it.
+        # The function expects to return the path to the primary requested report.
+        report_path = json_report_path
     else:
         raise ValueError(f"Unsupported output format: {output_format}")
 

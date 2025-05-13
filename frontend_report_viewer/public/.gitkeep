@@ -1,0 +1,9 @@
+# For static assets like images, fonts, and pre-generated JSON reports.
+
+## Example: Pre-generated report
+
+If you place a `CORE_vs_KNOTS_FIGHT_REPORT.json` file here, you could potentially fetch it directly in your components if it's small enough, or use Next.js API routes to serve it.
+
+## Example: Chart Images
+
+If charts are generated as static images and you want to serve them directly, they could also go here, though embedding them from the report artifact directly might be easier initially.
