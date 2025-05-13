@@ -33,31 +33,31 @@ const NodeStatsSection: React.FC<NodeStatsSectionProps> = ({ nodeStats, repo1Nam
         <span className={styles.totalNodes}>(Total: {totalDisplay} Nodes)</span>
       </h2>
       <div className={styles.statsGrid}>
-        <div className={`${styles.fighterStatBlock} ${styles.coreBlock}`}>
-          <h3 className={styles.fighterName}>{coreDisplayName}</h3>
-          <p className={styles.nodeCount}>{nodeStats.core.count.toLocaleString()}</p>
-          <p className={styles.nodeShare}>{nodeStats.coreShare.toFixed(2)}%</p>
+        <div className={`${styles.statBlock} ${styles.coreBlock}`}>
+          <h3 className={styles.statTitle}>{coreDisplayName}</h3>
+          <p className={styles.statValuePrimary}>{nodeStats.core.count.toLocaleString()}</p>
+          <p className={styles.statValueSecondary}>{nodeStats.coreShare.toFixed(2)}%</p>
         </div>
 
-        <div className={`${styles.fighterStatBlock} ${styles.knotsBlock}`}>
-          <h3 className={styles.fighterName}>{knotsDisplayName}</h3>
-          <p className={styles.nodeCount}>{nodeStats.knots.count.toLocaleString()}</p>
-          <p className={styles.nodeShare}>{nodeStats.knotsShare.toFixed(2)}%</p>
+        <div className={`${styles.statBlock} ${styles.knotsBlock}`}>
+          <h3 className={styles.statTitle}>{knotsDisplayName}</h3>
+          <p className={styles.statValuePrimary}>{nodeStats.knots.count.toLocaleString()}</p>
+          <p className={styles.statValueSecondary}>{nodeStats.knotsShare.toFixed(2)}%</p>
         </div>
 
         {nodeStats.btcsuite && nodeStats.btcsuite.count > 0 && (
-             <div className={`${styles.fighterStatBlock} ${styles.btcsuiteBlock}`}>
-                <h3 className={styles.fighterName}>{btcsuiteDisplayName}</h3>
-                <p className={styles.nodeCount}>{nodeStats.btcsuite.count.toLocaleString()}</p>
-                <p className={styles.nodeShare}>{nodeStats.btcsuiteShare.toFixed(2)}%</p>
+             <div className={`${styles.statBlock} ${styles.btcsuiteBlock}`}>
+                <h3 className={styles.statTitle}>{btcsuiteDisplayName}</h3>
+                <p className={styles.statValuePrimary}>{nodeStats.btcsuite.count.toLocaleString()}</p>
+                <p className={styles.statValueSecondary}>{nodeStats.btcsuiteShare.toFixed(2)}%</p>
             </div>
         )}
 
         {nodeStats.other.count > 0 && (
-             <div className={`${styles.fighterStatBlock} ${styles.otherBlock}`}>
-                <h3 className={styles.fighterName}>Other Clients</h3>
-                <p className={styles.nodeCount}>{nodeStats.other.count.toLocaleString()}</p>
-                <p className={styles.nodeShare}>{nodeStats.otherShare.toFixed(2)}%</p>
+             <div className={`${styles.statBlock} ${styles.otherBlock}`}>
+                <h3 className={styles.statTitle}>Other Clients</h3>
+                <p className={styles.statValuePrimary}>{nodeStats.other.count.toLocaleString()}</p>
+                <p className={styles.statValueSecondary}>{nodeStats.otherShare.toFixed(2)}%</p>
             </div>
         )}
       </div>

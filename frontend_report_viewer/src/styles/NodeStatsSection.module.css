@@ -37,19 +37,22 @@
 .statsGrid {
   display: flex;
   justify-content: space-around;
-  align-items: flex-start;
+  align-items: stretch; /* Changed from flex-start to stretch for equal height */
   gap: 1rem;
   margin-bottom: 1.5rem;
   flex-wrap: wrap; /* Allow wrapping if space is tight */
 }
 
-.fighterStatBlock {
+.statBlock {
   padding: 1rem;
   border-radius: 0px; /* Sharp edges */
   text-align: center;
-  flex-basis: 200px; /* Base width for each block */
+  flex-basis: 180px; /* Adjusted base width */
   flex-grow: 1;
   border: 2px dashed #576574;
+  display: flex; /* Added for flex column layout */
+  flex-direction: column; /* Added */
+  justify-content: space-between; /* Added to space out content */
 }
 
 .coreBlock {
@@ -69,29 +72,36 @@
   flex-basis: 150px; /* Potentially smaller */
 }
 
-.fighterName {
-  font-size: 1.2rem;
+.btcsuiteBlock .statTitle { /* Renamed from .fighterName */
+  color: #88ffcc; /* Color from Luke Dashjr's chart for btcsuite */
+  text-shadow: 1px 1px #1a1a2e;
+}
+
+.otherBlock .statTitle { color: #bdc3c7; }
+
+.statTitle {
+  font-size: 1.1rem; /* Adjusted */
   color: #feca57;
   margin-top: 0;
   margin-bottom: 0.5rem;
   text-shadow: 1px 1px #000;
+  line-height: 1.2;
 }
 
-.coreBlock .fighterName { color: #45aaf2; text-shadow: 1px 1px #1a1a2e; }
-.knotsBlock .fighterName { color: #ff6b81; text-shadow: 1px 1px #1a1a2e; }
-.btcsuiteBlock .fighterName { color: #88ffcc; text-shadow: 1px 1px #1a1a2e; }
-.otherBlock .fighterName { color: #bdc3c7; }
+.coreBlock .statTitle { color: #45aaf2; text-shadow: 1px 1px #1a1a2e; }
+.knotsBlock .statTitle { color: #ff6b81; text-shadow: 1px 1px #1a1a2e; }
+.otherBlock .statTitle { color: #bdc3c7; }
 
-.nodeCount {
-  font-size: 2rem; /* Large count */
+.statValuePrimary {
+  font-size: 1.8rem; /* Adjusted */
   color: #e0e0e0;
   font-weight: bold;
   margin: 0.25rem 0;
   line-height: 1;
 }
 
-.nodeShare {
-  font-size: 1rem;
+.statValueSecondary {
+  font-size: 0.9rem; /* Adjusted */
   color: #feca57; /* Yellow for percentage */
   font-weight: bold;
   margin-top: 0.25rem;

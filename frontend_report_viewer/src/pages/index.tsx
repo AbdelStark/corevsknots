@@ -109,28 +109,28 @@ export default function Home() {
 
         {reportData && (
           <>
-            <div className={styles.reportMeta}>
-                <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
-                <p>Period: {reportData.analysis_metadata.period_months} Months</p>
+
+            {/* Top summary row for Node Stats and GitHub Health */}
+            <div className={styles.topSummaryContainer}>
+              {nodeStats &&
+                <NodeStatsSection
+                  nodeStats={nodeStats}
+                  repo1Name={reportData.repo1.name}
+                  repo2Name={reportData.repo2.name}
+                />
+              }
+              {/* Display NodeStatsError within its potential space if nodeStats is null */}
+              {!nodeStats && nodeStatsError &&
+                  <div className={`${styles.nodeStatsContainer} ${styles.errorBox}`} style={{flex:1}}>
+                      <h2 className={styles.sectionTitle} style={{color: '#ff4757'}}>Network Dominance Error</h2>
+                      <p>{nodeStatsError}</p>
+                  </div>
+              }
+              {/* Placeholder for spacing if nodeStats is null and no error */}
+              {!nodeStats && !nodeStatsError && <div style={{flex:1}}></div> }
+
+              <OverallScoresSection reportData={reportData} />
             </div>
-
-            {/* Node Stats Section - Placed Prominently */}
-            {nodeStats &&
-              <NodeStatsSection
-                nodeStats={nodeStats}
-                repo1Name={reportData.repo1.name}
-                repo2Name={reportData.repo2.name}
-              />
-            }
-            {nodeStatsError &&
-                <div className={styles.nodeStatsContainer} style={{borderColor: '#ff4757', textAlign: 'center'}}>
-                    <h2 className={styles.sectionTitle} style={{color: '#ff4757'}}>Network Dominance Error</h2>
-                    <p style={{color: '#ff4757'}}>{nodeStatsError}</p>
-                </div>
-            }
-
-            {/* Overall Scores Health Bar - Placed above columns */}
-            <OverallScoresSection reportData={reportData} />
 
             <div className={styles.fightersContainer}>
               <div className={`${styles.fighterColumn} ${styles.fighterColumn1}`}>
@@ -168,6 +168,13 @@ export default function Home() {
                 <IssueSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
                 <TestSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
               </div>
+            </div>
+
+            <div className={styles.reportMeta}>
+                <p>Comparing {reportData.repo1.name} vs {reportData.repo2.name}</p>
+                <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
+                <p>Period: {reportData.analysis_metadata.period_months} Months</p>
+                {reportData.analysis_metadata.is_fight_mode && <p className={styles.fightModeText}>FIGHT MODE ENGAGED!</p>}
             </div>
           </>
         )}

@@ -151,3 +151,27 @@
 }
 
 /* metricPair, metricLabel, metricValue are now primarily in MetricCard.module.css */
+
+.topSummaryContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around; /* Or space-between */
+  align-items: flex-start; /* Align tops */
+  gap: 2rem;
+  width: 100%;
+  max-width: 1300px; /* Match fightersContainer or adjust */
+  margin-bottom: 2rem;
+}
+
+/* Optional: if NodeStatsSection or OverallScoresSection need to flex within topSummaryContainer */
+.topSummaryContainer > div { /* Target direct children */
+  flex: 1; /* Allow them to share space */
+  /* Add min-width if necessary */
+}
+
+.errorBox { /* Style for displaying errors in place of a section */
+    padding: 1rem;
+    border: 2px dashed #ff4757; /* Neon red error border */
+    color: #ff4757;
+    text-align: center;
+}

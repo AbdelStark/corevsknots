@@ -1,11 +1,12 @@
 // src/components/sections/OverallScoresSection.tsx
-import MetricCard from '@/components/MetricCard';
-import StarRating from '@/components/StarRating';
-import homeStyles from '@/styles/Home.module.css';
-import cardStyles from '@/styles/MetricCard.module.css';
 import { ComparisonData } from '@/types/reportTypes';
-import { getDisplayName } from '@/utils/displayName';
 import React from 'react';
+// MetricCard is not used if we mimic NodeStatsSection structure directly for this panel
+// import MetricCard from '@/components/MetricCard';
+import homeStyles from '@/styles/Home.module.css'; // For .valueRepo1/.valueRepo2 colors
+import cardStyles from '@/styles/MetricCard.module.css'; // For better/worse text values
+import nodeStatsStyles from '@/styles/NodeStatsSection.module.css'; // Reuse these styles
+import { getDisplayName } from '@/utils/displayName';
 
 interface OverallScoresSectionProps {
   reportData: ComparisonData;
@@ -17,36 +18,40 @@ const OverallScoresSection: React.FC<OverallScoresSectionProps> = ({ reportData 
   const repo1Name = reportData.repo1.name;
   const repo2Name = reportData.repo2.name;
 
-  let score1Class = `${cardStyles.metricValue} ${homeStyles.valueRepo1}`;
-  let score2Class = `${cardStyles.metricValue} ${homeStyles.valueRepo2}`;
+  let score1Style = `${homeStyles.valueRepo1}`;
+  let score2Style = `${homeStyles.valueRepo2}`;
 
   if (score1 !== undefined && score2 !== undefined) {
     if (score1 > score2) {
-      score1Class = `${cardStyles.metricValue} ${cardStyles.metricValueBetter} ${homeStyles.valueRepo1}`;
-      score2Class = `${cardStyles.metricValue} ${cardStyles.metricValueWorse} ${homeStyles.valueRepo2}`;
+      score1Style = `${homeStyles.valueRepo1} ${cardStyles.metricValueBetter}`;
+      score2Style = `${homeStyles.valueRepo2} ${cardStyles.metricValueWorse}`;
     } else if (score2 > score1) {
-      score2Class = `${cardStyles.metricValue} ${cardStyles.metricValueBetter} ${homeStyles.valueRepo2}`;
-      score1Class = `${cardStyles.metricValue} ${cardStyles.metricValueWorse} ${homeStyles.valueRepo1}`;
+      score2Style = `${homeStyles.valueRepo2} ${cardStyles.metricValueBetter}`;
+      score1Style = `${homeStyles.valueRepo1} ${cardStyles.metricValueWorse}`;
     }
   }
 
   return (
-    <MetricCard title="Overall Health Scores">
-      <div className={homeStyles.metricPair}>
-        <span className={homeStyles.metricLabel}>{getDisplayName(repo1Name)} Score:</span>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span className={score1Class} style={{ marginRight: '0.5rem' }}>{score1?.toFixed(1) ?? 'N/A'}/10</span>
-          <StarRating score={score1} />
+    <div className={nodeStatsStyles.nodeStatsContainer} style={{maxWidth: '600px' /* Adjust width as needed */}}>
+      <h2 className={nodeStatsStyles.sectionTitle}>GITHUB HEALTH</h2>
+      <div className={nodeStatsStyles.statsGrid} style={{justifyContent: 'space-around'}}>
+        {/* Core Score Block */}
+        <div className={`${nodeStatsStyles.statBlock} ${nodeStatsStyles.coreBlock}`}>
+          <h3 className={nodeStatsStyles.statTitle}>{getDisplayName(repo1Name)}</h3>
+          <p className={`${nodeStatsStyles.statValuePrimary} ${score1Style}`}>{score1?.toFixed(1) ?? 'N/A'}<span className={nodeStatsStyles.statValueSecondary}>/10</span></p>
+          {/* Optional: Could add a small textual description or rank here */}
+        </div>
+
+        {/* Knots Score Block */}
+        <div className={`${nodeStatsStyles.statBlock} ${nodeStatsStyles.knotsBlock}`}>
+          <h3 className={nodeStatsStyles.statTitle}>{getDisplayName(repo2Name)}</h3>
+          <p className={`${nodeStatsStyles.statValuePrimary} ${score2Style}`}>{score2?.toFixed(1) ?? 'N/A'}<span className={nodeStatsStyles.statValueSecondary}>/10</span></p>
+          {/* Optional: Could add a small textual description or rank here */}
         </div>
       </div>
-      <div className={homeStyles.metricPair}>
-        <span className={homeStyles.metricLabel}>{getDisplayName(repo2Name)} Score:</span>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span className={score2Class} style={{ marginRight: '0.5rem' }}>{score2?.toFixed(1) ?? 'N/A'}/10</span>
-          <StarRating score={score2} />
-        </div>
-      </div>
-    </MetricCard>
+      {/* No segmented bar here, using individual styled scores */}
+       <p className={nodeStatsStyles.lastUpdated} style={{fontSize: '0.7rem'}}>Overall score based on weighted category performance.</p>
+    </div>
   );
 };
 
