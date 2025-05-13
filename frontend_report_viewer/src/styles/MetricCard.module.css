@@ -10,11 +10,11 @@
   box-shadow: 0 0 15px #feca57aa; /* Neon yellow glow */
   width: 100%; /* Cards will take full width of their column or container */
 
-  /* For True Pixel Border - EXAMPLE */
+  /* For True Pixel Border */
   border-style: solid;
-  border-width: 6px; /* Adjust to image slice */
-  border-image-source: url("/pixel-card-border.svg"); /* Needs to be in /public */
-  border-image-slice: 2; /* e.g., 2 pixels for border lines */
+  border-width: 4px; /* Target screen width: 2x the 2px slice */
+  border-image-source: var(--card-border-image, url("/pixel-card-border.svg")); /* Use CSS var, with fallback */
+  border-image-slice: 2; /* Slices 2px from edges of the SVG */
   border-image-repeat: repeat;
   image-rendering: pixelated;
   background-clip: padding-box;

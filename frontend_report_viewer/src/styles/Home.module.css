@@ -105,26 +105,26 @@
   flex-direction: column;
   align-items: center; /* Center cards within the column */
   padding: 1rem;
-  /* border-style: double; */ /* Replaced by border-image or more complex CSS */
-  /* border-width: 6px; */
   border-radius: 0px;
-
-  /* For True Pixel Border - EXAMPLE - Needs actual image and fine-tuning */
   border-style: solid;
-  border-width: 8px; /* Adjust to match your pixel art image slice width */
-  border-image-source: url("/pixel-border-frame.svg"); /* Needs to be in /public */
-  border-image-slice: 3; /* Corresponds to the pixel width of corners/sides in the SVG */
-  border-image-repeat: repeat; /* or round, or stretch */
-  image-rendering: pixelated; /* Important for crisp pixels */
-  background-clip: padding-box; /* Keeps background from bleeding under border */
+  border-width: 6px;
+  border-image-slice: 3;
+  border-image-repeat: repeat;
+  image-rendering: pixelated;
+  background-clip: padding-box;
+  /* background-color: #1e1e3f; */ /* Optional background if needed */
 }
 
 .fighterColumn1 {
-  border-color: #45aaf2; /* Blue tint for fighter 1 */
+  /* border-color: #45aaf2; */ /* No longer needed if using border-image */
+  border-image-source: url("/pixel-border-frame-blue.svg");
+  --card-border-image: url("/pixel-card-border-blue.svg"); /* Define CSS variable */
 }
 
 .fighterColumn2 {
-  border-color: #ff6b81; /* Red tint for fighter 2 */
+  /* border-color: #ff6b81; */ /* No longer needed if using border-image */
+  border-image-source: url("/pixel-border-frame-red.svg");
+  --card-border-image: url("/pixel-card-border-red.svg"); /* Define CSS variable */
 }
 
 .fighterColumnTitle {

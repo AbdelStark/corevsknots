@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" shape-rendering="crispEdges">
+  <!-- Top border -->
+  <rect x="0" y="0" width="6" height="2" fill="#feca57" />
+
+  <!-- Bottom border -->
+  <rect x="0" y="4" width="6" height="2" fill="#feca57" />
+
+  <!-- Left border -->
+  <rect x="0" y="2" width="2" height="2" fill="#feca57" />
+
+  <!-- Right border -->
+  <rect x="4" y="2" width="2" height="2" fill="#feca57" />
+</svg>
