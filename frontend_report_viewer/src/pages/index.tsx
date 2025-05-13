@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 // import ComparisonBarChart from '@/components/ComparisonBarChart';
 
 // Import section components
+import FighterImage from '@/components/FighterImage'; // Import FighterImage
 import CiCdSection from '@/components/sections/CiCdSection';
 import CodeReviewSection from '@/components/sections/CodeReviewSection';
 import CommitSection from '@/components/sections/CommitSection';
@@ -91,7 +92,14 @@ export default function Home() {
 
             <div className={styles.fightersContainer}>
               <div className={`${styles.fighterColumn} ${styles.fighterColumn1}`}>
-                <h2 className={styles.fighterColumnTitle}>{getDisplayName(reportData.repo1.name)}</h2>
+                <div className={styles.fighterHeader}>
+                  <FighterImage
+                    fighterName={getDisplayName(reportData.repo1.name)}
+                    imageUrl="/player_core.png" // Assuming core is repo1
+                    altText={`${getDisplayName(reportData.repo1.name)} Fighter Image`}
+                  />
+                  <h2 className={styles.fighterColumnTitle}>{getDisplayName(reportData.repo1.name)}</h2>
+                </div>
                 <ContributorSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
                 <CommitSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
                 <PullRequestSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
@@ -102,7 +110,14 @@ export default function Home() {
               </div>
 
               <div className={`${styles.fighterColumn} ${styles.fighterColumn2}`}>
-                <h2 className={styles.fighterColumnTitle}>{getDisplayName(reportData.repo2.name)}</h2>
+                <div className={styles.fighterHeader}>
+                  <FighterImage
+                    fighterName={getDisplayName(reportData.repo2.name)}
+                    imageUrl="/player_knots.png" // Assuming knots is repo2
+                    altText={`${getDisplayName(reportData.repo2.name)} Fighter Image`}
+                  />
+                  <h2 className={styles.fighterColumnTitle}>{getDisplayName(reportData.repo2.name)}</h2>
+                </div>
                 <ContributorSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
                 <CommitSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
                 <PullRequestSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />

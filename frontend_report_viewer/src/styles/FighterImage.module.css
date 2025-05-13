@@ -1,0 +1,16 @@
+/* src/styles/FighterImage.module.css */
+.fighterImageContainer {
+  margin-bottom: 0.5rem; /* Space below image before title */
+  /* border: 2px solid #feca57; */ /* Optional: frame for the image */
+  /* padding: 5px; */
+  /* background-color: #2c2c54; */ /* Optional: background for the frame */
+  display: inline-block; /* To fit content */
+}
+
+.fighterImage {
+  display: block;
+  image-rendering: pixelated; /* Crucial for pixel art */
+  /* filter: drop-shadow(3px 3px 0px #000000aa); */ /* Retro drop shadow */
+  max-width: 120px; /* Ensure it doesn't get too large */
+  height: auto; /* Maintain aspect ratio */
+}

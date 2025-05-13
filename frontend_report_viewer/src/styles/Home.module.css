@@ -129,19 +129,25 @@
 
 .fighterColumnTitle {
   font-size: 1.8rem;
-  color: #1a1a2e; /* Dark background for text */
-  background-color: #feca57; /* Neon yellow banner */
+  color: #1a1a2e;
+  background-color: #feca57;
   text-transform: uppercase;
-  margin-top: -1rem; /* Pull it up to overlap border slightly if desired */
   margin-bottom: 1.5rem;
-  padding: 0.5rem 1rem; /* Padding for banner */
-  /* border-bottom: 2px solid #ff4757; */ /* Remove or change border */
-  display: inline-block; /* To allow background and padding */
-  text-shadow: none; /* Remove previous shadow if using background */
+  padding: 0.5rem 1rem;
+  display: inline-block;
+  text-shadow: none;
   letter-spacing: 1px;
-  border: 2px solid #1a1a2e; /* Border matching page background for inset look */
-  border-radius: 4px; /* Slightly rounded banner edges */
+  border: 2px solid #1a1a2e;
+  border-radius: 4px;
+  order: 2; /* Ensure title comes after image if image is also in .fighterColumn */
 }
 
-/* metricPair, metricLabel, metricValue, valueRepo1, valueRepo2 are now primarily in MetricCard.module.css */
-/* If needed for specific overrides or layout within Home.module.css, they can be added or adjusted here. */
+/* Container for the fighter image and title if grouped */
+.fighterHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem; /* Space below the fighter header group */
+}
+
+/* metricPair, metricLabel, metricValue are now primarily in MetricCard.module.css */
