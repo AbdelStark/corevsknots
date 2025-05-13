@@ -85,13 +85,14 @@
 
 /* Styles for indicating better/worse values */
 .metricValueBetter {
-  /* color: #2ecc71; Bright Green */
-  /* text-shadow: 0 0 5px #2ecc71; */
-  font-weight: bold; /* Make better value bolder */
-  /* Consider adding a small icon or background highlight */
+  color: #2ecc71 !important; /* Bright Green for better */
+  font-weight: bold;
+  text-shadow: 0 0 3px #2ecc71, 0 0 5px #2ecc71; /* Green glow */
+  /* Consider adding an icon like a star or up arrow next to it */
 }
 
 .metricValueWorse {
-  /* color: #c0392b; Dimmer Red */
-  opacity: 0.7;
+  color: #c0392b !important; /* Dimmer Red for worse, but still visible */
+  opacity: 0.75; /* Slight fade */
+  /* text-decoration: line-through; */ /* Optional: line-through for clearly worse */
 }
