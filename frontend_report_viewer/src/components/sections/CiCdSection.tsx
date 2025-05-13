@@ -1,7 +1,9 @@
 import MetricCard from '@/components/MetricCard';
-import styles from '@/styles/Home.module.css';
+import homeStyles from '@/styles/Home.module.css';
 import { ComparisonData } from '@/types/reportTypes';
+import { MetricDisplay } from '@/utils/metricDisplayUtils';
 import React from 'react';
+// import styles from '@/styles/Home.module.css';
 
 interface CiCdSectionProps {
   reportData: ComparisonData;
@@ -11,41 +13,62 @@ interface CiCdSectionProps {
 
 const CiCdSection: React.FC<CiCdSectionProps> = ({ reportData, fighterKey, displayName }) => {
   const metrics = reportData[fighterKey].metrics.ci_cd;
+  const opponentKey = fighterKey === 'repo1' ? 'repo2' : 'repo1';
+  const opponentMetrics = reportData[opponentKey].metrics.ci_cd;
 
-  if (!metrics) {
-    return <MetricCard title={`${displayName} - CI/CD`}><p>CI/CD data not available.</p></MetricCard>;
+  if (!metrics || !opponentMetrics) {
+    return <MetricCard title={`${displayName} - CI/CD`}><p>CI/CD data not fully available for comparison.</p></MetricCard>;
   }
 
   return (
     <MetricCard title={`${displayName} - CI/CD`}>
-      <div className={styles.metricPair} title="Whether Continuous Integration (CI) is detected.">
-        <span className={styles.metricLabel}>Has CI:</span>
-        <span className={styles.metricValue}>{metrics.has_ci ? 'Yes' : 'No'}</span>
-      </div>
-      {metrics.has_ci && (
+      <MetricDisplay
+        label="Has CI"
+        primaryValue={metrics.has_ci ? 'Yes' : 'No'} // Convert boolean to string for display
+        opponentValue={opponentMetrics.has_ci ? 'Yes' : 'No'}
+        primaryFighterKey={fighterKey}
+        tooltip="Whether Continuous Integration (CI) is detected."
+      />
+      {/* For boolean, direct comparison in MetricDisplay might not be ideal, text display is fine for now */}
+
+      {metrics.has_ci && opponentMetrics.has_ci && (
         <>
-          <div className={styles.metricPair} title="Percentage of CI workflow runs that succeeded.">
-            <span className={styles.metricLabel}>Workflow Success Rate:</span>
-            <span className={styles.metricValue}>{(metrics.workflow_success_rate !== undefined ? (metrics.workflow_success_rate * 100).toFixed(1) : 'N/A')}%</span>
-          </div>
-          <div className={styles.metricPair} title="Average number of CI workflow runs per day.">
-            <span className={styles.metricLabel}>Workflows per Day:</span>
-            <span className={styles.metricValue}>{metrics.workflows_per_day?.toFixed(1) ?? 'N/A'}</span>
-          </div>
-          <div className={styles.metricPair} title="Number of unique CI workflow configurations detected.">
-            <span className={styles.metricLabel}>Unique Workflows:</span>
-            <span className={styles.metricValue}>{metrics.unique_workflows ?? 'N/A'}</span>
-          </div>
-          <div className={styles.metricPair} title="Detected CI systems (e.g., GitHub Actions, Travis CI).">
-            <span className={styles.metricLabel}>CI Systems:</span>
-            <span className={styles.metricValue}>{metrics.ci_systems?.join(', ') || (metrics.ci_system_count ? `${metrics.ci_system_count} system(s)` : 'N/A')}</span>
-          </div>
-          <div className={styles.metricPair} title="Ratio of Pull Requests that triggered a CI run.">
-            <span className={styles.metricLabel}>PRs Run CI Ratio:</span>
-            <span className={styles.metricValue}>{(metrics.pr_ci_ratio !== undefined ? (metrics.pr_ci_ratio * 100).toFixed(1) : 'N/A')}%</span>
-          </div>
+          <MetricDisplay
+            label="Workflow Success Rate"
+            primaryValue={metrics.workflow_success_rate !== undefined ? metrics.workflow_success_rate * 100 : undefined}
+            opponentValue={opponentMetrics.workflow_success_rate !== undefined ? opponentMetrics.workflow_success_rate * 100 : undefined}
+            primaryFighterKey={fighterKey}
+            unit="%"
+            tooltip="Percentage of CI workflow runs that succeeded."
+          />
+          <MetricDisplay
+            label="Workflows per Day"
+            primaryValue={metrics.workflows_per_day}
+            opponentValue={opponentMetrics.workflows_per_day}
+            primaryFighterKey={fighterKey}
+            tooltip="Average number of CI workflow runs per day."
+          />
+          <MetricDisplay
+            label="Unique Workflows"
+            primaryValue={metrics.unique_workflows}
+            opponentValue={opponentMetrics.unique_workflows}
+            primaryFighterKey={fighterKey}
+            tooltip="Number of unique CI workflow configurations detected."
+          />
+          <MetricDisplay
+            label="PRs Run CI Ratio"
+            primaryValue={metrics.pr_ci_ratio !== undefined ? metrics.pr_ci_ratio * 100 : undefined}
+            opponentValue={opponentMetrics.pr_ci_ratio !== undefined ? opponentMetrics.pr_ci_ratio * 100 : undefined}
+            primaryFighterKey={fighterKey}
+            unit="%"
+            tooltip="Ratio of Pull Requests that triggered a CI run."
+          />
         </>
       )}
+       <div className={homeStyles.metricPair} title="Detected CI systems (e.g., GitHub Actions, Travis CI).">
+        <span className={homeStyles.metricLabel}>CI Systems:</span>
+        <span className={homeStyles.metricValue}>{metrics.ci_systems?.join(', ') || (metrics.ci_system_count ? `${metrics.ci_system_count} system(s)` : 'N/A')}</span>
+      </div>
     </MetricCard>
   );
 };

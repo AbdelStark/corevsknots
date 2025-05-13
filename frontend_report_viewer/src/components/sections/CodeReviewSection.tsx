@@ -1,9 +1,9 @@
 // src/components/sections/CodeReviewSection.tsx
 import MetricCard from '@/components/MetricCard';
 import { ComparisonData } from '@/types/reportTypes';
+import { MetricDisplay } from '@/utils/metricDisplayUtils';
 import React from 'react';
-// import ComparisonBarChart from '@/components/ComparisonBarChart'; // Removed for single fighter view
-import styles from '@/styles/Home.module.css';
+// import styles from '@/styles/Home.module.css'; // Not directly used
 
 interface CodeReviewSectionProps {
   reportData: ComparisonData;
@@ -13,37 +13,63 @@ interface CodeReviewSectionProps {
 
 const CodeReviewSection: React.FC<CodeReviewSectionProps> = ({ reportData, fighterKey, displayName }) => {
   const metrics = reportData[fighterKey].metrics.code_review;
+  const opponentKey = fighterKey === 'repo1' ? 'repo2' : 'repo1';
+  const opponentMetrics = reportData[opponentKey].metrics.code_review;
 
-  if (!metrics) {
-    return <MetricCard title={`${displayName} - Code Review`}><p>Code Review data not available.</p></MetricCard>;
+  if (!metrics || !opponentMetrics) {
+    return <MetricCard title={`${displayName} - Code Review`}><p>Code Review data not fully available for comparison.</p></MetricCard>;
   }
 
   return (
     <MetricCard title={`${displayName} - Code Review`}>
-      <div className={styles.metricPair} title="Average number of formal review submissions per PR.">
-        <span className={styles.metricLabel}>Reviews per PR:</span>
-        <span className={styles.metricValue}>{metrics.reviews_per_pr?.toFixed(1)}</span>
-      </div>
-      <div className={styles.metricPair} title="Average number of review comments per PR.">
-        <span className={styles.metricLabel}>Comments per PR:</span>
-        <span className={styles.metricValue}>{metrics.comments_per_pr?.toFixed(1)}</span>
-      </div>
-      <div className={styles.metricPair} title="Score (0-10) indicating review thoroughness (multiple reviewers, substantive comments/changes requested). Higher is better.">
-        <span className={styles.metricLabel}>Thoroughness Score:</span>
-        <span className={styles.metricValue}>{metrics.review_thoroughness_score?.toFixed(1)}/10</span>
-      </div>
-      <div className={styles.metricPair} title="Percentage of merged PRs that were merged by the PR author. Lower indicates more independent review.">
-        <span className={styles.metricLabel}>Self-Merged Ratio:</span>
-        <span className={styles.metricValue}>{(metrics.self_merged_ratio !== undefined ? (metrics.self_merged_ratio * 100).toFixed(1) : 'N/A')}%</span>
-      </div>
-      <div className={styles.metricPair} title="Average time in hours from PR creation to the first formal review. Lower is better.">
-        <span className={styles.metricLabel}>Avg. Time to First Review:</span>
-        <span className={styles.metricValue}>{metrics.avg_time_to_first_review?.toFixed(1)} hours</span>
-      </div>
-      <div className={styles.metricPair} title="Score (0-10) indicating speed of first review. Higher is better.">
-        <span className={styles.metricLabel}>Responsiveness Score:</span>
-        <span className={styles.metricValue}>{metrics.review_responsiveness_score?.toFixed(1)}/10</span>
-      </div>
+      <MetricDisplay
+        label="Reviews per PR"
+        primaryValue={metrics.reviews_per_pr}
+        opponentValue={opponentMetrics.reviews_per_pr}
+        primaryFighterKey={fighterKey}
+        tooltip="Average number of formal review submissions per PR."
+      />
+      <MetricDisplay
+        label="Comments per PR"
+        primaryValue={metrics.comments_per_pr}
+        opponentValue={opponentMetrics.comments_per_pr}
+        primaryFighterKey={fighterKey}
+        tooltip="Average number of review comments per PR."
+      />
+      <MetricDisplay
+        label="Thoroughness Score"
+        primaryValue={metrics.review_thoroughness_score}
+        opponentValue={opponentMetrics.review_thoroughness_score}
+        primaryFighterKey={fighterKey}
+        unit="/10"
+        tooltip="Score (0-10) indicating review thoroughness (multiple reviewers, substantive comments/changes requested). Higher is better."
+      />
+      <MetricDisplay
+        label="Self-Merged Ratio"
+        primaryValue={metrics.self_merged_ratio !== undefined ? metrics.self_merged_ratio * 100 : undefined}
+        opponentValue={opponentMetrics.self_merged_ratio !== undefined ? opponentMetrics.self_merged_ratio * 100 : undefined}
+        primaryFighterKey={fighterKey}
+        unit="%"
+        lowerIsBetter={true}
+        tooltip="Percentage of merged PRs that were merged by the PR author. Lower indicates more independent review."
+      />
+      <MetricDisplay
+        label="Avg. Time to First Review"
+        primaryValue={metrics.avg_time_to_first_review}
+        opponentValue={opponentMetrics.avg_time_to_first_review}
+        primaryFighterKey={fighterKey}
+        unit=" hours"
+        lowerIsBetter={true}
+        tooltip="Average time in hours from PR creation to the first formal review. Lower is better."
+      />
+      <MetricDisplay
+        label="Responsiveness Score"
+        primaryValue={metrics.review_responsiveness_score}
+        opponentValue={opponentMetrics.review_responsiveness_score}
+        primaryFighterKey={fighterKey}
+        unit="/10"
+        tooltip="Score (0-10) indicating speed of first review. Higher is better."
+      />
     </MetricCard>
   );
 };

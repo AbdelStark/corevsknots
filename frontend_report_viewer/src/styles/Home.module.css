@@ -117,5 +117,16 @@
   border-color: #ff6b81; /* Red tint for fighter 2 */
 }
 
+.fighterColumnTitle {
+  font-size: 1.8rem; /* Or adjust to fit pixel font nicely */
+  color: #feca57; /* Neon yellow, same as main headers */
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #ff4757; /* Neon red accent */
+  text-shadow: 1px 1px #000;
+  letter-spacing: 1px;
+}
+
 /* metricPair, metricLabel, metricValue, valueRepo1, valueRepo2 are now primarily in MetricCard.module.css */
 /* If needed for specific overrides or layout within Home.module.css, they can be added or adjusted here. */

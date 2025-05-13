@@ -98,9 +98,8 @@ export default function Home() {
             <OverallScoresSection reportData={reportData} />
 
             <div className={styles.fightersContainer}>
-              {/* Fighter 1 Column (Core) */}
               <div className={`${styles.fighterColumn} ${styles.fighterColumn1}`}>
-                {/* <h2 className={styles.fighterTitle}>{reportData.repo1.name}</h2> */} {/* Title now in main header */}
+                <h2 className={styles.fighterColumnTitle}>{getDisplayName(reportData.repo1.name)}</h2>
                 <ContributorSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
                 <CommitSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
                 <PullRequestSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
@@ -110,9 +109,8 @@ export default function Home() {
                 <TestSection reportData={reportData} fighterKey="repo1" displayName={getDisplayName(reportData.repo1.name)} />
               </div>
 
-              {/* Fighter 2 Column (Knots) */}
               <div className={`${styles.fighterColumn} ${styles.fighterColumn2}`}>
-                {/* <h2 className={styles.fighterTitle}>{reportData.repo2.name}</h2> */} {/* Title now in main header */}
+                <h2 className={styles.fighterColumnTitle}>{getDisplayName(reportData.repo2.name)}</h2>
                 <ContributorSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
                 <CommitSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
                 <PullRequestSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
