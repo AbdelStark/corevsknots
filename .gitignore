@@ -46,7 +46,6 @@ venv.bak/
 .cache/
 reports/
 charts/
-*.json
 !examples/*.json
 
 # Editor configs

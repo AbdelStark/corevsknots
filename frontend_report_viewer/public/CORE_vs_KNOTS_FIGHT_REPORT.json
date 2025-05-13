@@ -1,0 +1,3883 @@
+{
+  "repo1": {
+    "name": "bitcoin/bitcoin",
+    "metrics": {
+      "repository_info": {
+        "name": "bitcoin/bitcoin",
+        "description": "Bitcoin Core integration/staging tree",
+        "created_at": "2010-12-19T15:16:43Z",
+        "updated_at": "2025-05-12T15:58:59Z",
+        "pushed_at": "2025-05-12T13:22:59Z",
+        "stars": 83528,
+        "forks": 37204,
+        "watchers": 4041,
+        "open_issues": 719,
+        "language": "C++",
+        "license": "MIT License"
+      },
+      "contributor": {
+        "total_contributors": 346,
+        "contributors_by_commits": [
+          [
+            "laanwj",
+            7400
+          ],
+          [
+            "fanquake",
+            4432
+          ],
+          [
+            "sipa",
+            2264
+          ],
+          [
+            "achow101",
+            1929
+          ],
+          [
+            "hebasto",
+            1895
+          ],
+          [
+            "gavinandresen",
+            1101
+          ],
+          [
+            "ryanofsky",
+            795
+          ],
+          [
+            "jnewbery",
+            794
+          ],
+          [
+            "jonasschnelli",
+            774
+          ],
+          [
+            "practicalswift",
+            715
+          ],
+          [
+            "jonatack",
+            705
+          ],
+          [
+            "theuni",
+            704
+          ],
+          [
+            "glozow",
+            628
+          ],
+          [
+            "theStack",
+            574
+          ],
+          [
+            "luke-jr",
+            527
+          ],
+          [
+            "dongcarl",
+            509
+          ],
+          [
+            "TheBlueMatt",
+            506
+          ],
+          [
+            "sdaftuar",
+            353
+          ],
+          [
+            "Sjors",
+            331
+          ],
+          [
+            "promag",
+            329
+          ],
+          [
+            "meshcollider",
+            317
+          ],
+          [
+            "ajtowns",
+            307
+          ],
+          [
+            "furszy",
+            304
+          ],
+          [
+            "instagibbs",
+            303
+          ],
+          [
+            "vasild",
+            290
+          ],
+          [
+            "non-github-bitcoin",
+            271
+          ],
+          [
+            "gmaxwell",
+            267
+          ],
+          [
+            "jamesob",
+            222
+          ],
+          [
+            "fjahr",
+            220
+          ],
+          [
+            "morcos",
+            209
+          ],
+          [
+            "brunoerg",
+            196
+          ],
+          [
+            "darosior",
+            195
+          ],
+          [
+            "mzumsande",
+            192
+          ],
+          [
+            "kallewoof",
+            165
+          ],
+          [
+            "amitiuttarwar",
+            164
+          ],
+          [
+            "TheCharlatan",
+            164
+          ],
+          [
+            "Empact",
+            150
+          ],
+          [
+            "jtimon",
+            141
+          ],
+          [
+            "dergoegge",
+            129
+          ],
+          [
+            "paveljanik",
+            109
+          ],
+          [
+            "petertodd",
+            105
+          ],
+          [
+            "ken2812221",
+            105
+          ],
+          [
+            "stickies-v",
+            98
+          ],
+          [
+            "l0rinc",
+            92
+          ],
+          [
+            "pstratem",
+            87
+          ],
+          [
+            "cozz",
+            70
+          ],
+          [
+            "stratospher",
+            68
+          ],
+          [
+            "josibake",
+            67
+          ],
+          [
+            "hodlinator",
+            65
+          ],
+          [
+            "ismaelsadeeq",
+            64
+          ],
+          [
+            "JeremyRubin",
+            60
+          ],
+          [
+            "domob1812",
+            58
+          ],
+          [
+            "S3RK",
+            58
+          ],
+          [
+            "pinheadmz",
+            56
+          ],
+          [
+            "andrewtoth",
+            55
+          ],
+          [
+            "willcl-ark",
+            52
+          ],
+          [
+            "martinus",
+            51
+          ],
+          [
+            "w0xlt",
+            50
+          ],
+          [
+            "jimpo",
+            50
+          ],
+          [
+            "murchandamus",
+            48
+          ],
+          [
+            "sipsorcery",
+            46
+          ],
+          [
+            "0xB10C",
+            46
+          ],
+          [
+            "tdb3",
+            44
+          ],
+          [
+            "naumenkogs",
+            42
+          ],
+          [
+            "kiminuo",
+            40
+          ],
+          [
+            "rebroad",
+            36
+          ],
+          [
+            "jarolrod",
+            36
+          ],
+          [
+            "NicolasDorier",
+            35
+          ],
+          [
+            "aureleoules",
+            35
+          ],
+          [
+            "muggenhor",
+            34
+          ],
+          [
+            "CodeShark",
+            32
+          ],
+          [
+            "btcdrak",
+            32
+          ],
+          [
+            "kevkevinpal",
+            32
+          ],
+          [
+            "dooglus",
+            31
+          ],
+          [
+            "jl2012",
+            30
+          ],
+          [
+            "gwillen",
+            27
+          ],
+          [
+            "dhruv",
+            27
+          ],
+          [
+            "mjdietzx",
+            26
+          ],
+          [
+            "kazcw",
+            25
+          ],
+          [
+            "ishaanam",
+            25
+          ],
+          [
+            "marcofleon",
+            24
+          ],
+          [
+            "sr-gi",
+            23
+          ],
+          [
+            "troygiorshev",
+            22
+          ],
+          [
+            "kristapsk",
+            22
+          ],
+          [
+            "eklitzke",
+            22
+          ],
+          [
+            "dexX7",
+            22
+          ],
+          [
+            "john-moffett",
+            21
+          ],
+          [
+            "icota",
+            20
+          ],
+          [
+            "mruddy",
+            20
+          ],
+          [
+            "wtogami",
+            19
+          ],
+          [
+            "dgenr8",
+            19
+          ],
+          [
+            "pablomartin4btc",
+            18
+          ],
+          [
+            "rodentrabies",
+            18
+          ],
+          [
+            "AkioNak",
+            17
+          ],
+          [
+            "harding",
+            17
+          ],
+          [
+            "mrbandrews",
+            17
+          ],
+          [
+            "danra",
+            16
+          ],
+          [
+            "benthecarman",
+            16
+          ],
+          [
+            "super3",
+            16
+          ],
+          [
+            "prusnak",
+            16
+          ],
+          [
+            "klementtan",
+            16
+          ],
+          [
+            "cvengler",
+            16
+          ],
+          [
+            "sdkfjlsfjlskdfjlsdjflsjf",
+            16
+          ],
+          [
+            "maaku",
+            16
+          ],
+          [
+            "m3dwards",
+            16
+          ],
+          [
+            "jb55",
+            16
+          ],
+          [
+            "Bushstar",
+            15
+          ],
+          [
+            "scravy",
+            15
+          ],
+          [
+            "casey",
+            15
+          ],
+          [
+            "LarryRuane",
+            15
+          ],
+          [
+            "bitcoin-core-merge-script",
+            15
+          ],
+          [
+            "l2a5b1",
+            15
+          ],
+          [
+            "elichai",
+            15
+          ],
+          [
+            "kdomanski",
+            15
+          ],
+          [
+            "skeees",
+            15
+          ],
+          [
+            "jimmysong",
+            14
+          ],
+          [
+            "n-thumann",
+            14
+          ],
+          [
+            "brakmic",
+            14
+          ],
+          [
+            "adamjonas",
+            14
+          ],
+          [
+            "murrayn",
+            14
+          ],
+          [
+            "jkczyz",
+            13
+          ],
+          [
+            "str4d",
+            13
+          ],
+          [
+            "ENikS",
+            13
+          ],
+          [
+            "RandyMcMillan",
+            13
+          ],
+          [
+            "davidgumberg",
+            13
+          ],
+          [
+            "tjps",
+            12
+          ],
+          [
+            "EthanHeilman",
+            12
+          ],
+          [
+            "jachiang",
+            12
+          ],
+          [
+            "dcousens",
+            11
+          ],
+          [
+            "nomnombtc",
+            11
+          ],
+          [
+            "lsilva01",
+            11
+          ],
+          [
+            "ch4ot1c",
+            11
+          ],
+          [
+            "Christewart",
+            10
+          ],
+          [
+            "mess110",
+            10
+          ],
+          [
+            "JeremyRand",
+            10
+          ],
+          [
+            "shaavan",
+            10
+          ],
+          [
+            "lucash-dev",
+            10
+          ],
+          [
+            "Kvaciral",
+            10
+          ],
+          [
+            "codler",
+            10
+          ],
+          [
+            "wizeman",
+            10
+          ],
+          [
+            "merland",
+            10
+          ],
+          [
+            "real-or-random",
+            10
+          ],
+          [
+            "philmb3487",
+            9
+          ],
+          [
+            "recursive-rat4",
+            9
+          ],
+          [
+            "MarnixCroes",
+            9
+          ],
+          [
+            "jmcorgan",
+            9
+          ],
+          [
+            "maflcko",
+            9
+          ],
+          [
+            "jlopp",
+            9
+          ],
+          [
+            "conscott",
+            9
+          ],
+          [
+            "roques",
+            9
+          ],
+          [
+            "BrandonOdiwuor",
+            9
+          ],
+          [
+            "Crypt-iQ",
+            8
+          ],
+          [
+            "jgarzik",
+            8
+          ],
+          [
+            "PastaPastaPasta",
+            8
+          ],
+          [
+            "ajweiss",
+            8
+          ],
+          [
+            "schildbach",
+            8
+          ],
+          [
+            "jordanlewis",
+            8
+          ],
+          [
+            "joshtriplett",
+            8
+          ],
+          [
+            "narula",
+            8
+          ],
+          [
+            "PierreRochard",
+            8
+          ],
+          [
+            "romanz",
+            8
+          ],
+          [
+            "stevenroose",
+            8
+          ],
+          [
+            "isle2983",
+            8
+          ],
+          [
+            "marcotnunes",
+            8
+          ],
+          [
+            "naiyoma",
+            8
+          ],
+          [
+            "sje397",
+            7
+          ],
+          [
+            "droark",
+            7
+          ],
+          [
+            "sandakersmann",
+            7
+          ],
+          [
+            "kouloumos",
+            7
+          ],
+          [
+            "UdjinM6",
+            7
+          ],
+          [
+            "runeksvendsen",
+            7
+          ],
+          [
+            "dougEfresh",
+            7
+          ],
+          [
+            "celil-kj",
+            7
+          ],
+          [
+            "fyquah",
+            7
+          ],
+          [
+            "freewil",
+            7
+          ],
+          [
+            "amadeuszpawlik",
+            7
+          ],
+          [
+            "forrestv",
+            7
+          ],
+          [
+            "rkrux",
+            7
+          ],
+          [
+            "rex4539",
+            7
+          ],
+          [
+            "ariard",
+            7
+          ],
+          [
+            "danielabrozzoni",
+            7
+          ],
+          [
+            "donaloconnor",
+            6
+          ],
+          [
+            "Zero-1729",
+            6
+          ],
+          [
+            "JoelKatz",
+            6
+          ],
+          [
+            "jrmithdobbs",
+            6
+          ],
+          [
+            "yancyribbens",
+            6
+          ],
+          [
+            "virtu",
+            6
+          ],
+          [
+            "setpill",
+            6
+          ],
+          [
+            "cdecker",
+            6
+          ],
+          [
+            "DrahtBot",
+            6
+          ],
+          [
+            "eval-exec",
+            6
+          ],
+          [
+            "dertin",
+            6
+          ],
+          [
+            "Matoking",
+            6
+          ],
+          [
+            "ayush933",
+            6
+          ],
+          [
+            "mgiuca",
+            6
+          ],
+          [
+            "OttoAllmendinger",
+            6
+          ],
+          [
+            "ashleyholman",
+            6
+          ],
+          [
+            "vegard",
+            6
+          ],
+          [
+            "zw",
+            6
+          ],
+          [
+            "fsb4000",
+            6
+          ],
+          [
+            "glowang",
+            6
+          ],
+          [
+            "p2k",
+            6
+          ],
+          [
+            "randy-waterhouse",
+            6
+          ],
+          [
+            "rdponticelli",
+            5
+          ],
+          [
+            "sanket1729",
+            5
+          ],
+          [
+            "ptschip",
+            5
+          ],
+          [
+            "gubatron",
+            5
+          ],
+          [
+            "fcicq",
+            5
+          ],
+          [
+            "accraze",
+            5
+          ],
+          [
+            "whitj00",
+            5
+          ],
+          [
+            "robot-visions",
+            5
+          ],
+          [
+            "federicobond",
+            5
+          ],
+          [
+            "gkrizek",
+            5
+          ],
+          [
+            "AngusP",
+            5
+          ],
+          [
+            "hkjn",
+            5
+          ],
+          [
+            "alexanderkjeldaas",
+            5
+          ],
+          [
+            "jadijadi",
+            5
+          ],
+          [
+            "jameshilliard",
+            5
+          ],
+          [
+            "jeffrade",
+            5
+          ],
+          [
+            "lemzwerg",
+            5
+          ],
+          [
+            "vinniefalco",
+            5
+          ],
+          [
+            "roybadami",
+            5
+          ],
+          [
+            "r000n",
+            5
+          ],
+          [
+            "robbak",
+            5
+          ],
+          [
+            "mndrix",
+            5
+          ],
+          [
+            "maraoz",
+            5
+          ],
+          [
+            "greenaddress",
+            5
+          ],
+          [
+            "kashifs",
+            5
+          ],
+          [
+            "TheQuantumPhysicist",
+            4
+          ],
+          [
+            "stackman27",
+            4
+          ],
+          [
+            "yusufsahinhamza",
+            4
+          ],
+          [
+            "paraipan",
+            4
+          ],
+          [
+            "chinggg",
+            4
+          ],
+          [
+            "arowser",
+            4
+          ],
+          [
+            "ezegom",
+            4
+          ],
+          [
+            "fivepiece",
+            4
+          ],
+          [
+            "flack",
+            4
+          ],
+          [
+            "globalcitizen",
+            4
+          ],
+          [
+            "grimd34th",
+            4
+          ],
+          [
+            "jurraca",
+            4
+          ],
+          [
+            "secp512k2",
+            4
+          ],
+          [
+            "t-bast",
+            4
+          ],
+          [
+            "keystrike",
+            4
+          ],
+          [
+            "JBaczuk",
+            4
+          ],
+          [
+            "Michagogo",
+            4
+          ],
+          [
+            "suriyaa",
+            4
+          ],
+          [
+            "rajarshimaitra",
+            4
+          ],
+          [
+            "alfonsoromanz",
+            4
+          ],
+          [
+            "apoelstra",
+            4
+          ],
+          [
+            "brandondahler",
+            4
+          ],
+          [
+            "kcalvinalvin",
+            4
+          ],
+          [
+            "CryptAxe",
+            4
+          ],
+          [
+            "esotericnonsense",
+            4
+          ],
+          [
+            "daniel-s-ingram",
+            4
+          ],
+          [
+            "DomT4",
+            4
+          ],
+          [
+            "robot-dreams",
+            4
+          ],
+          [
+            "EricJ2190",
+            4
+          ],
+          [
+            "mibe",
+            4
+          ],
+          [
+            "whitslack",
+            4
+          ],
+          [
+            "miles170",
+            4
+          ],
+          [
+            "LongShao007",
+            4
+          ],
+          [
+            "MitchellCash",
+            4
+          ],
+          [
+            "guggero",
+            4
+          ],
+          [
+            "randolf",
+            4
+          ],
+          [
+            "4tar",
+            4
+          ],
+          [
+            "jayschwa",
+            4
+          ],
+          [
+            "JustinTArthur",
+            4
+          ],
+          [
+            "kostaz",
+            4
+          ],
+          [
+            "HashUnlimited",
+            3
+          ],
+          [
+            "Mirobit",
+            3
+          ],
+          [
+            "mikehearn",
+            3
+          ],
+          [
+            "polespinasa",
+            3
+          ],
+          [
+            "Prabhat1308",
+            3
+          ],
+          [
+            "psancheti110",
+            3
+          ],
+          [
+            "richardkiss",
+            3
+          ],
+          [
+            "roconnor-blockstream",
+            3
+          ],
+          [
+            "RHavar",
+            3
+          ],
+          [
+            "SergioDemianLerner",
+            3
+          ],
+          [
+            "shaulkf",
+            3
+          ],
+          [
+            "ShubhamPalriwala",
+            3
+          ],
+          [
+            "spencerlievens",
+            3
+          ],
+          [
+            "Emzy",
+            3
+          ],
+          [
+            "BlockMechanic",
+            3
+          ],
+          [
+            "tholenst",
+            3
+          ],
+          [
+            "afk11",
+            3
+          ],
+          [
+            "torkelrogstad",
+            3
+          ],
+          [
+            "Tyler-Hardin",
+            3
+          ],
+          [
+            "al42and",
+            3
+          ],
+          [
+            "windsok",
+            3
+          ],
+          [
+            "kdmukai",
+            3
+          ],
+          [
+            "lpescher",
+            3
+          ],
+          [
+            "monlovesmango",
+            3
+          ],
+          [
+            "mryandao",
+            3
+          ],
+          [
+            "nijynot",
+            3
+          ],
+          [
+            "10xcryptodev",
+            3
+          ],
+          [
+            "agroce",
+            3
+          ],
+          [
+            "AmirAbrams",
+            3
+          ],
+          [
+            "arnabsen1729",
+            3
+          ],
+          [
+            "bitcoinhodler",
+            3
+          ],
+          [
+            "bliotti",
+            3
+          ],
+          [
+            "davecgh",
+            3
+          ],
+          [
+            "DesWurstes",
+            3
+          ],
+          [
+            "dunxen",
+            3
+          ],
+          [
+            "BitonicEelis",
+            3
+          ],
+          [
+            "ellemouton",
+            3
+          ],
+          [
+            "ers35",
+            3
+          ],
+          [
+            "Eunoia1729",
+            3
+          ],
+          [
+            "fametrano",
+            3
+          ],
+          [
+            "Flowdalic",
+            3
+          ],
+          [
+            "michaelfolkson",
+            3
+          ],
+          [
+            "bitstein",
+            3
+          ],
+          [
+            "martinsaposnic",
+            3
+          ],
+          [
+            "marcinja",
+            3
+          ],
+          [
+            "lucayepa",
+            3
+          ],
+          [
+            "ldenman",
+            3
+          ],
+          [
+            "Krellan",
+            3
+          ],
+          [
+            "jonasnick",
+            3
+          ],
+          [
+            "lunacd",
+            3
+          ],
+          [
+            "hernanmarino",
+            3
+          ],
+          [
+            "ian-kelling",
+            3
+          ],
+          [
+            "bubelov",
+            3
+          ],
+          [
+            "isghe",
+            3
+          ],
+          [
+            "jrawsthorne",
+            3
+          ],
+          [
+            "jbampton",
+            3
+          ],
+          [
+            "jonls",
+            3
+          ],
+          [
+            "cdhowie",
+            2
+          ],
+          [
+            "seejee",
+            2
+          ],
+          [
+            "chrisgavin",
+            2
+          ],
+          [
+            "cbeams",
+            2
+          ],
+          [
+            "kanzure",
+            2
+          ],
+          [
+            "Brotcrunsher",
+            2
+          ],
+          [
+            "bencxr",
+            2
+          ],
+          [
+            "Ayush170-Future",
+            2
+          ],
+          [
+            "alecalve",
+            2
+          ],
+          [
+            "bvbfan",
+            2
+          ],
+          [
+            "anditto",
+            2
+          ],
+          [
+            "alonmuroch",
+            2
+          ],
+          [
+            "flipbitsnotburgers",
+            2
+          ],
+          [
+            "AliceWonderMiscreations",
+            2
+          ],
+          [
+            "krab",
+            2
+          ],
+          [
+            "leishman",
+            2
+          ],
+          [
+            "alexwaters",
+            2
+          ],
+          [
+            "axvr",
+            2
+          ],
+          [
+            "adlai",
+            2
+          ],
+          [
+            "1Il1",
+            2
+          ],
+          [
+            "1440000bytes",
+            2
+          ]
+        ],
+        "top_contributors": [
+          [
+            "laanwj",
+            7400
+          ],
+          [
+            "fanquake",
+            4432
+          ],
+          [
+            "sipa",
+            2264
+          ],
+          [
+            "achow101",
+            1929
+          ],
+          [
+            "hebasto",
+            1895
+          ],
+          [
+            "gavinandresen",
+            1101
+          ],
+          [
+            "ryanofsky",
+            795
+          ],
+          [
+            "jnewbery",
+            794
+          ],
+          [
+            "jonasschnelli",
+            774
+          ],
+          [
+            "practicalswift",
+            715
+          ]
+        ],
+        "active_contributors": 115,
+        "active_ratio": 0.33236994219653176,
+        "contributor_gini": 0.7740371233588759,
+        "bus_factor": 21,
+        "email_domains": {
+          "gmail.com": 50,
+          "achow101.com": 1,
+          "users.noreply.github.com": 18,
+          "721217.xyz": 2,
+          "ofsky.org": 1,
+          "wuille.net": 1,
+          "sprovoost.nl": 1,
+          "protonmail.com": 10,
+          "coryfields.com": 1,
+          "FreeBSD.org": 1,
+          "erisian.com.au": 1,
+          "256k1.dev": 1,
+          "proton.me": 1,
+          "atack.com": 1,
+          "chaincode.com": 1,
+          "b10c.me": 1,
+          "murch.one": 1,
+          "utopios.org": 1,
+          "pm.me": 2,
+          "yanofsky.org": 1,
+          "cryptic.to": 1,
+          "toaster.cc": 1,
+          "danwin1210.de": 1,
+          "waya.ai": 1,
+          "uab.cat": 1,
+          "romanzey.de": 1,
+          "pfeifer-mail.de": 1,
+          "bluematt.me": 1,
+          "mattwhitlock.name": 1,
+          "petertodd.org": 1,
+          "aliyun.com": 1,
+          "yancy.lol": 1,
+          "outlook.com": 1,
+          "jirijakes.com": 1,
+          "maciej.szmigiero.name": 1,
+          "grafi.jp": 1,
+          "bitlayer.ltd": 1,
+          "rogstad.io": 1,
+          "jb55.com": 1,
+          "squareup.com": 1,
+          "myyahoo.com": 1,
+          "example.com": 1
+        },
+        "organization_count": 42,
+        "organization_diversity": 0.6638959302029277
+      },
+      "commit": {
+        "total_commits_in_period": 3716,
+        "original_commits_in_period": 2593,
+        "commits_per_day": 7.1,
+        "commits_per_week": 49.73,
+        "commits_per_month": 213.12,
+        "commit_activity_days": 319,
+        "commit_activity_ratio": 0.873972602739726,
+        "commit_frequency": "very_active",
+        "avg_commit_size": 0,
+        "large_commit_ratio": 0,
+        "commit_message_quality": {
+          "avg_message_length": 49.52,
+          "descriptive_ratio": 0.678,
+          "quality_score": 8.3
+        },
+        "unique_authors": 115,
+        "top_authors": [
+          [
+            "MarcoFalke",
+            313
+          ],
+          [
+            "hebasto",
+            310
+          ],
+          [
+            "fanquake",
+            175
+          ],
+          [
+            "achow101",
+            138
+          ],
+          [
+            "sipa",
+            123
+          ]
+        ],
+        "merge_commit_count": 3,
+        "merge_commit_ratio": 0.001,
+        "commits_by_day": {
+          "Monday": 440,
+          "Tuesday": 455,
+          "Wednesday": 546,
+          "Thursday": 496,
+          "Friday": 470,
+          "Saturday": 95,
+          "Sunday": 91
+        },
+        "commits_by_hour": {
+          "0": 16,
+          "1": 56,
+          "2": 15,
+          "3": 30,
+          "4": 13,
+          "5": 25,
+          "6": 25,
+          "7": 75,
+          "8": 90,
+          "9": 152,
+          "10": 142,
+          "11": 161,
+          "12": 155,
+          "13": 192,
+          "14": 249,
+          "15": 210,
+          "16": 182,
+          "17": 141,
+          "18": 187,
+          "19": 136,
+          "20": 143,
+          "21": 111,
+          "22": 48,
+          "23": 39
+        },
+        "direct_commit_count_git": 653,
+        "direct_to_original_commit_ratio": 0.2518318549942152
+      },
+      "pull_request": {
+        "total_prs": 1646,
+        "open_prs": 227,
+        "closed_prs": 1419,
+        "merged_prs": 0,
+        "open_ratio": 0.138,
+        "merged_ratio": 0.0,
+        "closed_unmerged_ratio": 0.862,
+        "avg_review_count": 2.3,
+        "reviewed_pr_ratio": 0.004,
+        "self_merged_ratio": 0,
+        "avg_time_to_merge": 0,
+        "avg_time_to_close": 492.2,
+        "pr_velocity_score": 0,
+        "avg_pr_size": 0.0,
+        "large_pr_ratio": 0.0,
+        "unique_pr_authors": 282,
+        "top_pr_authors": [
+          [
+            "maflcko",
+            184
+          ],
+          [
+            "hebasto",
+            179
+          ],
+          [
+            "fanquake",
+            123
+          ],
+          [
+            "l0rinc",
+            73
+          ],
+          [
+            "Sjors",
+            61
+          ]
+        ],
+        "external_pr_ratio": 0.491
+      },
+      "code_review": {
+        "total_reviews": 23,
+        "total_review_comments": 15,
+        "reviews_per_pr": 2.3,
+        "comments_per_pr": 1.5,
+        "multi_reviewer_ratio": 0.5,
+        "substantive_review_ratio": 0.2,
+        "review_thoroughness_score": 3.5,
+        "unique_reviewers": 9,
+        "top_reviewers": [
+          [
+            "maflcko",
+            8
+          ],
+          [
+            "polespinasa",
+            8
+          ],
+          [
+            "TheCharlatan",
+            8
+          ],
+          [
+            "hebasto",
+            6
+          ],
+          [
+            "Sjors",
+            4
+          ]
+        ],
+        "reviewer_to_author_ratio": 1.29,
+        "avg_time_to_first_review": 13.02,
+        "review_responsiveness_score": 8.5,
+        "self_merged_count": 115,
+        "self_merged_ratio": 0.114,
+        "self_merged_prs_analyzed": 1012
+      },
+      "ci_cd": {
+        "has_ci": true,
+        "total_workflow_runs": 30,
+        "successful_workflow_runs": 18,
+        "workflow_success_rate": 0.6,
+        "workflows_per_day": 10.0,
+        "unique_workflows": 1,
+        "ci_config_count": 1,
+        "ci_systems": [
+          "GitHub Actions"
+        ],
+        "has_github_actions": true,
+        "has_travis": false,
+        "has_circle_ci": false,
+        "ci_system_count": 1,
+        "pr_ci_ratio": 0.0,
+        "pr_ci_required": true
+      },
+      "issue": {
+        "total_issues": 1282,
+        "open_issues": 243,
+        "closed_issues": 1039,
+        "open_ratio": 0.19,
+        "avg_time_to_first_response": 10706.37,
+        "avg_time_to_close": 5620.67,
+        "stale_issues": 176,
+        "stale_issue_ratio": 0.724,
+        "responsiveness_score": 0.8,
+        "has_labels": true,
+        "label_count": 37,
+        "labeled_issue_ratio": 0.743,
+        "top_labels": [
+          [
+            "Tests",
+            199
+          ],
+          [
+            "Feature",
+            160
+          ],
+          [
+            "Build system",
+            143
+          ],
+          [
+            "Wallet",
+            130
+          ],
+          [
+            "Questions and Help",
+            108
+          ]
+        ],
+        "categorization_score": 7,
+        "unique_issue_authors": 501,
+        "top_issue_authors": [
+          [
+            "maflcko",
+            139
+          ],
+          [
+            "fanquake",
+            124
+          ],
+          [
+            "Sjors",
+            63
+          ],
+          [
+            "hebasto",
+            55
+          ],
+          [
+            "achow101",
+            22
+          ]
+        ],
+        "external_issue_ratio": 0.596,
+        "closure_rate": 0.81,
+        "recently_closed": 61,
+        "recently_closed_ratio": 0.048,
+        "issue_velocity_score": 6.1
+      },
+      "test": {
+        "test_files_count": 348,
+        "has_tests": true,
+        "has_test_directory": false,
+        "test_framework_signals": [],
+        "testing_practice_score": 0
+      },
+      "repository": {
+        "name": "bitcoin/bitcoin",
+        "analysis_period_months": 12,
+        "analysis_date": "2025-05-13T10:45:52.944563",
+        "github_stars": 83528,
+        "github_forks": 37204,
+        "github_watchers": 4041,
+        "default_branch": "master",
+        "language": "C++"
+      },
+      "overall_health_score": 5.4
+    }
+  },
+  "repo2": {
+    "name": "bitcoinknots/bitcoin",
+    "metrics": {
+      "repository_info": {
+        "name": "bitcoinknots/bitcoin",
+        "description": "Bitcoin Knots enhanced Bitcoin node/wallet software",
+        "created_at": "2016-02-25T11:03:39Z",
+        "updated_at": "2025-05-12T18:17:14Z",
+        "pushed_at": "2025-05-11T07:32:52Z",
+        "stars": 337,
+        "forks": 76,
+        "watchers": 41,
+        "open_issues": 54,
+        "language": "C++",
+        "license": "MIT License"
+      },
+      "contributor": {
+        "total_contributors": 344,
+        "contributors_by_commits": [
+          [
+            "laanwj",
+            7372
+          ],
+          [
+            "fanquake",
+            3922
+          ],
+          [
+            "sipa",
+            2197
+          ],
+          [
+            "achow101",
+            1672
+          ],
+          [
+            "luke-jr",
+            1626
+          ],
+          [
+            "hebasto",
+            1616
+          ],
+          [
+            "gavinandresen",
+            1101
+          ],
+          [
+            "jnewbery",
+            794
+          ],
+          [
+            "jonasschnelli",
+            781
+          ],
+          [
+            "jonatack",
+            716
+          ],
+          [
+            "practicalswift",
+            715
+          ],
+          [
+            "theuni",
+            691
+          ],
+          [
+            "ryanofsky",
+            661
+          ],
+          [
+            "theStack",
+            535
+          ],
+          [
+            "dongcarl",
+            509
+          ],
+          [
+            "glozow",
+            508
+          ],
+          [
+            "TheBlueMatt",
+            506
+          ],
+          [
+            "sdaftuar",
+            336
+          ],
+          [
+            "promag",
+            334
+          ],
+          [
+            "meshcollider",
+            317
+          ],
+          [
+            "ajtowns",
+            280
+          ],
+          [
+            "furszy",
+            279
+          ],
+          [
+            "vasild",
+            278
+          ],
+          [
+            "non-github-bitcoin",
+            271
+          ],
+          [
+            "gmaxwell",
+            267
+          ],
+          [
+            "instagibbs",
+            251
+          ],
+          [
+            "Sjors",
+            249
+          ],
+          [
+            "jamesob",
+            221
+          ],
+          [
+            "morcos",
+            209
+          ],
+          [
+            "fjahr",
+            193
+          ],
+          [
+            "kallewoof",
+            181
+          ],
+          [
+            "brunoerg",
+            167
+          ],
+          [
+            "mzumsande",
+            165
+          ],
+          [
+            "amitiuttarwar",
+            164
+          ],
+          [
+            "Empact",
+            150
+          ],
+          [
+            "darosior",
+            150
+          ],
+          [
+            "jtimon",
+            141
+          ],
+          [
+            "TheCharlatan",
+            129
+          ],
+          [
+            "dergoegge",
+            125
+          ],
+          [
+            "paveljanik",
+            109
+          ],
+          [
+            "ken2812221",
+            106
+          ],
+          [
+            "petertodd",
+            105
+          ],
+          [
+            "pstratem",
+            87
+          ],
+          [
+            "stickies-v",
+            86
+          ],
+          [
+            "cozz",
+            70
+          ],
+          [
+            "stratospher",
+            69
+          ],
+          [
+            "josibake",
+            67
+          ],
+          [
+            "pinheadmz",
+            62
+          ],
+          [
+            "JeremyRubin",
+            60
+          ],
+          [
+            "domob1812",
+            58
+          ],
+          [
+            "S3RK",
+            58
+          ],
+          [
+            "andrewtoth",
+            52
+          ],
+          [
+            "w0xlt",
+            51
+          ],
+          [
+            "jimpo",
+            50
+          ],
+          [
+            "martinus",
+            50
+          ],
+          [
+            "ismaelsadeeq",
+            48
+          ],
+          [
+            "sipsorcery",
+            46
+          ],
+          [
+            "willcl-ark",
+            46
+          ],
+          [
+            "kiminuo",
+            43
+          ],
+          [
+            "naumenkogs",
+            42
+          ],
+          [
+            "murchandamus",
+            41
+          ],
+          [
+            "rebroad",
+            40
+          ],
+          [
+            "aureleoules",
+            37
+          ],
+          [
+            "jarolrod",
+            36
+          ],
+          [
+            "NicolasDorier",
+            35
+          ],
+          [
+            "muggenhor",
+            34
+          ],
+          [
+            "CodeShark",
+            33
+          ],
+          [
+            "btcdrak",
+            32
+          ],
+          [
+            "dooglus",
+            31
+          ],
+          [
+            "0xB10C",
+            30
+          ],
+          [
+            "jl2012",
+            30
+          ],
+          [
+            "ishaanam",
+            27
+          ],
+          [
+            "tdb3",
+            27
+          ],
+          [
+            "dhruv",
+            27
+          ],
+          [
+            "gwillen",
+            27
+          ],
+          [
+            "kazcw",
+            25
+          ],
+          [
+            "mjdietzx",
+            25
+          ],
+          [
+            "kevkevinpal",
+            24
+          ],
+          [
+            "hodlinator",
+            23
+          ],
+          [
+            "eklitzke",
+            23
+          ],
+          [
+            "troygiorshev",
+            22
+          ],
+          [
+            "kristapsk",
+            22
+          ],
+          [
+            "john-moffett",
+            22
+          ],
+          [
+            "dexX7",
+            22
+          ],
+          [
+            "mruddy",
+            21
+          ],
+          [
+            "icota",
+            20
+          ],
+          [
+            "dgenr8",
+            19
+          ],
+          [
+            "wtogami",
+            19
+          ],
+          [
+            "cvengler",
+            18
+          ],
+          [
+            "rodentrabies",
+            18
+          ],
+          [
+            "benthecarman",
+            17
+          ],
+          [
+            "mrbandrews",
+            17
+          ],
+          [
+            "harding",
+            17
+          ],
+          [
+            "AkioNak",
+            17
+          ],
+          [
+            "maaku",
+            16
+          ],
+          [
+            "sdkfjlsfjlskdfjlsdjflsjf",
+            16
+          ],
+          [
+            "elichai",
+            16
+          ],
+          [
+            "danra",
+            16
+          ],
+          [
+            "super3",
+            16
+          ],
+          [
+            "prusnak",
+            16
+          ],
+          [
+            "klementtan",
+            16
+          ],
+          [
+            "Bushstar",
+            15
+          ],
+          [
+            "scravy",
+            15
+          ],
+          [
+            "brakmic",
+            15
+          ],
+          [
+            "casey",
+            15
+          ],
+          [
+            "skeees",
+            15
+          ],
+          [
+            "kdomanski",
+            15
+          ],
+          [
+            "jb55",
+            15
+          ],
+          [
+            "bitcoin-core-merge-script",
+            15
+          ],
+          [
+            "l2a5b1",
+            15
+          ],
+          [
+            "murrayn",
+            14
+          ],
+          [
+            "RandyMcMillan",
+            14
+          ],
+          [
+            "n-thumann",
+            14
+          ],
+          [
+            "adamjonas",
+            14
+          ],
+          [
+            "LarryRuane",
+            14
+          ],
+          [
+            "jimmysong",
+            14
+          ],
+          [
+            "pablomartin4btc",
+            14
+          ],
+          [
+            "jkczyz",
+            13
+          ],
+          [
+            "str4d",
+            13
+          ],
+          [
+            "ENikS",
+            13
+          ],
+          [
+            "l0rinc",
+            12
+          ],
+          [
+            "m3dwards",
+            12
+          ],
+          [
+            "sr-gi",
+            12
+          ],
+          [
+            "tjps",
+            12
+          ],
+          [
+            "jachiang",
+            12
+          ],
+          [
+            "shaavan",
+            12
+          ],
+          [
+            "dcousens",
+            11
+          ],
+          [
+            "nomnombtc",
+            11
+          ],
+          [
+            "lsilva01",
+            11
+          ],
+          [
+            "ch4ot1c",
+            11
+          ],
+          [
+            "merland",
+            10
+          ],
+          [
+            "EthanHeilman",
+            10
+          ],
+          [
+            "real-or-random",
+            10
+          ],
+          [
+            "lucash-dev",
+            10
+          ],
+          [
+            "wizeman",
+            10
+          ],
+          [
+            "JeremyRand",
+            10
+          ],
+          [
+            "codler",
+            10
+          ],
+          [
+            "mess110",
+            10
+          ],
+          [
+            "Kvaciral",
+            10
+          ],
+          [
+            "maflcko",
+            9
+          ],
+          [
+            "roques",
+            9
+          ],
+          [
+            "conscott",
+            9
+          ],
+          [
+            "BrandonOdiwuor",
+            9
+          ],
+          [
+            "Christewart",
+            9
+          ],
+          [
+            "jlopp",
+            9
+          ],
+          [
+            "jmcorgan",
+            9
+          ],
+          [
+            "recursive-rat4",
+            9
+          ],
+          [
+            "philmb3487",
+            9
+          ],
+          [
+            "Crypt-iQ",
+            8
+          ],
+          [
+            "jgarzik",
+            8
+          ],
+          [
+            "PastaPastaPasta",
+            8
+          ],
+          [
+            "dangershony",
+            8
+          ],
+          [
+            "ajweiss",
+            8
+          ],
+          [
+            "marcotnunes",
+            8
+          ],
+          [
+            "isle2983",
+            8
+          ],
+          [
+            "stevenroose",
+            8
+          ],
+          [
+            "romanz",
+            8
+          ],
+          [
+            "PierreRochard",
+            8
+          ],
+          [
+            "narula",
+            8
+          ],
+          [
+            "MarnixCroes",
+            8
+          ],
+          [
+            "schildbach",
+            8
+          ],
+          [
+            "joshtriplett",
+            8
+          ],
+          [
+            "jordanlewis",
+            8
+          ],
+          [
+            "apoelstra",
+            8
+          ],
+          [
+            "dougEfresh",
+            7
+          ],
+          [
+            "droark",
+            7
+          ],
+          [
+            "sje397",
+            7
+          ],
+          [
+            "sandakersmann",
+            7
+          ],
+          [
+            "runeksvendsen",
+            7
+          ],
+          [
+            "kouloumos",
+            7
+          ],
+          [
+            "UdjinM6",
+            7
+          ],
+          [
+            "celil-kj",
+            7
+          ],
+          [
+            "fyquah",
+            7
+          ],
+          [
+            "freewil",
+            7
+          ],
+          [
+            "amadeuszpawlik",
+            7
+          ],
+          [
+            "forrestv",
+            7
+          ],
+          [
+            "rex4539",
+            7
+          ],
+          [
+            "ariard",
+            7
+          ],
+          [
+            "Zero-1729",
+            6
+          ],
+          [
+            "JoelKatz",
+            6
+          ],
+          [
+            "donaloconnor",
+            6
+          ],
+          [
+            "jrmithdobbs",
+            6
+          ],
+          [
+            "virtu",
+            6
+          ],
+          [
+            "setpill",
+            6
+          ],
+          [
+            "vegard",
+            6
+          ],
+          [
+            "OttoAllmendinger",
+            6
+          ],
+          [
+            "zw",
+            6
+          ],
+          [
+            "mgiuca",
+            6
+          ],
+          [
+            "fsb4000",
+            6
+          ],
+          [
+            "ayush933",
+            6
+          ],
+          [
+            "ashleyholman",
+            6
+          ],
+          [
+            "greenaddress",
+            6
+          ],
+          [
+            "Matoking",
+            6
+          ],
+          [
+            "glowang",
+            6
+          ],
+          [
+            "dertin",
+            6
+          ],
+          [
+            "cdecker",
+            6
+          ],
+          [
+            "DrahtBot",
+            6
+          ],
+          [
+            "p2k",
+            6
+          ],
+          [
+            "randy-waterhouse",
+            6
+          ],
+          [
+            "alexanderkjeldaas",
+            5
+          ],
+          [
+            "fcicq",
+            5
+          ],
+          [
+            "gubatron",
+            5
+          ],
+          [
+            "ptschip",
+            5
+          ],
+          [
+            "sanket1729",
+            5
+          ],
+          [
+            "rdponticelli",
+            5
+          ],
+          [
+            "marcofleon",
+            5
+          ],
+          [
+            "AngusP",
+            5
+          ],
+          [
+            "robot-visions",
+            5
+          ],
+          [
+            "federicobond",
+            5
+          ],
+          [
+            "gkrizek",
+            5
+          ],
+          [
+            "hkjn",
+            5
+          ],
+          [
+            "jadijadi",
+            5
+          ],
+          [
+            "jameshilliard",
+            5
+          ],
+          [
+            "jeffrade",
+            5
+          ],
+          [
+            "lemzwerg",
+            5
+          ],
+          [
+            "vinniefalco",
+            5
+          ],
+          [
+            "roybadami",
+            5
+          ],
+          [
+            "r000n",
+            5
+          ],
+          [
+            "whitj00",
+            5
+          ],
+          [
+            "robbak",
+            5
+          ],
+          [
+            "mndrix",
+            5
+          ],
+          [
+            "maraoz",
+            5
+          ],
+          [
+            "accraze",
+            5
+          ],
+          [
+            "kashifs",
+            5
+          ],
+          [
+            "stackman27",
+            4
+          ],
+          [
+            "torkelrogstad",
+            4
+          ],
+          [
+            "TheQuantumPhysicist",
+            4
+          ],
+          [
+            "yusufsahinhamza",
+            4
+          ],
+          [
+            "paraipan",
+            4
+          ],
+          [
+            "chinggg",
+            4
+          ],
+          [
+            "arowser",
+            4
+          ],
+          [
+            "ezegom",
+            4
+          ],
+          [
+            "fivepiece",
+            4
+          ],
+          [
+            "flack",
+            4
+          ],
+          [
+            "globalcitizen",
+            4
+          ],
+          [
+            "grimd34th",
+            4
+          ],
+          [
+            "t-bast",
+            4
+          ],
+          [
+            "yancyribbens",
+            4
+          ],
+          [
+            "rajarshimaitra",
+            4
+          ],
+          [
+            "suriyaa",
+            4
+          ],
+          [
+            "keystrike",
+            4
+          ],
+          [
+            "JBaczuk",
+            4
+          ],
+          [
+            "Michagogo",
+            4
+          ],
+          [
+            "brandondahler",
+            4
+          ],
+          [
+            "Brotcrunsher",
+            4
+          ],
+          [
+            "kcalvinalvin",
+            4
+          ],
+          [
+            "CryptAxe",
+            4
+          ],
+          [
+            "esotericnonsense",
+            4
+          ],
+          [
+            "daniel-s-ingram",
+            4
+          ],
+          [
+            "danielabrozzoni",
+            4
+          ],
+          [
+            "davidgumberg",
+            4
+          ],
+          [
+            "DomT4",
+            4
+          ],
+          [
+            "robot-dreams",
+            4
+          ],
+          [
+            "EricJ2190",
+            4
+          ],
+          [
+            "randolf",
+            4
+          ],
+          [
+            "guggero",
+            4
+          ],
+          [
+            "MitchellCash",
+            4
+          ],
+          [
+            "miles170",
+            4
+          ],
+          [
+            "mibe",
+            4
+          ],
+          [
+            "whitslack",
+            4
+          ],
+          [
+            "LongShao007",
+            4
+          ],
+          [
+            "kostaz",
+            4
+          ],
+          [
+            "hsjoberg",
+            4
+          ],
+          [
+            "4tar",
+            4
+          ],
+          [
+            "jayschwa",
+            4
+          ],
+          [
+            "JustinTArthur",
+            4
+          ],
+          [
+            "AmirAbrams",
+            3
+          ],
+          [
+            "bitstein",
+            3
+          ],
+          [
+            "HashUnlimited",
+            3
+          ],
+          [
+            "Mirobit",
+            3
+          ],
+          [
+            "mikehearn",
+            3
+          ],
+          [
+            "psancheti110",
+            3
+          ],
+          [
+            "richardkiss",
+            3
+          ],
+          [
+            "roconnor-blockstream",
+            3
+          ],
+          [
+            "RHavar",
+            3
+          ],
+          [
+            "SergioDemianLerner",
+            3
+          ],
+          [
+            "shaulkf",
+            3
+          ],
+          [
+            "ShubhamPalriwala",
+            3
+          ],
+          [
+            "spencerlievens",
+            3
+          ],
+          [
+            "Emzy",
+            3
+          ],
+          [
+            "carnhofdaki",
+            3
+          ],
+          [
+            "BlockMechanic",
+            3
+          ],
+          [
+            "tholenst",
+            3
+          ],
+          [
+            "afk11",
+            3
+          ],
+          [
+            "Tyler-Hardin",
+            3
+          ],
+          [
+            "al42and",
+            3
+          ],
+          [
+            "windsok",
+            3
+          ],
+          [
+            "kdmukai",
+            3
+          ],
+          [
+            "lpescher",
+            3
+          ],
+          [
+            "mryandao",
+            3
+          ],
+          [
+            "nijynot",
+            3
+          ],
+          [
+            "agroce",
+            3
+          ],
+          [
+            "10xcryptodev",
+            3
+          ],
+          [
+            "arnabsen1729",
+            3
+          ],
+          [
+            "bitcoinhodler",
+            3
+          ],
+          [
+            "bliotti",
+            3
+          ],
+          [
+            "danben",
+            3
+          ],
+          [
+            "davecgh",
+            3
+          ],
+          [
+            "DesWurstes",
+            3
+          ],
+          [
+            "dunxen",
+            3
+          ],
+          [
+            "BitonicEelis",
+            3
+          ],
+          [
+            "ellemouton",
+            3
+          ],
+          [
+            "ers35",
+            3
+          ],
+          [
+            "Eunoia1729",
+            3
+          ],
+          [
+            "fametrano",
+            3
+          ],
+          [
+            "marcinja",
+            3
+          ],
+          [
+            "michaelfolkson",
+            3
+          ],
+          [
+            "lucayepa",
+            3
+          ],
+          [
+            "Retropex",
+            3
+          ],
+          [
+            "ldenman",
+            3
+          ],
+          [
+            "Krellan",
+            3
+          ],
+          [
+            "jonasnick",
+            3
+          ],
+          [
+            "jonls",
+            3
+          ],
+          [
+            "jbampton",
+            3
+          ],
+          [
+            "jrawsthorne",
+            3
+          ],
+          [
+            "isghe",
+            3
+          ],
+          [
+            "bubelov",
+            3
+          ],
+          [
+            "ian-kelling",
+            3
+          ],
+          [
+            "hernanmarino",
+            3
+          ],
+          [
+            "Flowdalic",
+            3
+          ],
+          [
+            "Ayush170-Future",
+            2
+          ],
+          [
+            "bencxr",
+            2
+          ],
+          [
+            "kanzure",
+            2
+          ],
+          [
+            "cbeams",
+            2
+          ],
+          [
+            "chrisgavin",
+            2
+          ],
+          [
+            "seejee",
+            2
+          ],
+          [
+            "cdhowie",
+            2
+          ],
+          [
+            "GChuf",
+            2
+          ],
+          [
+            "colindean",
+            2
+          ],
+          [
+            "meeDamian",
+            2
+          ],
+          [
+            "bytemaster",
+            2
+          ],
+          [
+            "alecalve",
+            2
+          ],
+          [
+            "bvbfan",
+            2
+          ],
+          [
+            "Elbandi",
+            2
+          ],
+          [
+            "anditto",
+            2
+          ],
+          [
+            "alonmuroch",
+            2
+          ],
+          [
+            "flipbitsnotburgers",
+            2
+          ],
+          [
+            "AliceWonderMiscreations",
+            2
+          ],
+          [
+            "krab",
+            2
+          ],
+          [
+            "leishman",
+            2
+          ],
+          [
+            "alexwaters",
+            2
+          ],
+          [
+            "axvr",
+            2
+          ],
+          [
+            "1Il1",
+            2
+          ],
+          [
+            "1440000bytes",
+            2
+          ]
+        ],
+        "top_contributors": [
+          [
+            "laanwj",
+            7372
+          ],
+          [
+            "fanquake",
+            3922
+          ],
+          [
+            "sipa",
+            2197
+          ],
+          [
+            "achow101",
+            1672
+          ],
+          [
+            "luke-jr",
+            1626
+          ],
+          [
+            "hebasto",
+            1616
+          ],
+          [
+            "gavinandresen",
+            1101
+          ],
+          [
+            "jnewbery",
+            794
+          ],
+          [
+            "jonasschnelli",
+            781
+          ],
+          [
+            "jonatack",
+            716
+          ]
+        ],
+        "active_contributors": 99,
+        "active_ratio": 0.2877906976744186,
+        "knots_original_commit_authors_count": 74,
+        "core_merge_commit_authors_count": 60,
+        "knots_contributors_only_merging_core": 25,
+        "knots_contributors_with_original_work": 74,
+        "knots_contributors_by_original_commits": [
+          [
+            "luke-jr",
+            975
+          ],
+          [
+            "jonatack",
+            27
+          ],
+          [
+            "achow101",
+            23
+          ],
+          [
+            "kallewoof",
+            15
+          ],
+          [
+            "tdb3",
+            15
+          ],
+          [
+            "hodlinator",
+            14
+          ],
+          [
+            "hebasto",
+            13
+          ],
+          [
+            "MarcoFalke",
+            13
+          ],
+          [
+            "pinheadmz",
+            10
+          ],
+          [
+            "fanquake",
+            10
+          ],
+          [
+            "furszy",
+            9
+          ],
+          [
+            "willcl-ark",
+            7
+          ],
+          [
+            "mzumsande",
+            7
+          ],
+          [
+            "vasild",
+            6
+          ],
+          [
+            "jonasschnelli",
+            6
+          ],
+          [
+            "dangershony",
+            6
+          ],
+          [
+            "brunoerg",
+            5
+          ],
+          [
+            "Sjors",
+            4
+          ],
+          [
+            "stratospher",
+            4
+          ],
+          [
+            "theuni",
+            4
+          ],
+          [
+            "theStack",
+            4
+          ],
+          [
+            "apoelstra",
+            4
+          ],
+          [
+            "Retropex",
+            3
+          ],
+          [
+            "kiminuo",
+            3
+          ],
+          [
+            "l0rinc",
+            3
+          ],
+          [
+            "jamesob",
+            3
+          ],
+          [
+            "fjahr",
+            3
+          ],
+          [
+            "promag",
+            3
+          ],
+          [
+            "eval-exec",
+            2
+          ],
+          [
+            "rkrux",
+            2
+          ],
+          [
+            "aureleoules",
+            2
+          ],
+          [
+            "andrewtoth",
+            2
+          ],
+          [
+            "Thomas Kerin",
+            2
+          ],
+          [
+            "hsjoberg",
+            2
+          ],
+          [
+            "rebroad",
+            2
+          ],
+          [
+            "darosior",
+            2
+          ],
+          [
+            "Talej",
+            2
+          ],
+          [
+            "TheCharlatan",
+            2
+          ],
+          [
+            "BrandonOdiwuor",
+            2
+          ],
+          [
+            "niftynei",
+            2
+          ],
+          [
+            "pablomartin4btc",
+            2
+          ],
+          [
+            "ismaelsadeeq",
+            2
+          ],
+          [
+            "sipa",
+            2
+          ],
+          [
+            "w0xlt",
+            2
+          ],
+          [
+            "ishaanam",
+            2
+          ],
+          [
+            "LarryRuane",
+            1
+          ],
+          [
+            "vostrnad",
+            1
+          ],
+          [
+            "ken2812221",
+            1
+          ],
+          [
+            "brakmic",
+            1
+          ],
+          [
+            "afk11",
+            1
+          ],
+          [
+            "greenaddress",
+            1
+          ],
+          [
+            "romanz",
+            1
+          ],
+          [
+            "davidben",
+            1
+          ],
+          [
+            "CharlesCNorton",
+            1
+          ],
+          [
+            "andhans",
+            1
+          ],
+          [
+            "Steven Hay",
+            1
+          ],
+          [
+            "JayBitron",
+            1
+          ],
+          [
+            "A-Manning",
+            1
+          ],
+          [
+            "0xB10C",
+            1
+          ],
+          [
+            "ajtowns",
+            1
+          ],
+          [
+            "CodeShark",
+            1
+          ],
+          [
+            "somdoron",
+            1
+          ],
+          [
+            "instagibbs",
+            1
+          ],
+          [
+            "kevkevinpal",
+            1
+          ],
+          [
+            "eklitzke",
+            1
+          ],
+          [
+            "dergoegge",
+            1
+          ],
+          [
+            "laanwj",
+            1
+          ],
+          [
+            "MarnixCroes",
+            1
+          ],
+          [
+            "jadijadi",
+            1
+          ],
+          [
+            "AaronDewes",
+            1
+          ],
+          [
+            "danben",
+            1
+          ],
+          [
+            "john-moffett",
+            1
+          ],
+          [
+            "TheBlueMatt",
+            1
+          ],
+          [
+            "elichai",
+            1
+          ]
+        ],
+        "knots_top_original_contributors": [
+          [
+            "luke-jr",
+            975
+          ],
+          [
+            "jonatack",
+            27
+          ],
+          [
+            "achow101",
+            23
+          ],
+          [
+            "kallewoof",
+            15
+          ],
+          [
+            "tdb3",
+            15
+          ],
+          [
+            "hodlinator",
+            14
+          ],
+          [
+            "hebasto",
+            13
+          ],
+          [
+            "MarcoFalke",
+            13
+          ],
+          [
+            "pinheadmz",
+            10
+          ],
+          [
+            "fanquake",
+            10
+          ]
+        ],
+        "knots_original_contributor_gini": 0.8809911337645094,
+        "knots_original_bus_factor": 3,
+        "contributor_gini": 0.8912768147316441,
+        "bus_factor": 23,
+        "email_domains": {
+          "gmail.com": 32,
+          "achow101.com": 1,
+          "garage.co.jp": 1,
+          "256k1.dev": 1,
+          "protonmail.com": 4,
+          "users.noreply.github.com": 10,
+          "greenaddress.it": 1,
+          "protonmail.ch": 1,
+          "web.de": 1,
+          "wpsoftware.net": 1,
+          "FreeBSD.org": 1,
+          "wrtdesign.net": 1,
+          "erisian.com.au": 1,
+          "b10c.me": 1,
+          "pm.me": 1,
+          "sprovoost.nl": 1,
+          "721217.xyz": 1,
+          "eklitzke.org": 1,
+          "utopios.org": 1,
+          "bitmaintech.com": 1,
+          "bluematt.me": 1,
+          "jonasschnelli.ch": 1,
+          "orangepill.ovh": 1,
+          "thomaskerin.io": 1,
+          "atack.com": 1,
+          "esuza.com": 1,
+          "romanzey.de": 1,
+          "wuille.net": 1,
+          "coryfields.com": 1,
+          "davidben.net": 1,
+          "oules.com": 1
+        },
+        "organization_count": 31,
+        "organization_diversity": 0.7045085972934152
+      },
+      "commit": {
+        "total_commits_in_period": 2371,
+        "original_commits_in_period": 1262,
+        "commits_per_day": 4.28,
+        "commits_per_week": 29.95,
+        "commits_per_month": 128.34,
+        "commit_activity_days": 87,
+        "commit_activity_ratio": 0.29491525423728815,
+        "commit_frequency": "very_active",
+        "avg_commit_size": 0,
+        "large_commit_ratio": 0,
+        "commit_message_quality": {
+          "avg_message_length": 52.98,
+          "descriptive_ratio": 0.496,
+          "quality_score": 7.5
+        },
+        "unique_authors": 74,
+        "top_authors": [
+          [
+            "luke-jr",
+            975
+          ],
+          [
+            "jonatack",
+            27
+          ],
+          [
+            "achow101",
+            23
+          ],
+          [
+            "kallewoof",
+            15
+          ],
+          [
+            "tdb3",
+            15
+          ]
+        ],
+        "merge_commit_count": 123,
+        "merge_commit_ratio": 0.097,
+        "commits_by_day": {
+          "Monday": 90,
+          "Tuesday": 100,
+          "Wednesday": 492,
+          "Thursday": 106,
+          "Friday": 356,
+          "Saturday": 72,
+          "Sunday": 46
+        },
+        "commits_by_hour": {
+          "0": 65,
+          "1": 35,
+          "2": 25,
+          "3": 302,
+          "4": 20,
+          "5": 16,
+          "6": 1,
+          "7": 0,
+          "8": 1,
+          "9": 2,
+          "10": 2,
+          "11": 0,
+          "12": 0,
+          "13": 10,
+          "14": 26,
+          "15": 48,
+          "16": 151,
+          "17": 74,
+          "18": 86,
+          "19": 53,
+          "20": 56,
+          "21": 63,
+          "22": 37,
+          "23": 189
+        },
+        "direct_commit_count_git": 629,
+        "direct_to_original_commit_ratio": 0.49841521394611726
+      },
+      "pull_request": {
+        "total_prs": 15,
+        "open_prs": 11,
+        "closed_prs": 4,
+        "merged_prs": 0,
+        "open_ratio": 0.733,
+        "merged_ratio": 0.0,
+        "closed_unmerged_ratio": 0.267,
+        "avg_review_count": 0.3,
+        "reviewed_pr_ratio": 0.133,
+        "self_merged_ratio": 0,
+        "avg_time_to_merge": 0,
+        "avg_time_to_close": 4528.85,
+        "pr_velocity_score": 0,
+        "avg_pr_size": 0.0,
+        "large_pr_ratio": 0.0,
+        "unique_pr_authors": 9,
+        "top_pr_authors": [
+          [
+            "Retropex",
+            3
+          ],
+          [
+            "luke-jr",
+            3
+          ],
+          [
+            "rebroad",
+            2
+          ],
+          [
+            "GregTonoski",
+            2
+          ],
+          [
+            "jasonfoura",
+            1
+          ]
+        ],
+        "external_pr_ratio": 0.8
+      },
+      "code_review": {
+        "total_reviews": 3,
+        "total_review_comments": 4,
+        "reviews_per_pr": 0.3,
+        "comments_per_pr": 0.4,
+        "multi_reviewer_ratio": 0.0,
+        "substantive_review_ratio": 0.1,
+        "review_thoroughness_score": 0.5,
+        "unique_reviewers": 2,
+        "top_reviewers": [
+          [
+            "luke-jr",
+            5
+          ],
+          [
+            "Armss9936",
+            2
+          ]
+        ],
+        "reviewer_to_author_ratio": 0.33,
+        "avg_time_to_first_review": 220.13,
+        "review_responsiveness_score": 0,
+        "self_merged_count": 0,
+        "self_merged_ratio": 0,
+        "self_merged_prs_analyzed": 0
+      },
+      "ci_cd": {
+        "has_ci": true,
+        "total_workflow_runs": 30,
+        "successful_workflow_runs": 5,
+        "workflow_success_rate": 0.167,
+        "workflows_per_day": 0.42,
+        "unique_workflows": 1,
+        "ci_config_count": 1,
+        "ci_systems": [
+          "GitHub Actions"
+        ],
+        "has_github_actions": true,
+        "has_travis": false,
+        "has_circle_ci": false,
+        "ci_system_count": 1,
+        "pr_ci_ratio": 0.0,
+        "pr_ci_required": true
+      },
+      "issue": {
+        "total_issues": 39,
+        "open_issues": 30,
+        "closed_issues": 9,
+        "open_ratio": 0.769,
+        "avg_time_to_first_response": 1833.4,
+        "avg_time_to_close": 1943.04,
+        "stale_issues": 15,
+        "stale_issue_ratio": 0.5,
+        "responsiveness_score": 1.5,
+        "has_labels": true,
+        "label_count": 6,
+        "labeled_issue_ratio": 0.872,
+        "top_labels": [
+          [
+            "bug",
+            24
+          ],
+          [
+            "enhancement",
+            10
+          ],
+          [
+            "help wanted",
+            8
+          ],
+          [
+            "Testing & user comments wanted",
+            5
+          ],
+          [
+            "good first issue",
+            4
+          ]
+        ],
+        "categorization_score": 7,
+        "unique_issue_authors": 21,
+        "top_issue_authors": [
+          [
+            "luke-jr",
+            15
+          ],
+          [
+            "Luckst4r",
+            2
+          ],
+          [
+            "jesterhodl",
+            2
+          ],
+          [
+            "Tracachang",
+            2
+          ],
+          [
+            "willpowercinema",
+            2
+          ]
+        ],
+        "external_issue_ratio": 0.615,
+        "closure_rate": 0.231,
+        "recently_closed": 0,
+        "recently_closed_ratio": 0.0,
+        "issue_velocity_score": 0.0
+      },
+      "test": {
+        "test_files_count": 334,
+        "has_tests": true,
+        "has_test_directory": false,
+        "test_framework_signals": [],
+        "testing_practice_score": 0
+      },
+      "repository": {
+        "name": "bitcoinknots/bitcoin",
+        "analysis_period_months": 12,
+        "analysis_date": "2025-05-13T10:46:34.407586",
+        "github_stars": 337,
+        "github_forks": 76,
+        "github_watchers": 41,
+        "default_branch": "28.x-knots",
+        "language": "C++"
+      },
+      "overall_health_score": 4.4
+    }
+  },
+  "comparison": {
+    "contributor": {
+      "total_contributors_difference": 2,
+      "active_contributors_difference": 16,
+      "bus_factor_difference": -2,
+      "contributor_gini_difference": -0.11723969137276824
+    },
+    "commit": {
+      "commits_per_day_difference": 2.8199999999999994,
+      "avg_commit_size_difference": 0,
+      "quality_score_difference": 0.8000000000000007,
+      "merge_commit_ratio_difference": -0.096
+    },
+    "pull_request": {
+      "total_prs_difference": 1631,
+      "merged_ratio_difference": 0.0,
+      "avg_time_to_merge_difference": 0,
+      "velocity_score_difference": 0
+    },
+    "code_review": {
+      "reviews_per_pr_difference": 1.9999999999999998,
+      "comments_per_pr_difference": 1.1,
+      "self_merged_ratio_difference": 0.114,
+      "thoroughness_score_difference": 3.0
+    },
+    "ci_cd": {
+      "has_ci_difference": 0,
+      "workflow_success_rate_difference": 0.43299999999999994,
+      "ci_system_count_difference": 0
+    },
+    "issue": {
+      "total_issues_difference": 1243,
+      "responsiveness_score_difference": -0.7,
+      "categorization_score_difference": 0,
+      "stale_issue_ratio_difference": 0.22399999999999998
+    },
+    "test": {
+      "has_tests_difference": 0,
+      "test_files_count_difference": 14,
+      "testing_practice_score_difference": 0
+    },
+    "overall": {
+      "health_score_difference": 1.0
+    }
+  },
+  "analysis_metadata": {
+    "date": "2025-05-13T10:46:34.643908",
+    "period_months": 12,
+    "is_fight_mode": true
+  }
+}
