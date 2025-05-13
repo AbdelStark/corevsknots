@@ -1,0 +1,43 @@
+name: Manual Fight Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      months:
+        description: "Analysis period in months"
+        required: true
+        default: "12"
+      output_path:
+        description: "Output directory for reports"
+        required: true
+        default: "./reports"
+
+jobs:
+  generate_fight_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11" # Or your preferred Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[testing]" # Installs project and dev/test dependencies
+
+      - name: Run Bitcoin Repo Health Fight
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the default GHA token for API calls
+        run: |
+          bitcoin-repo-health fight --output ${{ github.event.inputs.output_path }} --months ${{ github.event.inputs.months }} --verbose
+
+      - name: Upload Fight Report Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fight-report-${{ github.run_id }}
+          path: ${{ github.event.inputs.output_path }}/
+          if-no-files-found: error # Fails the workflow if the report directory is not found
