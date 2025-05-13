@@ -40,48 +40,62 @@ pip install -e .
 
 ### Command Line Interface
 
-The tool provides a simple command-line interface for analyzing repositories:
+The tool provides a command-line interface for analyzing repositories:
 
 ```bash
-# Analyze a single repository
+# Analyze a single repository (e.g., bitcoin/bitcoin)
 bitcoin-repo-health analyze --repo bitcoin/bitcoin --output ./reports
 
 # Compare two repositories
-bitcoin-repo-health compare --repo bitcoin/bitcoin --compare-with bitcoinknots/bitcoin --output ./reports
+bitcoin-repo-health compare --repo1 bitcoin/bitcoin --repo2 bitcoinknots/bitcoin --output ./reports
 
-# Generate a report from previously collected metrics
-bitcoin-repo-health report --metrics ./reports/bitcoin_bitcoin_metrics.json
+# "Fight" mode: Compare Bitcoin Core vs. Bitcoin Knots with fork-specific logic
+bitcoin-repo-health fight --output ./reports --months 6 # Example: analyze last 6 months
+
+# Generate a report from previously collected metrics (Not yet fully implemented)
+# bitcoin-repo-health report --metrics ./reports/bitcoin_bitcoin_metrics.json --format markdown
 ```
 
 ### Options
 
-```
+The command-line interface is defined as follows (from `bitcoin-repo-health --help`):
+
+```text
+Bitcoin Repository Health Analysis Tool
+
 Usage:
-    bitcoin-repo-health analyze [options]
-    bitcoin-repo-health compare [options]
-    bitcoin-repo-health report [options]
+    bitcoin-repo-health analyze [--repo=<repo>] [--output=<path>] [--months=<months>] [--token=<token>] [--local-path=<local>] [--use-cache | --no-cache] [--verbose]
+    bitcoin-repo-health compare [--repo1=<repo1>] [--repo2=<repo2>] [--output=<path>] [--months=<months>] [--token=<token>] [--local-path1=<local1>] [--local-path2=<local2>] [--use-cache | --no-cache] [--verbose]
+    bitcoin-repo-health fight [--output=<path>] [--months=<months>] [--token=<token>] [--local-path1=<local1>] [--local-path2=<local2>] [--use-cache | --no-cache] [--verbose]
+    bitcoin-repo-health report [--metrics=<file>] [--output=<path>] [--format=<format>]
     bitcoin-repo-health -h | --help
     bitcoin-repo-health --version
 
-Commands:
-    analyze     Analyze a single repository and generate metrics
-    compare     Compare two repositories and generate a comparative report
-    report      Generate a report from previously collected metrics
-
 Options:
-    -r, --repo <repo>              Repository name or URL (e.g., bitcoin/bitcoin)
-    -c, --compare-with <repo>      Repository to compare with (e.g., bitcoinknots/bitcoin)
-    -o, --output <path>            Output directory for reports [default: ./reports]
-    -f, --format <format>          Output format (markdown, html, json) [default: markdown]
-    -p, --period <months>          Analysis period in months [default: 12]
-    -t, --token <token>            GitHub personal access token
-    -l, --local-path <path>        Path to local repository clone
-    --cache                        Use cached data if available
-    --no-charts                    Don't generate charts
-    --config <file>                Path to configuration file
-    -v, --verbose                  Enable verbose output
-    -h, --help                     Show this help message
-    --version                      Show version
+    --repo=<repo>               Repository name (e.g., bitcoin/bitcoin) for analyze.
+                                If not provided, the tool might prompt or use a default.
+    --repo1=<repo1>             First repository name for comparison (e.g., bitcoin/bitcoin).
+    --repo2=<repo2>             Second repository name for comparison (e.g., bitcoinknots/bitcoin).
+                                For the 'fight' command, these are automatically set to
+                                Bitcoin Core and Bitcoin Knots respectively.
+    --output=<path>             Output directory for reports [default: ./reports].
+    --months=<months>           Analysis period in months [default: 12].
+    --token=<token>             GitHub personal access token. Can also be set via GITHUB_TOKEN
+                                environment variable.
+    --local-path=<local>        Path to local repository clone for single analysis.
+    --local-path1=<local1>      Path to first local repository clone (for compare or fight).
+    --local-path2=<local2>      Path to second local repository clone (for compare or fight).
+    --use-cache                 Use cached API responses [default: True].
+    --no-cache                  Do not use cached API responses. This will make fresh API calls.
+    --metrics=<file>            Path to previously collected metrics JSON file for generating
+                                a report from existing data. (Report generation from file
+                                is not yet fully implemented).
+    --format=<format>           Output format for the report (e.g., markdown, html, json)
+                                [default: markdown]. This applies when generating a new report
+                                or from a metrics file.
+    -v --verbose                  Enable verbose output, showing DEBUG level logs.
+    -h --help                     Show this help message and exit.
+    --version                     Show version information and exit.
 ```
 
 ### GitHub API Rate Limiting
