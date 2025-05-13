@@ -6,6 +6,7 @@
   padding: 2rem 1rem;
   min-height: 100vh;
   width: 100%;
+  position: relative; /* For positioning the GitHub link */
 }
 
 .headerContainer {
@@ -174,4 +175,29 @@
     border: 2px dashed #ff4757; /* Neon red error border */
     color: #ff4757;
     text-align: center;
+}
+
+.githubLink {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 1.5rem; /* Adjust size of icon/text */
+  color: #feca57; /* Neon yellow */
+  text-decoration: none;
+  padding: 0.5rem;
+  border: 2px solid transparent; /* For hover effect */
+  transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  z-index: 10; /* Ensure it's above other content if overlap occurs */
+}
+
+.githubLink:hover {
+  color: #ff4757; /* Neon red on hover */
+  border-color: #ff4757; /* Neon red border on hover for a button feel */
+  background-color: rgba(255, 71, 87, 0.1); /* Slight bg on hover */
+}
+
+.githubIcon {
+  /* If using a font icon or SVG via CSS */
+  /* Example: content: '\f09b'; font-family: "Font Awesome 5 Brands"; */
+  margin-right: 0.3em; /* If you have text next to an icon */
 }

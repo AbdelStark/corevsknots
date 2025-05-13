@@ -81,6 +81,18 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
+        <a
+          href="https://github.com/AbdelStark/corevsknots"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.githubLink}
+          title="View Project on GitHub"
+        >
+          {/* Simple Unicode Octagonal Icon as a placeholder. Replace with SVG/Image for better visuals */}
+          <span className={styles.githubIcon}>🐙</span> {/* GitHub Octocat emoji as an example */}
+          {/* Or use text: <span className={styles.githubIcon}>Code</span> */}
+        </a>
+
         <div className={styles.headerContainer}>
             <h1 className={styles.title}>
               <a
@@ -174,7 +186,6 @@ export default function Home() {
                 <p>Comparing {reportData.repo1.name} vs {reportData.repo2.name}</p>
                 <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
                 <p>Period: {reportData.analysis_metadata.period_months} Months</p>
-                {reportData.analysis_metadata.is_fight_mode && <p className={styles.fightModeText}>FIGHT MODE ENGAGED!</p>}
             </div>
           </>
         )}

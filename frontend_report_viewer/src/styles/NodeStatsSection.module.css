@@ -101,10 +101,29 @@
 }
 
 .statValueSecondary {
-  font-size: 0.9rem; /* Adjusted */
-  color: #feca57; /* Yellow for percentage */
+  font-size: 0.9rem;
+  color: #feca57;
   font-weight: bold;
   margin-top: 0.25rem;
+  margin-left: 0.2em; /* Space from primary value */
+}
+
+.statExtraInfo {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: #bdc3c7; /* Lighter grey */
+  line-height: 1.4;
+}
+
+.statExtraInfo p {
+  margin: 0.1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the extra info text */
+}
+
+.statExtraInfo p span {
+  margin-left: 0.3em;
 }
 
 .segmentedBarContainer {
@@ -143,6 +162,13 @@
 
 .otherSegment {
   background-color: #7f8c8d; /* Grey */
+}
+
+/* New style for the placeholder segment if it represents multiple others */
+.otherSegmentPlaceholder {
+  background-color: #576574; /* Darker, less prominent grey */
+  /* Optionally, add a subtle pattern or very faint text if space allows */
+  /* E.g., for text: display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; font-size: 0.6rem; color: #95a5a6; */
 }
 
 .lastUpdated {
