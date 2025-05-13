@@ -1447,7 +1447,7 @@
         ],
         "active_contributors": 115,
         "active_ratio": 0.33236994219653176,
-        "contributor_gini": 0.7741814278046162,
+        "contributor_gini": 0.774137902102596,
         "bus_factor": 21,
         "email_domains": {
           "gmail.com": 50,
@@ -1498,25 +1498,25 @@
       },
       "commit": {
         "total_commits_in_period": 3715,
-        "original_commits_in_period": 2592,
+        "original_commits_in_period": 2591,
         "commits_per_day": 7.1,
-        "commits_per_week": 49.71,
-        "commits_per_month": 213.04,
-        "commit_activity_days": 319,
-        "commit_activity_ratio": 0.873972602739726,
+        "commits_per_week": 49.69,
+        "commits_per_month": 212.96,
+        "commit_activity_days": 320,
+        "commit_activity_ratio": 0.8767123287671232,
         "commit_frequency": "very_active",
         "avg_commit_size": 0,
         "large_commit_ratio": 0,
         "commit_message_quality": {
-          "avg_message_length": 49.52,
-          "descriptive_ratio": 0.678,
+          "avg_message_length": 49.54,
+          "descriptive_ratio": 0.679,
           "quality_score": 8.3
         },
         "unique_authors": 115,
         "top_authors": [
           [
             "MarcoFalke",
-            313
+            315
           ],
           [
             "hebasto",
@@ -1524,7 +1524,7 @@
           ],
           [
             "fanquake",
-            175
+            172
           ],
           [
             "achow101",
@@ -1538,8 +1538,8 @@
         "merge_commit_count": 3,
         "merge_commit_ratio": 0.001,
         "commits_by_day": {
-          "Monday": 439,
-          "Tuesday": 455,
+          "Monday": 436,
+          "Tuesday": 457,
           "Wednesday": 546,
           "Thursday": 496,
           "Friday": 470,
@@ -1554,12 +1554,12 @@
           "4": 13,
           "5": 25,
           "6": 25,
-          "7": 75,
+          "7": 77,
           "8": 90,
           "9": 152,
           "10": 141,
           "11": 161,
-          "12": 155,
+          "12": 152,
           "13": 192,
           "14": 249,
           "15": 210,
@@ -1572,8 +1572,8 @@
           "22": 48,
           "23": 39
         },
-        "direct_commit_count_git": 653,
-        "direct_to_original_commit_ratio": 0.251929012345679
+        "direct_commit_count_git": 654,
+        "direct_to_original_commit_ratio": 0.252412196063296
       },
       "pull_request": {
         "total_prs": 1645,
@@ -1747,14 +1747,14 @@
       "repository": {
         "name": "bitcoin/bitcoin",
         "analysis_period_months": 12,
-        "analysis_date": "2025-05-13T13:21:54.250808",
+        "analysis_date": "2025-05-13T14:27:21.609655",
         "github_stars": 83528,
         "github_forks": 37204,
         "github_watchers": 4041,
         "default_branch": "master",
         "language": "C++"
       },
-      "overall_health_score": 6.2
+      "overall_health_score": 6.6
     }
   },
   "repo2": {
@@ -3546,43 +3546,43 @@
         "contributor_gini": 0.8912768147316441,
         "bus_factor": 23,
         "email_domains": {
-          "gmail.com": 32,
-          "users.noreply.github.com": 10,
-          "bluematt.me": 1,
-          "bitmaintech.com": 1,
-          "thomaskerin.io": 1,
-          "atack.com": 1,
-          "garage.co.jp": 1,
-          "wuille.net": 1,
-          "b10c.me": 1,
-          "protonmail.com": 4,
-          "davidben.net": 1,
-          "256k1.dev": 1,
-          "721217.xyz": 1,
-          "esuza.com": 1,
-          "romanzey.de": 1,
           "greenaddress.it": 1,
-          "oules.com": 1,
-          "utopios.org": 1,
-          "FreeBSD.org": 1,
-          "coryfields.com": 1,
-          "wpsoftware.net": 1,
-          "pm.me": 1,
-          "wrtdesign.net": 1,
           "achow101.com": 1,
+          "bitmaintech.com": 1,
+          "gmail.com": 32,
+          "256k1.dev": 1,
+          "wrtdesign.net": 1,
           "erisian.com.au": 1,
-          "sprovoost.nl": 1,
-          "orangepill.ovh": 1,
+          "users.noreply.github.com": 10,
           "eklitzke.org": 1,
-          "web.de": 1,
+          "pm.me": 1,
+          "wuille.net": 1,
+          "protonmail.ch": 1,
+          "b10c.me": 1,
+          "FreeBSD.org": 1,
+          "721217.xyz": 1,
+          "protonmail.com": 4,
+          "sprovoost.nl": 1,
+          "atack.com": 1,
+          "utopios.org": 1,
+          "oules.com": 1,
+          "thomaskerin.io": 1,
+          "garage.co.jp": 1,
+          "davidben.net": 1,
           "jonasschnelli.ch": 1,
-          "protonmail.ch": 1
+          "romanzey.de": 1,
+          "web.de": 1,
+          "esuza.com": 1,
+          "wpsoftware.net": 1,
+          "coryfields.com": 1,
+          "bluematt.me": 1,
+          "orangepill.ovh": 1
         },
         "organization_count": 31,
-        "organization_diversity": 0.7045085972934155
+        "organization_diversity": 0.7045085972934154
       },
       "commit": {
-        "total_commits_in_period": 2370,
+        "total_commits_in_period": 2367,
         "original_commits_in_period": 1262,
         "commits_per_day": 4.28,
         "commits_per_week": 29.95,
@@ -3820,14 +3820,14 @@
       "repository": {
         "name": "bitcoinknots/bitcoin",
         "analysis_period_months": 12,
-        "analysis_date": "2025-05-13T13:22:27.987768",
+        "analysis_date": "2025-05-13T14:27:55.790026",
         "github_stars": 337,
         "github_forks": 76,
         "github_watchers": 41,
         "default_branch": "28.x-knots",
         "language": "C++"
       },
-      "overall_health_score": 5.1
+      "overall_health_score": 5.3
     }
   },
   "comparison": {
@@ -3835,7 +3835,7 @@
       "total_contributors_difference": 2,
       "active_contributors_difference": 16,
       "bus_factor_difference": -2,
-      "contributor_gini_difference": -0.11709538692702792
+      "contributor_gini_difference": -0.11713891262904808
     },
     "commit": {
       "commits_per_day_difference": 2.8199999999999994,
@@ -3872,11 +3872,11 @@
       "testing_practice_score_difference": 0
     },
     "overall": {
-      "health_score_difference": 1.1000000000000005
+      "health_score_difference": 1.2999999999999998
     }
   },
   "analysis_metadata": {
-    "date": "2025-05-13T13:22:28.200102",
+    "date": "2025-05-13T14:27:56.001698",
     "period_months": 12,
     "is_fight_mode": true
   }
