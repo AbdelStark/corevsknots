@@ -1,0 +1,143 @@
+/* src/styles/NodeStatsSection.module.css */
+.nodeStatsContainer {
+  width: 100%;
+  max-width: 900px; /* Adjust as needed */
+  margin: 2rem auto 3rem auto;
+  padding: 1.5rem;
+  background-color: #2c2c54; /* Darker card background */
+  border: 3px solid #feca57; /* Neon yellow border */
+  border-image-source: url("/pixel-border-frame.svg"); /* Using the general frame */
+  border-image-slice: 3;
+  border-image-width: 9px; /* Match SVG design intent for thickness */
+  border-image-repeat: repeat;
+  image-rendering: pixelated;
+  background-clip: padding-box;
+  border-style: solid; /* Required for border-image */
+}
+
+.sectionTitle {
+  color: #ff4757; /* Neon Red */
+  text-align: center;
+  font-size: 1.8rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px #000;
+}
+
+.totalNodes {
+    font-size: 0.7em;
+    color: #bdc3c7;
+    font-weight: normal;
+    text-shadow: none;
+    margin-left: 0.5em;
+}
+
+.statsGrid {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap; /* Allow wrapping if space is tight */
+}
+
+.fighterStatBlock {
+  padding: 1rem;
+  border-radius: 0px; /* Sharp edges */
+  text-align: center;
+  flex-basis: 200px; /* Base width for each block */
+  flex-grow: 1;
+  border: 2px dashed #576574;
+}
+
+.coreBlock {
+  border-color: #45aaf2; /* Blue for Core */
+}
+
+.knotsBlock {
+  border-color: #ff6b81; /* Red for Knots */
+}
+
+.btcsuiteBlock {
+  border-color: #88ffcc; /* Color from Luke Dashjr's chart for btcsuite */
+}
+
+.otherBlock {
+  border-color: #7f8c8d; /* Grey for Other */
+  flex-basis: 150px; /* Potentially smaller */
+}
+
+.fighterName {
+  font-size: 1.2rem;
+  color: #feca57;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  text-shadow: 1px 1px #000;
+}
+
+.coreBlock .fighterName { color: #45aaf2; text-shadow: 1px 1px #1a1a2e; }
+.knotsBlock .fighterName { color: #ff6b81; text-shadow: 1px 1px #1a1a2e; }
+.btcsuiteBlock .fighterName { color: #88ffcc; text-shadow: 1px 1px #1a1a2e; }
+.otherBlock .fighterName { color: #bdc3c7; }
+
+.nodeCount {
+  font-size: 2rem; /* Large count */
+  color: #e0e0e0;
+  font-weight: bold;
+  margin: 0.25rem 0;
+  line-height: 1;
+}
+
+.nodeShare {
+  font-size: 1rem;
+  color: #feca57; /* Yellow for percentage */
+  font-weight: bold;
+  margin-top: 0.25rem;
+}
+
+.segmentedBarContainer {
+  width: 100%;
+  height: 30px; /* Height of the bar */
+  background-color: #1e1e3f; /* Dark track */
+  display: flex;
+  border-radius: 0px; /* Sharp edges */
+  overflow: hidden;
+  border: 2px solid #576574;
+  margin-bottom: 1rem;
+}
+
+.segment {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.7rem; /* For text inside segment if needed */
+  transition: width 0.5s ease-in-out;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+}
+
+.coreSegment {
+  background-color: #45aaf2; /* Blue */
+}
+
+.knotsSegment {
+  background-color: #ff6b81; /* Red */
+}
+
+.btcsuiteSegment {
+  background-color: #88ffcc; /* Minty green for btcsuite */
+}
+
+.otherSegment {
+  background-color: #7f8c8d; /* Grey */
+}
+
+.lastUpdated {
+    font-size: 0.7rem;
+    color: #7f8c8d;
+    text-align: center;
+    margin-top: 1rem;
+}

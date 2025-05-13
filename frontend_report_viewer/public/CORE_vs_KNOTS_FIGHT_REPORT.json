@@ -1447,7 +1447,7 @@
         ],
         "active_contributors": 115,
         "active_ratio": 0.33236994219653176,
-        "contributor_gini": 0.7740371233588759,
+        "contributor_gini": 0.7741814278046162,
         "bus_factor": 21,
         "email_domains": {
           "gmail.com": 50,
@@ -1497,11 +1497,11 @@
         "organization_diversity": 0.6638959302029277
       },
       "commit": {
-        "total_commits_in_period": 3716,
-        "original_commits_in_period": 2593,
+        "total_commits_in_period": 3715,
+        "original_commits_in_period": 2592,
         "commits_per_day": 7.1,
-        "commits_per_week": 49.73,
-        "commits_per_month": 213.12,
+        "commits_per_week": 49.71,
+        "commits_per_month": 213.04,
         "commit_activity_days": 319,
         "commit_activity_ratio": 0.873972602739726,
         "commit_frequency": "very_active",
@@ -1538,7 +1538,7 @@
         "merge_commit_count": 3,
         "merge_commit_ratio": 0.001,
         "commits_by_day": {
-          "Monday": 440,
+          "Monday": 439,
           "Tuesday": 455,
           "Wednesday": 546,
           "Thursday": 496,
@@ -1557,7 +1557,7 @@
           "7": 75,
           "8": 90,
           "9": 152,
-          "10": 142,
+          "10": 141,
           "11": 161,
           "12": 155,
           "13": 192,
@@ -1573,12 +1573,12 @@
           "23": 39
         },
         "direct_commit_count_git": 653,
-        "direct_to_original_commit_ratio": 0.2518318549942152
+        "direct_to_original_commit_ratio": 0.251929012345679
       },
       "pull_request": {
-        "total_prs": 1646,
+        "total_prs": 1645,
         "open_prs": 227,
-        "closed_prs": 1419,
+        "closed_prs": 1418,
         "merged_prs": 0,
         "open_ratio": 0.138,
         "merged_ratio": 0.0,
@@ -1587,7 +1587,7 @@
         "reviewed_pr_ratio": 0.004,
         "self_merged_ratio": 0,
         "avg_time_to_merge": 0,
-        "avg_time_to_close": 492.2,
+        "avg_time_to_close": 489.9,
         "pr_velocity_score": 0,
         "avg_pr_size": 0.0,
         "large_pr_ratio": 0.0,
@@ -1607,7 +1607,7 @@
           ],
           [
             "l0rinc",
-            73
+            72
           ],
           [
             "Sjors",
@@ -1652,7 +1652,7 @@
         "review_responsiveness_score": 8.5,
         "self_merged_count": 115,
         "self_merged_ratio": 0.114,
-        "self_merged_prs_analyzed": 1012
+        "self_merged_prs_analyzed": 1011
       },
       "ci_cd": {
         "has_ci": true,
@@ -1674,13 +1674,13 @@
       },
       "issue": {
         "total_issues": 1282,
-        "open_issues": 243,
-        "closed_issues": 1039,
+        "open_issues": 244,
+        "closed_issues": 1038,
         "open_ratio": 0.19,
-        "avg_time_to_first_response": 10706.37,
-        "avg_time_to_close": 5620.67,
+        "avg_time_to_first_response": 10706.09,
+        "avg_time_to_close": 5625.78,
         "stale_issues": 176,
-        "stale_issue_ratio": 0.724,
+        "stale_issue_ratio": 0.721,
         "responsiveness_score": 0.8,
         "has_labels": true,
         "label_count": 37,
@@ -1747,14 +1747,14 @@
       "repository": {
         "name": "bitcoin/bitcoin",
         "analysis_period_months": 12,
-        "analysis_date": "2025-05-13T10:45:52.944563",
+        "analysis_date": "2025-05-13T13:21:54.250808",
         "github_stars": 83528,
         "github_forks": 37204,
         "github_watchers": 4041,
         "default_branch": "master",
         "language": "C++"
       },
-      "overall_health_score": 5.4
+      "overall_health_score": 6.2
     }
   },
   "repo2": {
@@ -3547,42 +3547,42 @@
         "bus_factor": 23,
         "email_domains": {
           "gmail.com": 32,
-          "achow101.com": 1,
-          "garage.co.jp": 1,
-          "256k1.dev": 1,
-          "protonmail.com": 4,
           "users.noreply.github.com": 10,
-          "greenaddress.it": 1,
-          "protonmail.ch": 1,
-          "web.de": 1,
-          "wpsoftware.net": 1,
-          "FreeBSD.org": 1,
-          "wrtdesign.net": 1,
-          "erisian.com.au": 1,
-          "b10c.me": 1,
-          "pm.me": 1,
-          "sprovoost.nl": 1,
-          "721217.xyz": 1,
-          "eklitzke.org": 1,
-          "utopios.org": 1,
-          "bitmaintech.com": 1,
           "bluematt.me": 1,
-          "jonasschnelli.ch": 1,
-          "orangepill.ovh": 1,
+          "bitmaintech.com": 1,
           "thomaskerin.io": 1,
           "atack.com": 1,
+          "garage.co.jp": 1,
+          "wuille.net": 1,
+          "b10c.me": 1,
+          "protonmail.com": 4,
+          "davidben.net": 1,
+          "256k1.dev": 1,
+          "721217.xyz": 1,
           "esuza.com": 1,
           "romanzey.de": 1,
-          "wuille.net": 1,
+          "greenaddress.it": 1,
+          "oules.com": 1,
+          "utopios.org": 1,
+          "FreeBSD.org": 1,
           "coryfields.com": 1,
-          "davidben.net": 1,
-          "oules.com": 1
+          "wpsoftware.net": 1,
+          "pm.me": 1,
+          "wrtdesign.net": 1,
+          "achow101.com": 1,
+          "erisian.com.au": 1,
+          "sprovoost.nl": 1,
+          "orangepill.ovh": 1,
+          "eklitzke.org": 1,
+          "web.de": 1,
+          "jonasschnelli.ch": 1,
+          "protonmail.ch": 1
         },
         "organization_count": 31,
-        "organization_diversity": 0.7045085972934152
+        "organization_diversity": 0.7045085972934155
       },
       "commit": {
-        "total_commits_in_period": 2371,
+        "total_commits_in_period": 2370,
         "original_commits_in_period": 1262,
         "commits_per_day": 4.28,
         "commits_per_week": 29.95,
@@ -3750,7 +3750,7 @@
         "open_issues": 30,
         "closed_issues": 9,
         "open_ratio": 0.769,
-        "avg_time_to_first_response": 1833.4,
+        "avg_time_to_first_response": 1833.49,
         "avg_time_to_close": 1943.04,
         "stale_issues": 15,
         "stale_issue_ratio": 0.5,
@@ -3820,14 +3820,14 @@
       "repository": {
         "name": "bitcoinknots/bitcoin",
         "analysis_period_months": 12,
-        "analysis_date": "2025-05-13T10:46:34.407586",
+        "analysis_date": "2025-05-13T13:22:27.987768",
         "github_stars": 337,
         "github_forks": 76,
         "github_watchers": 41,
         "default_branch": "28.x-knots",
         "language": "C++"
       },
-      "overall_health_score": 4.4
+      "overall_health_score": 5.1
     }
   },
   "comparison": {
@@ -3835,7 +3835,7 @@
       "total_contributors_difference": 2,
       "active_contributors_difference": 16,
       "bus_factor_difference": -2,
-      "contributor_gini_difference": -0.11723969137276824
+      "contributor_gini_difference": -0.11709538692702792
     },
     "commit": {
       "commits_per_day_difference": 2.8199999999999994,
@@ -3844,7 +3844,7 @@
       "merge_commit_ratio_difference": -0.096
     },
     "pull_request": {
-      "total_prs_difference": 1631,
+      "total_prs_difference": 1630,
       "merged_ratio_difference": 0.0,
       "avg_time_to_merge_difference": 0,
       "velocity_score_difference": 0
@@ -3864,7 +3864,7 @@
       "total_issues_difference": 1243,
       "responsiveness_score_difference": -0.7,
       "categorization_score_difference": 0,
-      "stale_issue_ratio_difference": 0.22399999999999998
+      "stale_issue_ratio_difference": 0.22099999999999997
     },
     "test": {
       "has_tests_difference": 0,
@@ -3872,11 +3872,11 @@
       "testing_practice_score_difference": 0
     },
     "overall": {
-      "health_score_difference": 1.0
+      "health_score_difference": 1.1000000000000005
     }
   },
   "analysis_metadata": {
-    "date": "2025-05-13T10:46:34.643908",
+    "date": "2025-05-13T13:22:28.200102",
     "period_months": 12,
     "is_fight_mode": true
   }

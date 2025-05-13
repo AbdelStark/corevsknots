@@ -13,10 +13,12 @@ import CodeReviewSection from '@/components/sections/CodeReviewSection';
 import CommitSection from '@/components/sections/CommitSection';
 import ContributorSection from '@/components/sections/ContributorSection';
 import IssueSection from '@/components/sections/IssueSection';
+import NodeStatsSection from '@/components/sections/NodeStatsSection'; // Import NodeStatsSection
 import OverallScoresSection from '@/components/sections/OverallScoresSection';
 import PullRequestSection from '@/components/sections/PullRequestSection';
 import TestSection from '@/components/sections/TestSection';
 import { getDisplayName, getRepoUrl } from '@/utils/displayName'; // Import from utils
+import { ProcessedNodeStats } from './api/node-stats'; // Import type for node stats
 
 // const getRepoUrl = (repoFullName: string): string => { // MOVED
 //   return `https://github.com/${repoFullName}`;
@@ -26,23 +28,43 @@ import { getDisplayName, getRepoUrl } from '@/utils/displayName'; // Import from
 
 export default function Home() {
   const [reportData, setReportData] = useState<ComparisonData | null>(null);
+  const [nodeStats, setNodeStats] = useState<ProcessedNodeStats | null>(null); // State for node stats
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [nodeStatsError, setNodeStatsError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch('/CORE_vs_KNOTS_FIGHT_REPORT.json');
-        if (!response.ok) {
-          throw new Error(`Failed to fetch report: ${response.status} ${response.statusText}`);
+        setNodeStatsError(null);
+
+        // Fetch main report data
+        const reportResponse = await fetch('/CORE_vs_KNOTS_FIGHT_REPORT.json');
+        if (!reportResponse.ok) {
+          throw new Error(`Failed to fetch report: ${reportResponse.status} ${reportResponse.statusText}`);
         }
-        const data: ComparisonData = await response.json();
-        setReportData(data);
+        const reportJson: ComparisonData = await reportResponse.json();
+        setReportData(reportJson);
+
+        // Fetch node stats
+        try {
+            const nodeStatsResponse = await fetch('/api/node-stats');
+            if (!nodeStatsResponse.ok) {
+                const errData = await nodeStatsResponse.json();
+                throw new Error(errData.error || `Failed to fetch node stats: ${nodeStatsResponse.status}`);
+            }
+            const nodeStatsJson: ProcessedNodeStats = await nodeStatsResponse.json();
+            setNodeStats(nodeStatsJson);
+        } catch (e: any) {
+            console.error("Error fetching node stats:", e);
+            setNodeStatsError(e.message || "Could not load node stats.");
+        }
+
       } catch (err: any) {
-        console.error("Error fetching report data:", err);
-        setError(err.message || "An unknown error occurred while fetching the report.");
+        console.error("Error fetching data:", err);
+        setError(err.message || "An unknown error occurred.");
       } finally {
         setLoading(false);
       }
@@ -83,9 +105,29 @@ export default function Home() {
 
         {loading && <p className={styles.description}>SELECT YOUR FIGHTER! (Loading...)</p>}
         {error && <p className={`${styles.description} ${styles.errorMessage}`}>SYSTEM ERROR! ({error})</p>}
+        {nodeStatsError && <p className={`${styles.description} ${styles.errorMessage}`}>Node Stats Error: {nodeStatsError}</p>}
 
         {reportData && (
           <>
+            <div className={styles.reportMeta}>
+                <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
+                <p>Period: {reportData.analysis_metadata.period_months} Months</p>
+            </div>
+
+            {/* Node Stats Section - Placed Prominently */}
+            {nodeStats &&
+              <NodeStatsSection
+                nodeStats={nodeStats}
+                repo1Name={reportData.repo1.name}
+                repo2Name={reportData.repo2.name}
+              />
+            }
+            {nodeStatsError &&
+                <div className={styles.nodeStatsContainer} style={{borderColor: '#ff4757', textAlign: 'center'}}>
+                    <h2 className={styles.sectionTitle} style={{color: '#ff4757'}}>Network Dominance Error</h2>
+                    <p style={{color: '#ff4757'}}>{nodeStatsError}</p>
+                </div>
+            }
 
             {/* Overall Scores Health Bar - Placed above columns */}
             <OverallScoresSection reportData={reportData} />
@@ -127,12 +169,6 @@ export default function Home() {
                 <TestSection reportData={reportData} fighterKey="repo2" displayName={getDisplayName(reportData.repo2.name)} />
               </div>
             </div>
-
-            <div className={styles.reportMeta}>
-                <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
-                <p>Period: {reportData.analysis_metadata.period_months} Months</p>
-            </div>
-
           </>
         )}
       </main>
