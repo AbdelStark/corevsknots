@@ -1,0 +1,41 @@
+/* src/styles/StarRating.module.css */
+.starRatingContainer {
+  display: inline-flex; /* Align stars in a row */
+  font-size: 1.8rem; /* Adjust size of stars, pixel-font friendly */
+  line-height: 1; /* Prevent extra spacing */
+  margin-left: 0.5rem;
+}
+
+.star {
+  cursor: default;
+  transition: color 0.2s ease-in-out;
+  margin: 0 0.05em; /* Small spacing between stars */
+  font-family: 'Press Start 2P', cursive; /* Ensure pixel font if using text stars */
+}
+
+.filled {
+  color: #feca57; /* Neon yellow for filled stars */
+  text-shadow: 0 0 3px #feca57, 0 0 5px #feca57;
+}
+
+.halfFilled {
+  position: relative;
+  color: #feca57; /* Base color */
+  text-shadow: 0 0 3px #feca57, 0 0 5px #feca57;
+}
+
+/* For a true half-star, you might need two overlapping divs or a specific half-star character/icon */
+/* This is a simple way, or just round to full/empty stars */
+.halfFilled::before {
+  content: '★'; /* Or your half-star character/icon */
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #feca57;
+}
+
+.empty {
+  color: #576574; /* Darker grey for empty stars */
+}

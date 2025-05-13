@@ -17,8 +17,8 @@ from .cache import Cache
 
 logger = get_logger(__name__)
 
-MAX_PAGES = 50
-MAX_PAGES_PER_ENDPOINT = 50
+MAX_PAGES = 500
+MAX_PAGES_PER_ENDPOINT = 500
 
 
 class GitHubAPIClient:
