@@ -1,14 +1,16 @@
 /* src/styles/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  font-family: 'Press Start 2P', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   line-height: 1.6;
-  font-size: 16px;
-  color: #333;
-  background-color: #f4f7f6; /* Lighter, slightly off-white background */
+  font-size: 14px;
+  color: #e0e0e0;
+  background-color: #1a1a2e;
 }
 
 * {
@@ -16,11 +18,12 @@ body {
 }
 
 a {
-  color: #0070f3; /* Next.js blue, good for links */
+  color: #ff4757;
   text-decoration: none;
 }
 
 a:hover {
+  color: #feca57;
   text-decoration: underline;
 }
 
@@ -30,17 +33,20 @@ img {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #2c3e50; /* Dark blue/grey for headers */
+  font-family: 'Press Start 2P', cursive;
+  color: #feca57;
   margin-top: 1.5em;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.75em;
+  text-shadow: 2px 2px #ff4757;
 }
 
 p {
   margin-bottom: 1em;
+  font-size: 0.9rem;
 }
 
 hr {
   border: none;
-  border-top: 1px solid #e0e0e0;
+  border-top: 2px dashed #576574;
   margin: 2rem 0;
 }

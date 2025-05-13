@@ -16,6 +16,10 @@ import OverallScoresSection from '@/components/sections/OverallScoresSection';
 import PullRequestSection from '@/components/sections/PullRequestSection';
 import TestSection from '@/components/sections/TestSection';
 
+const getRepoUrl = (repoFullName: string): string => {
+  return `https://github.com/${repoFullName}`;
+};
+
 export default function Home() {
   const [reportData, setReportData] = useState<ComparisonData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -51,33 +55,45 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Core vs Knots Health Comparison
-        </h1>
+        <div className={styles.headerContainer}>
+            <h1 className={styles.title}>
+            Core <span className={styles.vsText}>VS</span> Knots
+            </h1>
+            <p className={styles.description}>
+            Repository Health Battle!
+            </p>
+        </div>
 
         {loading && <p className={styles.description}>Loading report data...</p>}
-        {error && <p className={styles.description} style={{ color: 'red' }}>Error: {error}</p>}
+        {error && <p className={styles.description} style={{ color: '#ff4757' }}>Error: {error}</p>}
 
         {reportData && (
-          <div className={styles.reportContainer}>
-            <h2>Report for: {reportData.repo1.name} vs {reportData.repo2.name}</h2>
-            <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
-            <p>Analysis Period: {reportData.analysis_metadata.period_months} months</p>
-            {reportData.analysis_metadata.is_fight_mode && <p><strong>Fight Mode Enabled!</strong></p>}
+          <>
+            <div className={styles.reportMeta}>
+                <p>
+                    Comparing
+                    <a href={getRepoUrl(reportData.repo1.name)} target="_blank" rel="noopener noreferrer">{reportData.repo1.name}</a>
+                    vs
+                    <a href={getRepoUrl(reportData.repo2.name)} target="_blank" rel="noopener noreferrer">{reportData.repo2.name}</a>
+                </p>
+                <p>Analysis Date: {new Date(reportData.analysis_metadata.date).toLocaleDateString()}</p>
+                <p>Analysis Period: {reportData.analysis_metadata.period_months} months</p>
+                {reportData.analysis_metadata.is_fight_mode && <p><strong>FIGHT MODE!</strong></p>}
+            </div>
 
-            <hr />
-
-            <OverallScoresSection reportData={reportData} />
-            <ContributorSection reportData={reportData} />
-            <CommitSection reportData={reportData} />
-            <PullRequestSection reportData={reportData} />
-            <CodeReviewSection reportData={reportData} />
-
-            {/* TODO: Add more sections for CI/CD, Issues, Tests, and other metrics and charts */}
-            <CiCdSection reportData={reportData} />
-            <IssueSection reportData={reportData} />
-            <TestSection reportData={reportData} />
-          </div>
+            <div className={styles.reportContainer}>
+                {/* This div will conceptually hold the two fighter columns */}
+                {/* For now, sections will stack, but styling could make them side-by-side later */}
+                <OverallScoresSection reportData={reportData} />
+                <ContributorSection reportData={reportData} />
+                <CommitSection reportData={reportData} />
+                <PullRequestSection reportData={reportData} />
+                <CodeReviewSection reportData={reportData} />
+                <CiCdSection reportData={reportData} />
+                <IssueSection reportData={reportData} />
+                <TestSection reportData={reportData} />
+            </div>
+          </>
         )}
       </main>
     </>
