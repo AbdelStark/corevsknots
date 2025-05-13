@@ -1,8 +1,11 @@
 /* src/styles/MetricCard.module.css */
 .card {
   background-color: #2c2c54; /* Darker card background */
-  border: 2px solid #feca57; /* Neon yellow border */
-  border-radius: 8px;
+  border-style: double; /* Changed from solid */
+  border-width: 4px; /* Thicker for pixel feel */
+  /* border: 2px solid #feca57; */ /* Neon yellow border */
+  border-color: #feca57; /* Ensure border color is still neon yellow */
+  border-radius: 0px; /* Sharp edges for pixel look */
   padding: 1.5rem;
   margin-bottom: 2rem; /* Increased margin */
   box-shadow: 0 0 15px #feca57aa; /* Neon yellow glow */
@@ -87,12 +90,25 @@
 .metricValueBetter {
   color: #2ecc71 !important; /* Bright Green for better */
   font-weight: bold;
-  text-shadow: 0 0 3px #2ecc71, 0 0 5px #2ecc71; /* Green glow */
+  text-shadow: 0 0 4px #2ecc71, 0 0 7px #2ecc71, 0 0 10px #2eff71, 0 0 2px #000; /* Enhanced Green glow + subtle black outline */
   /* Consider adding an icon like a star or up arrow next to it */
 }
 
 .metricValueWorse {
-  color: #c0392b !important; /* Dimmer Red for worse, but still visible */
+  /* color: #c0392b; Dimmer Red */
   opacity: 0.75; /* Slight fade */
   /* text-decoration: line-through; */ /* Optional: line-through for clearly worse */
+}
+
+.winIndicator {
+  color: #feca57; /* Neon yellow */
+  font-size: 0.7em; /* Smaller than metric value */
+  margin-left: 0.3em;
+  font-weight: bold;
+  animation: blinkWin 1s infinite alternate; /* Blinking animation */
+}
+
+@keyframes blinkWin {
+  from { opacity: 1; }
+  to { opacity: 0.5; }
 }

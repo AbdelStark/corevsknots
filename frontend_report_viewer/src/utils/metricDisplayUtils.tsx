@@ -20,6 +20,7 @@ export interface MetricDisplayProps {
   tooltip?: string;
   // To correctly style the primary fighter's value (repo1 or repo2 color)
   primaryFighterKey: 'repo1' | 'repo2';
+  precision?: number;
 }
 
 export const MetricDisplay: React.FC<MetricDisplayProps> = ({
@@ -30,21 +31,34 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
   lowerIsBetter = false,
   tooltip,
   primaryFighterKey,
+  precision,
 }) => {
-  const valPrimaryDisplay = primaryValue !== undefined ? `${primaryValue}${unit}` : 'N/A';
-  const valOpponentDisplay = opponentValue !== undefined ? `${opponentValue}${unit}` : 'N/A';
+  const formatValue = (val: string | number | undefined, p?: number): string => {
+    if (val === undefined || val === null) return 'N/A';
+    if (typeof val === 'string') return val; // Already a string (e.g., 'Yes'/'No')
+    // Use provided precision, or default to 1 if float, 0 if integer
+    const effectivePrecision = p ?? (val % 1 !== 0 ? 1 : 0);
+    return val.toFixed(effectivePrecision);
+  };
+
+  const valPrimaryDisplay = `${formatValue(primaryValue, precision)}${unit}`;
+  const valOpponentDisplay = `${formatValue(opponentValue, precision)}${unit}`;
 
   let primaryStyle = primaryFighterKey === 'repo1' ? homeStyles.valueRepo1 : homeStyles.valueRepo2;
   let opponentStyle = primaryFighterKey === 'repo1' ? homeStyles.valueRepo2 : homeStyles.valueRepo1;
+  let primaryIsWinner = false;
+  let opponentIsWinner = false;
 
   const better = isBetter(primaryValue as number, opponentValue as number, lowerIsBetter);
 
   if (better === true) { // Primary is better
     primaryStyle = `${primaryStyle} ${cardStyles.metricValueBetter}`;
     opponentStyle = `${opponentStyle} ${cardStyles.metricValueWorse}`;
+    primaryIsWinner = true;
   } else if (better === false) { // Opponent is better
     opponentStyle = `${opponentStyle} ${cardStyles.metricValueBetter}`;
     primaryStyle = `${primaryStyle} ${cardStyles.metricValueWorse}`;
+    opponentIsWinner = true; // Though we only show WIN! for primary here
   }
 
   const diff = (primaryValue !== undefined && opponentValue !== undefined && typeof primaryValue === 'number' && typeof opponentValue === 'number')
@@ -57,11 +71,10 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
     const primaryWins = lowerIsBetter ? diff < 0 : diff > 0;
     const opponentWins = lowerIsBetter ? diff > 0 : diff < 0;
 
-    // Ensure toFixed(1) for floats, toFixed(0) for integers in diff
-    const diffIsFloat = (typeof primaryValue ==='number' && primaryValue % 1 !== 0) ||
-                        (typeof opponentValue ==='number' && opponentValue % 1 !== 0) ||
-                        (typeof diff === 'number' && diff % 1 !== 0);
-    diffDisplay = `${diff > 0 ? '+' : ''}${diff.toFixed(diffIsFloat ? 1 : 0)}${unit}`;
+    const diffPrecision = precision ?? ((typeof primaryValue ==='number' && primaryValue % 1 !== 0) ||
+                                     (typeof opponentValue ==='number' && opponentValue % 1 !== 0) ||
+                                     (diff % 1 !== 0) ? 1 : 0);
+    diffDisplay = `${diff > 0 ? '+' : ''}${diff.toFixed(diffPrecision)}${unit}`;
 
     if (primaryWins) diffStyle = `${cardStyles.metricValueBetter} ${primaryStyle.includes(homeStyles.valueRepo1) ? homeStyles.valueRepo1 : homeStyles.valueRepo2 }`;
     else if (opponentWins) diffStyle = `${cardStyles.metricValueBetter} ${opponentStyle.includes(homeStyles.valueRepo1) ? homeStyles.valueRepo1 : homeStyles.valueRepo2 }`;
@@ -71,7 +84,10 @@ export const MetricDisplay: React.FC<MetricDisplayProps> = ({
     <div className={homeStyles.metricPair} title={tooltip}>
       <span className={homeStyles.metricLabel}>{label}:</span>
       <div style={{ textAlign: 'right' }}>
-        <span className={primaryStyle}>{valPrimaryDisplay}</span>
+        <span className={primaryStyle}>
+          {valPrimaryDisplay}
+          {primaryIsWinner && <span className={cardStyles.winIndicator}> WIN!</span>}
+        </span>
         {/* Removed direct VS text from here, can be part of overall card design */}
         {/* <span className={cardStyles.vsText}>vs</span> */}
         {/* <span className={opponentStyle}>{valOpponentDisplay}</span> */}

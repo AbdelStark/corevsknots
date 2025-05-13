@@ -307,13 +307,13 @@ def calculate_overall_health_score(metrics: Dict[str, Any], repo_name: Optional[
     is_knots_with_original_metrics = repo_name == KNOTS_REPO_IDENTIFIER and "knots_original_bus_factor" in metrics.get("contributor", {})
 
     weights = {
-        "contributor": 0.15,
+        "contributor": 0.3,
         "commit": 0.15,
         "pull_request": 0.15,
-        "code_review": 0.2,
-        "ci_cd": 0.15,
-        "issue": 0.1,
-        "test": 0.1,
+        "code_review": 0.25,
+        "ci_cd": 0.05,
+        "issue": 0.05,
+        "test": 0.05,
     }
 
     scores = {}

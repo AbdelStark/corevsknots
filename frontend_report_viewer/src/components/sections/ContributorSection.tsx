@@ -53,15 +53,17 @@ const ContributorSection: React.FC<ContributorSectionProps> = ({ reportData, fig
         opponentValue={reportData.analysis_metadata.is_fight_mode && opponentKey === 'repo2' ? opponentMetrics.knots_original_bus_factor : opponentMetrics.bus_factor}
         primaryFighterKey={fighterKey}
         tooltip={isKnotsInFightModeTarget ? "Knots Original Bus Factor: Min. contributors for 80% of original Knots commits." : "General Bus Factor: Min. contributors for 80% of overall/filtered commits."}
+        precision={0} // Bus factor is integer
       />
       <MetricDisplay
         label="Gini Coefficient"
         primaryValue={isKnotsInFightModeTarget ? metrics.knots_original_contributor_gini : metrics.contributor_gini}
         opponentValue={reportData.analysis_metadata.is_fight_mode && opponentKey === 'repo2' ? opponentMetrics.knots_original_contributor_gini : opponentMetrics.contributor_gini}
         primaryFighterKey={fighterKey}
-        unit=" (0-1)"
-        lowerIsBetter={false} // Higher GINI means more inequality (often considered less ideal for bus factor)
+        unit=" (0-1)" // Unit is now just for context in label, value is formatted
+        lowerIsBetter={false}
         tooltip={isKnotsInFightModeTarget ? "Knots Original Gini: Measures inequality of original Knots commit distribution." : "General Gini: Measures inequality of commit distribution."}
+        precision={2} // Use 2 decimal places for Gini
       />
       <MetricDisplay
         label="Org. Count (Email Domains)"
@@ -69,6 +71,7 @@ const ContributorSection: React.FC<ContributorSectionProps> = ({ reportData, fig
         opponentValue={opponentMetrics.organization_count}
         primaryFighterKey={fighterKey}
         tooltip="Number of unique email domains among commit authors."
+        precision={0}
       />
       <MetricDisplay
         label="Org. Diversity (Shannon)"
@@ -77,6 +80,7 @@ const ContributorSection: React.FC<ContributorSectionProps> = ({ reportData, fig
         primaryFighterKey={fighterKey}
         unit=" (0-1)"
         tooltip="Shannon entropy of contributor distribution across email domains. Higher indicates more diverse organizational representation."
+        precision={3} // Shannon entropy often has 3 decimals
       />
     </MetricCard>
   );
