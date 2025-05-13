@@ -82,3 +82,16 @@
   margin: 0 0.5rem;
   font-size: 0.8rem;
 }
+
+/* Styles for indicating better/worse values */
+.metricValueBetter {
+  /* color: #2ecc71; Bright Green */
+  /* text-shadow: 0 0 5px #2ecc71; */
+  font-weight: bold; /* Make better value bolder */
+  /* Consider adding a small icon or background highlight */
+}
+
+.metricValueWorse {
+  /* color: #c0392b; Dimmer Red */
+  opacity: 0.7;
+}

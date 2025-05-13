@@ -15,17 +15,13 @@ import IssueSection from '@/components/sections/IssueSection';
 import OverallScoresSection from '@/components/sections/OverallScoresSection';
 import PullRequestSection from '@/components/sections/PullRequestSection';
 import TestSection from '@/components/sections/TestSection';
+import { getDisplayName, getRepoUrl } from '@/utils/displayName'; // Import from utils
 
-const getRepoUrl = (repoFullName: string): string => {
-  return `https://github.com/${repoFullName}`;
-};
+// const getRepoUrl = (repoFullName: string): string => { // MOVED
+//   return `https://github.com/${repoFullName}`;
+// };
 
-// Function to get display name
-const getDisplayName = (repoFullName: string): string => {
-  if (repoFullName.toLowerCase().includes('bitcoinknots')) return 'Knots';
-  if (repoFullName.toLowerCase().includes('bitcoin/bitcoin')) return 'Core';
-  return repoFullName; // Fallback
-}
+// Function to get display name - REMOVED, now imported
 
 export default function Home() {
   const [reportData, setReportData] = useState<ComparisonData | null>(null);
